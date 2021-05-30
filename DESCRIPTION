@@ -1,0 +1,45 @@
+Package: blaseRtools
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Brad",
+           family = "Blaser",
+           role = c("aut", "cre"),
+           email = "bradley.blaser@osumc.edu",
+           comment = c(ORCID = "0000-0002-3168-5423"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    broom,
+    cowplot,
+    DESeq2,
+    DoubletFinder,
+    fastSave,
+    ggpubr,
+    ggrepel,
+    grid,
+    hexbin,
+    huxtable,
+    MASS,
+    Matrix,
+    Matrix.utils,
+    monocle3,
+    pheatmap,
+    readxl,
+    rrvgo,
+    scater,
+    Seurat,
+    SeuratDisk,
+    sinew,
+    SingleCellExperiment,
+    stats,
+    tidyverse,
+    topGO
+Suggests: 
+    org.Mm.eg.db,
+    org.Dr.eg.db,
+    org.Hs.eg.db
