@@ -43,3 +43,5 @@ Suggests:
     org.Mm.eg.db,
     org.Dr.eg.db,
     org.Hs.eg.db
+URL: https://github.com/blaserlab/blaseRtools
+BugReports: https://github.com/blaserlab/blaseRtools/issues
