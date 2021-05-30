@@ -1,13 +1,13 @@
 Package: blaseRtools
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: R Tools for Blaser Lab Data Analysis 
+Version: 0.0.0.9004
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
            role = c("aut", "cre"),
            email = "bradley.blaser@osumc.edu",
            comment = c(ORCID = "0000-0002-3168-5423"))
-Description: What the package does (one paragraph).
+Description: This is a repository of R tools for Single Cell RNA seq and other lab data analysis functions.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

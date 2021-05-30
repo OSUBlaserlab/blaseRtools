@@ -1,25 +1,20 @@
-
 # blaseRtools
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of blaseRtools is to ...
+This R package includes commonly used functions for R analysis in the Blaser Lab.  Most are related to single cell analysis and are derived from monocle with some modifications.  Helper functions for general data analysis are also present.    
 
 ## Installation
 
-You can install the released version of blaseRtools from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of blaseRtools from with:
 
 ``` r
-install.packages("blaseRtools")
+devtools::install_github("git@github.com:blaserlab/blaseRtools.git")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Create a biaxial UMAP plot of single cell data highlighting cell partitions:
 
 ``` r
 library(blaseRtools)
-## basic example code
+bb_var_umap(cds = cds, var = "partition")
 ```
-
