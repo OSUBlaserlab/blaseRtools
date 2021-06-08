@@ -1,23 +1,24 @@
-#' Make a dotplot of gene expression by cell population 
-#' 
-#' @param cds A cell data set object 
-#' @param markers A character vector of genes to plot 
+#' Make a dotplot of gene expression by cell population
+#'
+#' @param cds A cell data set object
+#' @param markers A character vector of genes to plot
 #' @param group_cells_by A cds colData column.  Use "multifactorial" to pick 2 categorical variables to put on X axis and to facet by.  See ordering below.
 #' @param norm_method How to normalize gene expression.  Default = "log"
 #' @param lower_threshold Lower cutoff for gene expression
 #' @param max.size The maximum size of the dotplot
-#' @param ordering If NULL, a biclustering algorithm will be applied.  If a colData column has been selected in group_cells_by, use a character vector to explicitly set the levels for ordering.  If using group_cells_by = "multifactorial" you will need a df to define factors and levels (see description).   
-#' @param pseudocount Add to zero expressors.  Default = 1 
+#' @param group_ordering Defaults to "biclustering" method from pheatmap.  Optionally will take a vector of group values to set the axis order explicitly.  If using group_cells_by = "multifactorial" you will need a df to define facet and axis levels.  See example.
+#' @param gene_ordering
+#' @param pseudocount Add to zero expressors.  Default = 1
 #' @param scale_max Expression scale max
 #' @param scale_min Expression scale min
-#' @param colorscale_name Label for the color scale  
-#' @param sizescale_name Label for the size scale 
-#' @param ... Additional parameters to pass to facet_wrap. 
-#' @return A ggplot 
+#' @param colorscale_name Label for the color scale
+#' @param sizescale_name Label for the size scale
+#' @param ... Additional parameters to pass to facet_wrap.
+#' @return A ggplot
 #' @export
 #' @import tidyverse monocle3
 #' @importFrom stats as.dist cor
-#' @examples 
+#' @examples
 #' bb_gene_dotplot(
 #'   cds_anno_aligned_tissue_id,
 #'   group_cells_by = "multifactorial",
@@ -36,7 +37,8 @@ bb_gene_dotplot <- function(cds,
                             norm_method = c("log", "size_only"),
                             lower_threshold = 0,
                             max.size = 10,
-                            ordering = NULL,
+                            group_ordering = "bicluster",
+                            gene_ordering = NULL,
                             pseudocount = 1,
                             scale_max = 3,
                             scale_min = -3,
@@ -45,10 +47,10 @@ bb_gene_dotplot <- function(cds,
                             ...)
 {
   norm_method = match.arg(norm_method)
-  gene_ids = as.data.frame(fData(cds)) %>% 
+  gene_ids = as.data.frame(fData(cds)) %>%
     tibble::rownames_to_column() %>%
     dplyr::filter(rowname %in% markers | gene_short_name %in%
-                    markers) %>% 
+                    markers) %>%
     dplyr::pull(rowname)
   major_axis <- 2
   minor_axis <- 1
@@ -56,11 +58,11 @@ bb_gene_dotplot <- function(cds,
   exprs_mat <- reshape2::melt(exprs_mat)
   colnames(exprs_mat) <- c("Cell", "Gene", "Expression")
   exprs_mat$Gene <- as.character(exprs_mat$Gene)
-  
+
   if (group_cells_by == "multifactorial") {
-    multivar <- paste0(unique(ordering$variable)[1],"_AND_",unique(ordering$variable)[2])
-    multivar_val <- paste0(unique(ordering$value))
-    colData(cds)[,multivar] <- paste0(colData(cds)[,unique(ordering$variable)[1]],"_AND_",colData(cds)[,unique(ordering$variable)[2]])
+    multivar <- paste0(unique(group_ordering$variable)[1],"_AND_",unique(group_ordering$variable)[2])
+    multivar_val <- paste0(unique(group_ordering$value))
+    colData(cds)[,multivar] <- paste0(colData(cds)[,unique(group_ordering$variable)[1]],"_AND_",colData(cds)[,unique(group_ordering$variable)[2]])
     cell_group <- colData(cds)[,multivar]
   } else {
     cell_group <- colData(cds)[, group_cells_by]
@@ -107,9 +109,12 @@ bb_gene_dotplot <- function(cds,
       factor(ExpVal$Gene, levels = colnames(res)[ph$tree_col$order])
     ExpVal$Group <-
       factor(ExpVal$Group, levels = row.names(res)[ph$tree_row$order])
-  if (!is.null(ordering) && group_cells_by != "multifactorial") {
-    ExpVal$Group <- 
-      factor(ExpVal$Group, levels = ordering)
+  if (group_ordering != "bicluster" && group_cells_by != "multifactorial") {
+    ExpVal$Group <-
+      factor(ExpVal$Group, levels = group_ordering)
+  }
+  if (!is.null(gene_ordering)) {
+    ExpVal$Gene <- factor(ExpVal$Gene, levels = gene_ordering)
   }
 
   if (group_cells_by != "multifactorial") {
@@ -126,14 +131,14 @@ bb_gene_dotplot <- function(cds,
     return(g)
   }
   if (group_cells_by == "multifactorial") {
-    facet_choice <- ordering %>% filter(aesthetic == "facet") %>% pull(value) %>% paste(collapse = "|")
-    axis_choice <- ordering %>% filter(aesthetic == "axis") %>% pull(value) %>% paste(collapse = "|")
-    ExpVal <- 
+    facet_choice <- group_ordering %>% filter(aesthetic == "facet") %>% pull(value) %>% paste(collapse = "|")
+    axis_choice <- group_ordering %>% filter(aesthetic == "axis") %>% pull(value) %>% paste(collapse = "|")
+    ExpVal <-
       ExpVal %>%
       mutate(facet = str_extract(Group, pattern = facet_choice)) %>%
-      mutate(facet = factor(facet, levels = ordering %>% filter(aesthetic == "facet") %>% arrange(level) %>% pull(value))) %>%
+      mutate(facet = factor(facet, levels = group_ordering %>% filter(aesthetic == "facet") %>% arrange(level) %>% pull(value))) %>%
       mutate(axis = str_extract(Group, pattern = axis_choice)) %>%
-      mutate(axis = factor(axis, levels = ordering %>% filter(aesthetic == "axis") %>% arrange(level) %>% pull(value))) 
+      mutate(axis = factor(axis, levels = group_ordering %>% filter(aesthetic == "axis") %>% arrange(level) %>% pull(value)))
       g <-
       ggplot(ExpVal, mapping = aes(y = Gene, x = axis)) +
       geom_point(aes(colour = mean,
@@ -150,6 +155,5 @@ bb_gene_dotplot <- function(cds,
       theme(strip.background = element_blank())
      return(g)
   }
- 
-}
 
+}

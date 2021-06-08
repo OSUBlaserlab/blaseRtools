@@ -17,3 +17,7 @@
 # blaseRtools 0.0.0.9004
 
 * Fixed go term functions. 
+
+# blaseRtools 0.0.0.9005
+
+* Made it possible to explicitly order axes in bb_gene_dotplot 

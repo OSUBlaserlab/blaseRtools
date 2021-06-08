@@ -12,7 +12,8 @@ bb_gene_dotplot(
   norm_method = c("log", "size_only"),
   lower_threshold = 0,
   max.size = 10,
-  ordering = NULL,
+  group_ordering = "bicluster",
+  gene_ordering = NULL,
   pseudocount = 1,
   scale_max = 3,
   scale_min = -3,
@@ -34,7 +35,7 @@ bb_gene_dotplot(
 
 \item{max.size}{The maximum size of the dotplot}
 
-\item{ordering}{If NULL, a biclustering algorithm will be applied.  If a colData column has been selected in group_cells_by, use a character vector to explicitly set the levels for ordering.  If using group_cells_by = "multifactorial" you will need a df to define factors and levels (see description).}
+\item{group_ordering}{Defaults to "biclustering" method from pheatmap.  Optionally will take a vector of group values to set the axis order explicitly.  If using group_cells_by = "multifactorial" you will need a df to define facet and axis levels.  See example.}
 
 \item{pseudocount}{Add to zero expressors.  Default = 1}
 
