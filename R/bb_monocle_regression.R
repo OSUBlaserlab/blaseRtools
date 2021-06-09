@@ -10,7 +10,6 @@
 #' @return A tibble containing the regression results.
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_monocle_regression <-
   function(cds,
            gene_or_genes,

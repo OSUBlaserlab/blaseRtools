@@ -19,8 +19,12 @@ bb_gene_violinplot(
   palette = NULL,
   violin_alpha = 1,
   jitter_alpha = 1,
+  jitter_color = "black",
+  jitter_fill = "transparent",
+  jitter_size = 0.5,
   facet_scales = "fixed",
-  order_genes = TRUE
+  order_genes = TRUE,
+  jitter_match = F
 )
 }
 \arguments{
@@ -52,9 +56,17 @@ bb_gene_violinplot(
 
 \item{jitter_alpha}{Alpha value for jitter plot}
 
+\item{jitter_color}{Color for the jitter plot.  Defaults to black and ignored if jitter_match == TRUE}
+
+\item{jitter_fill}{Fill for the jitter plot}
+
+\item{jitter_size}{Size of the jitter points}
+
 \item{facet_scales}{Scale option for facetting.  "Fixed" is default}
 
 \item{order_genes}{If true, put genes in the same order as variable parameter}
+
+\item{jitter_match}{If true, match jitter color to violin fill.}
 }
 \value{
 A ggplot

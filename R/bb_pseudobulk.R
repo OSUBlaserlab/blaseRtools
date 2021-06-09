@@ -6,7 +6,6 @@
 #' @return A list of results from pseudobulk analysis
 #' @export
 #' @import tidyverse DESeq2 pheatmap Matrix.utils monocle3
-#' @examples
 bb_pseudobulk <- function(cds_deseq, 
 			  replicate_variable, 
 			  class_variable) {

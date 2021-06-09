@@ -37,3 +37,4 @@ use_data_raw()
 
 
 check()
+install()

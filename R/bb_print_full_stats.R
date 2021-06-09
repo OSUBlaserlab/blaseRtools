@@ -10,7 +10,6 @@
 #' @export
 #' @import tidyverse
 #' @importFrom huxtable hux add_colnames set_bold set_all_borders 
-#' @examples
 bb_print_full_stats <- function(data, 
 				class_var, 
 				class1, 

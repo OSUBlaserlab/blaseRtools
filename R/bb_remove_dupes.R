@@ -5,7 +5,6 @@
 #' @return A deduplicated tibble
 #' @export 
 #' @import dplyr
-#' @examples
 bb_remove_dupes <- function(data,
 			    column) {
   data <- data %>%

@@ -6,7 +6,6 @@
 #' @return A list of items for downstream plotting
 #' @export
 #' @import rrvgo
-#' @examples
 bb_gosummary <- function(x, 
 			 reduce_threshold = 0.8,
 			 go_db = c("org.Hs.eg.db", "org.Dr.eg.db", "org.Mm.eg.db")) {

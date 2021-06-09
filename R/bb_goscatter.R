@@ -9,7 +9,6 @@
 #' @export
 #' @import tidyverse ggrepel
 #' @importFrom stats cmdscale as.dist
-#' @examples
 bb_goscatter <-
   function (simMatrix,
             reducedTerms,

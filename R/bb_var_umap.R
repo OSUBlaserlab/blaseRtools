@@ -24,7 +24,6 @@
 #' @return A ggplot
 #' @export
 #' @import tidyverse monocle3 ggrepel MASS hexbin
-#' @example
 bb_var_umap <- function(cds,
                         var,
                         value_to_highlight = NULL,

@@ -14,7 +14,6 @@
 #' @return A ggplot 
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_gene_pseudotime <-function (cds_subset, 
 			       min_expr = NULL, 
 			       cell_size = 0.75, 

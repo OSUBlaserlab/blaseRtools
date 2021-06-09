@@ -21,3 +21,7 @@
 # blaseRtools 0.0.0.9005
 
 * Made it possible to explicitly order axes in bb_gene_dotplot 
+
+# blaseRtools 0.0.0.9006
+
+* Edits to violin plot to allow automatic matching of point to violin.

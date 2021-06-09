@@ -10,7 +10,6 @@
 #' @return A ggplot 
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_gene_umap <-
   function (cds,
             gene_or_genes,

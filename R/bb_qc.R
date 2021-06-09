@@ -6,7 +6,6 @@
 #' @return A list of qc objects
 #' @export
 #' @import tidyverse scater
-#' @examples
 bb_qc <- function(cds, 
 		  cds_name, 
 		  genome = c("human", 

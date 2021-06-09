@@ -9,7 +9,6 @@
 #' @return A data frame in the format needed to pass into bb_gene_umap.
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_plot_rowData_col <- function(cds,
                                 rowData_col,
                                 filter_in = NULL,

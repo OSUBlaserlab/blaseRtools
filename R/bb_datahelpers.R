@@ -2,14 +2,12 @@
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 se <- function(x) sqrt(var(x, na.rm=TRUE)/length(x))
 
 #' Generate median +/- se stat object for jitter ggplot 
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 data_median_se <- function(x) {
   m <- median(x)
   ymin <- m - se(x)
@@ -21,7 +19,6 @@ data_median_se <- function(x) {
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 data_summary_median_iqr <- function(x) {
   m <- median(x)
   ymin <- m - (IQR(x) / 2)
@@ -33,7 +30,6 @@ data_summary_median_iqr <- function(x) {
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 data_summary_mean_se <- function(x) {
   m <- mean(x)
   ymin <- m - se(x)
@@ -45,7 +41,6 @@ data_summary_mean_se <- function(x) {
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 data_summary_median_mad <- function(x) {
   m <- median(x)
   ymin <- m - mad(x)
@@ -57,7 +52,6 @@ data_summary_median_mad <- function(x) {
 #' 
 #' @param x A numeric vector 
 #' @export
-#' @examples
 data_summary_mean_sd <- function(x) {
   m <- mean(x)
   ymin <- m - sd(x)
@@ -72,7 +66,6 @@ data_summary_mean_sd <- function(x) {
 #' @param cds A cell data set object 
 #' @param columns_to_add A named vector where the name of each element becomes the name of the new colData column and the value is the value for that particular sample.  Best used when importing from a metadata table. 
 #' @export
-#' @examples
 add_cds_factor_columns <- function(cds, columns_to_add) {
   for (i in 1:length(columns_to_add)) {
     colData(cds)$new <- unname(columns_to_add[i])

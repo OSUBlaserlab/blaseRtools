@@ -6,7 +6,6 @@
 #' @return A tibble of low- and high-confidence doublet calls by barcode 
 #' @export
 #' @import tidyverse DoubletFinder Seurat
-#' @examples
 bb_doubletfinder <-
   function(cds,
            doublet_prediction,

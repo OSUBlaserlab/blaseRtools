@@ -14,12 +14,15 @@
 #' @param palette Color palette to use.  Viridis is default.
 #' @param violin_alpha Alpha value for violin plot
 #' @param jitter_alpha Alpha value for jitter plot
+#' @param jitter_color Color for the jitter plot.  Defaults to black and ignored if jitter_match == TRUE
+#' @param jitter_fill Fill for the jitter plot
+#' @param jitter_size Size of the jitter points
 #' @param facet_scales Scale option for facetting.  "Fixed" is default
 #' @param order_genes If true, put genes in the same order as variable parameter 
+#' @param jitter_match If true, match jitter color to violin fill. 
 #' @return A ggplot 
 #' @export
 #' @import tidyverse monocle3 ggpubr
-#' @examples
 bb_gene_violinplot <-
   function(cds,
            variable,
@@ -35,8 +38,12 @@ bb_gene_violinplot <-
            palette = NULL,
            violin_alpha = 1,
            jitter_alpha = 1,
+           jitter_color = "black",
+           jitter_fill = "transparent",
+           jitter_size = 0.5,
            facet_scales = "fixed",
-           order_genes = TRUE) {
+           order_genes = TRUE,
+           jitter_match = F) {
     my_comparisons <-
       comparison_list#(list(c(comparator1,comparator2),c(comparator1,comparator3)...))
     if (length(dim(genes_to_plot)) > 1) {
@@ -66,14 +73,36 @@ bb_gene_violinplot <-
       }
     }
     if (include_jitter == TRUE) {
+      if (jitter_match == TRUE){
+       p1 <- p1 + geom_jitter(
+         shape = 21,
+         size = jitter_size,
+         width = 0.2,
+         alpha = jitter_alpha,
+	 fill = jitter_fill, 
+         aes(color = !!as.name(variable)),
+         show.legend = F
+       ) 
+      } else {
       p1 <-
         p1 + geom_jitter(
           shape = 21,
-          size = 0.5,
-          color = "black",
+          size = jitter_size,
+          color = jitter_color,
+          fill = jitter_fill,
           alpha = jitter_alpha,
           width = 0.2
         )
+      }
+    }
+    if (is.null(palette)) {
+      p1 <- p1 +
+        scale_color_viridis_d(alpha = jitter_alpha,
+                             begin = 0.1,
+                             end = 0.9)
+    } else {
+      p1 <- p1 +
+        scale_color_manual(aesthetics = "color", values = alpha(palette, jitter_alpha)) 
     }
     p1 <- p1 +
       geom_violin(
@@ -83,20 +112,7 @@ bb_gene_violinplot <-
         size = 0.5,
         aes(fill = !!as.name(variable)),
         draw_quantiles = 0.5
-      )
-    # p1 <- p1 +
-    #   ylim(0,yplotmax)
-    # if (!is.null(comparison_list)) {
-    #   p1<-p1+stat_compare_means(
-    #     comparisons = my_comparisons,
-    #     method = "wilcox.test",
-    #     size = 2,
-    #     label = "p.signif",
-    #     hide.ns = F,
-    #     label.y = sig_lab_y
-    #   )
-    # }
-    p1 <- p1 +
+      ) +
       theme(legend.position = legend_pos) +
       theme(legend.direction = "horizontal") +
       theme(legend.justification = "center") +
@@ -108,14 +124,14 @@ bb_gene_violinplot <-
       )
     if (is.null(palette)) {
       p1 <- p1 +
-        scale_fill_viridis_d(alpha = 0.6,
+        scale_fill_viridis_d(alpha = violin_alpha,
                              begin = 0.1,
                              end = 0.9)
     } else {
       p1 <- p1 +
-        scale_fill_manual(values = alpha(palette, violin_alpha)) +
-        theme(plot.title = element_text(hjust = 0.5))
+        scale_fill_manual(values = alpha(palette, violin_alpha)) 
     }
+    p1 <- p1 + theme(plot.title = element_text(hjust = 0.5))
     if (length(dim(genes_to_plot)) > 1) {
       p1 <- p1 +
         facet_wrap(~ gene_group, nrow = rows, scales = facet_scales) +
@@ -129,5 +145,4 @@ bb_gene_violinplot <-
       p1 <- p1 + theme(axis.text.x = element_blank())
     }
     return(p1)
-    # return(data_to_plot)
   }

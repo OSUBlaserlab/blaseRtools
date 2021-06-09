@@ -9,7 +9,6 @@
 #' @return A cell data set object. 
 #' @export
 #' @import monocle3
-#' @examples
 bb_load_multi_counts <-
   function (pipestance_path = NULL,
             genome = NULL,

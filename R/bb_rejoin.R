@@ -6,7 +6,6 @@
 #' @return A cell data set object with qc and doubletfinder data 
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_rejoin <- function(cds, qc_data, doubletfinder_data) {
   cds_tbl <- as_tibble(colData(cds))
   cds_tbl <- left_join(cds_tbl, qc_data)

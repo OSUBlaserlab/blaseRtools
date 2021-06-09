@@ -7,7 +7,6 @@
 #' @return A list of items including the enrichment results.
 #' @import tidyverse topGO
 #' @rdname bb_goenrichment
-#' @export
 bb_goenrichment <- function(query,
                             reference,
                             group_pval = 0.01,

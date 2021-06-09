@@ -4,7 +4,6 @@
 #' @return A matrix 
 #' @export
 #' @import dplyr
-#' @examples
 bb_tbl_to_matrix <- function(data) {
   data <- data %>%
     as.data.frame()

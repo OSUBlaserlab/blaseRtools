@@ -5,7 +5,6 @@
 #' @param y NPC Y coordinate
 #' @export
 #' @import ggplot2 grid
-#' @examples
 bb_annotate_npc <- function(label, x, y, ...)
 {
   annotation_custom(textGrob(

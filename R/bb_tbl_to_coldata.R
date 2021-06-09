@@ -6,7 +6,6 @@
 #' @return A celldataset
 #' @export
 #' @import tidyverse SingleCellExperiment
-#' @examples
 bb_tbl_to_coldata <-
   function(cds, min_tbl, join_col = "barcode_sample") {
     full_tbl <-

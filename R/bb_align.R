@@ -6,7 +6,6 @@
 #' @return A modified cell data set object with aligned dimensions and new metadata columns holding prealignment umap coordinates.
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_align <- function(cds, align_by, n_cores = 8) {
   cds_aligned <- align_cds(cds = cds, alignment_group = align_by)
   prealignment_dims <- plot_cells(cds)[["data"]] %>% as_tibble() %>% select(data_dim_1,data_dim_2)

@@ -5,7 +5,6 @@
 #' @return A modified cds with Seurat cell assignments. 
 #' @export
 #' @import tidyverse Seurat monocle3 broom Matrix SingleCellExperiment SeuratDisk
-#' @examples
 bb_seurat_anno <- function(cds, reference) {
   seurat_reference <- LoadH5Seurat(reference)
   

@@ -9,7 +9,6 @@
 #' @return A modified cell data set object with leiden, louvain, and partition metadata columns.  Outputs csv files with top markers into specified directory, or current working directory if NULL.
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_triplecluster <- function(cds,
                              n_top_markers = 50,
                              outfile,

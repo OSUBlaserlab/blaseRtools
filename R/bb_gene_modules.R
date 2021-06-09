@@ -7,7 +7,6 @@
 #' @return A modified cell data set object with a new rowData column holding gene module data.
 #' @export
 #' @import tidyverse monocle3
-#' @examples
 bb_gene_modules <- function(cds, 
 			    n_cores = 8) {
   graph_test_res <-
