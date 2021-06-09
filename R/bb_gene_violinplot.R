@@ -102,7 +102,7 @@ bb_gene_violinplot <-
                              end = 0.9)
     } else {
       p1 <- p1 +
-        scale_color_manual(aesthetics = "color", values = alpha(palette, jitter_alpha)) 
+        scale_color_manual(aesthetics = "color", values = alpha(palette, jitter_alpha), drop = TRUE) 
     }
     p1 <- p1 +
       geom_violin(
@@ -129,7 +129,7 @@ bb_gene_violinplot <-
                              end = 0.9)
     } else {
       p1 <- p1 +
-        scale_fill_manual(values = alpha(palette, violin_alpha)) 
+        scale_fill_manual(values = alpha(palette, violin_alpha), drop = TRUE) 
     }
     p1 <- p1 + theme(plot.title = element_text(hjust = 0.5))
     if (length(dim(genes_to_plot)) > 1) {
