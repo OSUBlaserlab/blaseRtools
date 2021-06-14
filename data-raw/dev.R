@@ -37,4 +37,5 @@ use_data_raw()
 
 
 check()
+document()
 install()

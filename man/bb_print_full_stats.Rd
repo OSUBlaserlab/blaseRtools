@@ -4,20 +4,24 @@
 \alias{bb_print_full_stats}
 \title{Print out a stats report}
 \usage{
-bb_print_full_stats(data, class_var, class1, class2, value_var, out = NULL)
+bb_print_full_stats(
+  data,
+  classification_variable,
+  numeric_variable,
+  test_type = c("Student", "Welch", "Wilcox"),
+  output = NULL
+)
 }
 \arguments{
-\item{data}{A Tibble in tidy data format}
+\item{data}{A Tibble in tidy data format.  Must contain or be filtered to contain only 2 levels in "classification_variable" for comparisons.}
 
-\item{class_var}{Column containing the class variable}
+\item{classification_variable}{Column containing the class variable}
 
-\item{class1}{The first class to compare}
+\item{numeric_variable}{The column containing the numeric values to summarize and compare}
 
-\item{class2}{The second class to compare}
+\item{test_type}{Must be one of "Student", "Welch", and "Wilcox"}
 
-\item{value_var}{The column containing the values}
-
-\item{out}{The text file to output}
+\item{output}{Output file; if null prints to screen.}
 }
 \value{
 A text file

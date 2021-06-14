@@ -25,3 +25,7 @@
 # blaseRtools 0.0.0.9006-7
 
 * Edits to violin plot to allow automatic matching of point to violin.
+
+# blaseRtools 0.0.0.9008
+
+* reworked print stats report
