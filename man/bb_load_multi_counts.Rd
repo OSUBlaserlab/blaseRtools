@@ -6,8 +6,8 @@
 \usage{
 bb_load_multi_counts(
   pipestance_path = NULL,
+  specimen = NULL,
   genome = NULL,
-  barcode_filtered = TRUE,
   umi_cutoff = 100,
   allowed_data_types = c("Gene Expression", "Antibody Capture"),
   sample_metadata_nvps = NULL
@@ -17,8 +17,6 @@ bb_load_multi_counts(
 \item{pipestance_path}{A character string of the file path to the multi pipestance directory}
 
 \item{genome}{A character string for multi-genome samples}
-
-\item{barcode_filtered}{Boolean}
 
 \item{umi_cutoff}{Don't import cells with fewer UMIs than this value}
 

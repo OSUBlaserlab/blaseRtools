@@ -1,50 +1,39 @@
-#' Load 10X Multi data into a cds 
-#' 
+#' Load 10X Multi data into a cds
+#'
 #' @param pipestance_path A character string of the file path to the multi pipestance directory
+#' @param specimen
 #' @param genome A character string for multi-genome samples
-#' @param barcode_filtered  Boolean
 #' @param umi_cutoff Don't import cells with fewer UMIs than this value
-#' @param allowed_data_types Control type of data to import. 
-#' @param sample_metadata_nvps A named vector or list of name+value pairs where name is the cell metadata column name to add and value is a sample-level metadata value.  These are applied to all cells in the sample (e.g.:  patient_id, treatment, timepoint). 
-#' @return A cell data set object. 
+#' @param allowed_data_types Control type of data to import.
+#' @param sample_metadata_nvps A named vector or list of name+value pairs where name is the cell metadata column name to add and value is a sample-level metadata value.  These are applied to all cells in the sample (e.g.:  patient_id, treatment, timepoint).
+#' @return A cell data set object.
 #' @export
 #' @import monocle3
-bb_load_multi_counts <-
-  function (pipestance_path = NULL,
+bb_load_multi_counts <- function (pipestance_path = NULL,
+            specimen = NULL,
             genome = NULL,
-            barcode_filtered = TRUE,
             umi_cutoff = 100,
             allowed_data_types = c("Gene Expression","Antibody Capture"),
-	    sample_metadata_nvps = NULL
+	          sample_metadata_nvps = NULL
 
-  )
-  {
+  ){
     if (!dir.exists(pipestance_path))
       stop(
         "Could not find the pipestance path: '",
         pipestance_path,
         "'.\n         Please double-check if the directory exists.\n"
       )
-    od = file.path(pipestance_path, "outs/count")
+    od = file.path(pipestance_path, "outs/per_sample_outs", specimen)
     if (!dir.exists(od))
       stop(
         "Could not find the pipestance output directory: '",
         file.path(pipestance_path, "outs"),
         "'. Please double-check if the directory exists.\n"
       )
-    v3p = file.path(od, "filtered_feature_bc_matrix")
+    v3p = file.path(od, "count/sample_feature_bc_matrix")
     v2p = file.path(od, "filtered_gene_bc_matrices")
     v3d = dir.exists(v3p)
-    if (barcode_filtered) {
-      matrix_dir = ifelse(v3d, v3p, v2p)
-    }
-    else {
-      matrix_dir = ifelse(
-        v3d,
-        file.path(od, "raw_feature_bc_matrix"),
-        file.path(od, "raw_gene_bc_matrices")
-      )
-    }
+    matrix_dir = ifelse(v3d, v3p, v2p)
     if (!dir.exists(matrix_dir))
       stop("Could not find directory: ", matrix_dir)
     if (v3d) {

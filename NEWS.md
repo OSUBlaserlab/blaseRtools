@@ -29,3 +29,7 @@
 # blaseRtools 0.0.0.9008
 
 * reworked print stats report
+
+# blaseRtools 0.0.0.9009
+
+* changed bb_load_multi_counts to be compatible with cellranger v6
