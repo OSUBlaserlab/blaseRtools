@@ -16,6 +16,8 @@ bb_load_multi_counts(
 \arguments{
 \item{pipestance_path}{A character string of the file path to the multi pipestance directory}
 
+\item{specimen}{The specimen name.}
+
 \item{genome}{A character string for multi-genome samples}
 
 \item{umi_cutoff}{Don't import cells with fewer UMIs than this value}

@@ -30,6 +30,6 @@
 
 * reworked print stats report
 
-# blaseRtools 0.0.0.9009
+# blaseRtools 0.0.0.9009-10
 
-* changed bb_load_multi_counts to be compatible with cellranger v6
+* changed bb_load_multi_counts to be compatible with cellranger v6, changed qc to allow for pdx

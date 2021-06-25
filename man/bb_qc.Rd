@@ -11,7 +11,7 @@ bb_qc(cds, cds_name, genome = c("human", "mouse", "zfish"))
 
 \item{cds_name}{The name of the cds}
 
-\item{genome}{The species to use for identifying mitochondrial genes.}
+\item{genome}{The species to use for identifying mitochondrial genes. Choose from "human", "mouse", "zfish", "human_mouse" for pdx.}
 }
 \value{
 A list of qc objects

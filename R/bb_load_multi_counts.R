@@ -1,7 +1,7 @@
 #' Load 10X Multi data into a cds
 #'
 #' @param pipestance_path A character string of the file path to the multi pipestance directory
-#' @param specimen
+#' @param specimen The specimen name.
 #' @param genome A character string for multi-genome samples
 #' @param umi_cutoff Don't import cells with fewer UMIs than this value
 #' @param allowed_data_types Control type of data to import.

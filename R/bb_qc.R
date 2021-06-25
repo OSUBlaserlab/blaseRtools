@@ -1,15 +1,15 @@
-#' A function to run qc tests on cds objects. 
-#' 
+#' A function to run qc tests on cds objects.
+#'
 #' @param cds A cell data set object to run qc functions on
-#' @param cds_name The name of the cds   
-#' @param genome The species to use for identifying mitochondrial genes.
+#' @param cds_name The name of the cds
+#' @param genome The species to use for identifying mitochondrial genes. Choose from "human", "mouse", "zfish", "human_mouse" for pdx.
 #' @return A list of qc objects
 #' @export
 #' @import tidyverse scater
-bb_qc <- function(cds, 
-		  cds_name, 
-		  genome = c("human", 
-			     "mouse", 
+bb_qc <- function(cds,
+		  cds_name,
+		  genome = c("human",
+			     "mouse",
 			     "zfish")) {
   if (genome == "human") {
     mito_pattern <-"^MT-"
@@ -19,6 +19,9 @@ bb_qc <- function(cds,
   }
   if (genome == "zfish") {
     mito_pattern <- "^mt-"
+  }
+  if (genome == "human_mouse") {
+    mito_pattern <- "^MT-|^mt-"
   }
   cds <-
     scater::addPerCellQC(cds,subsets=list(Mito=grep(mito_pattern, rowData(cds)$gene_short_name)))
@@ -63,7 +66,7 @@ bb_qc <- function(cds,
   cds_to_plot_mito <- bind_rows(cds_tbl, cds_tbl_filtered_mito)
   plot_any <-
     ggplot(cds_to_plot_any, aes(x = fct_rev(pre_post), y = log10(detected))) +
-    geom_violin() + 
+    geom_violin() +
     labs(y = "log10(detected features)", title = paste0("qc.any:  ",cds_name), x = "thresholding") +
     theme(plot.title = element_text(hjust = 0.5))
   plot_mito <-
