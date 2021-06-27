@@ -33,3 +33,7 @@
 # blaseRtools 0.0.0.9009-10
 
 * changed bb_load_multi_counts to be compatible with cellranger v6, changed qc to allow for pdx
+
+# blaseRtools 0.0.0.9011
+
+* added bb_renv_datapkg:  a function to load binary data packages from local sources
