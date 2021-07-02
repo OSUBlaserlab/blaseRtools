@@ -37,3 +37,7 @@
 # blaseRtools 0.0.0.9011
 
 * added bb_renv_datapkg:  a function to load binary data packages from local sources
+
+# blaseRtools 0.0.0.9012
+
+* added bb_goenrichment back to namespace; edited bb_renv_datapkg to allow installation of explicit binary packages

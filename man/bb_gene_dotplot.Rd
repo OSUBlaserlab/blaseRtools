@@ -55,16 +55,3 @@ A ggplot
 \description{
 Make a dotplot of gene expression by cell population
 }
-\examples{
-bb_gene_dotplot(
-  cds_anno_aligned_tissue_id,
-  group_cells_by = "multifactorial",
-  markers = c("FLT3", "CXCL8", "IL3RA", "CSF2RA", "IL6R"),
-  ordering = tribble(
-    ~aesthetic, ~variable, ~value, ~level,
-    "facet","chemo_response","sensitive",1,
-    "facet","chemo_response","unresponsive",2,
-    "axis","timepoint_binary","pre-treatment",1,
-    "axis","timepoint_binary","post-treatment",2)
-  )
-}

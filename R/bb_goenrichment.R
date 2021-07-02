@@ -1,10 +1,12 @@
-#' @title GO Term Enrichment
+#' Go Term Enrichment
+#'
 #' @description A function to find enriched go terms from a query list of gene names relative to a reference list of gene names.
 #' @param query A vector of gene names
-#' @param reference The background gene list.  Usually will be rowData(cds_main).
+#' @param reference The background gene list.  Usually will be as_tibble(rowData(cds_main)).
 #' @param group_pval P value to determine enrichment.  Default: 0.01.
-#' @param go_db PARAM_DESCRIPTION, Default: c("org.Hs.eg.db", "org.Dr.eg.db", "org.Mm.eg.db")
+#' @param go_db GO term database Default: c("org.Hs.eg.db", "org.Dr.eg.db", "org.Mm.eg.db")
 #' @return A list of items including the enrichment results.
+#' @export
 #' @import tidyverse topGO
 #' @rdname bb_goenrichment
 bb_goenrichment <- function(query,

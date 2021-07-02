@@ -2,7 +2,7 @@
 % Please edit documentation in R/bb_goenrichment.R
 \name{bb_goenrichment}
 \alias{bb_goenrichment}
-\title{GO Term Enrichment}
+\title{Go Term Enrichment}
 \usage{
 bb_goenrichment(
   query,
@@ -14,11 +14,11 @@ bb_goenrichment(
 \arguments{
 \item{query}{A vector of gene names}
 
-\item{reference}{The background gene list.  Usually will be rowData(cds_main).}
+\item{reference}{The background gene list.  Usually will be as_tibble(rowData(cds_main)).}
 
 \item{group_pval}{P value to determine enrichment.  Default: 0.01.}
 
-\item{go_db}{PARAM_DESCRIPTION, Default: c("org.Hs.eg.db", "org.Dr.eg.db", "org.Mm.eg.db")}
+\item{go_db}{GO term database Default: c("org.Hs.eg.db", "org.Dr.eg.db", "org.Mm.eg.db")}
 }
 \value{
 A list of items including the enrichment results.

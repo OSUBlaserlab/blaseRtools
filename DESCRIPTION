@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9011
+Version: 0.0.0.9012
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -16,31 +16,35 @@ RoxygenNote: 7.1.1
 URL: https://github.com/blaserlab/blaseRtools
 BugReports: https://github.com/blaserlab/blaseRtools/issues
 Suggests: 
-    broom,
     DESeq2,
     DoubletFinder,
+    org.Dr.eg.db,
+    org.Hs.eg.db,
+    org.Mm.eg.db
+Imports: 
+    readxl,
+    cowplot,
+    monocle3,
+    tidyverse,
     fastSave,
-    hexbin,
-    huxtable,
     MASS,
     Matrix,
     Matrix.utils,
-    monocle3,
-    org.Dr.eg.db,
-    org.Hs.eg.db,
-    org.Mm.eg.db,
-    pheatmap,
-    readxl,
-    rrvgo,
-    scater,
     Seurat,
     SeuratDisk,
     SingleCellExperiment,
-    topGO
-Imports: 
+    broom,
     ggpubr,
-    cowplot,
-    tidyverse,
     ggrepel,
     grid,
-    stats
+    hexbin,
+    pheatmap,
+    rrvgo,
+    topGO,
+    scater,
+    huxtable,
+    stats,
+    dplyr,
+    ggplot2,
+    renv,
+    stringr
