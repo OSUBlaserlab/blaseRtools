@@ -45,4 +45,5 @@ renv::init()
 
 devtools::check()
 devtools::document()
-devtools::build(path = "~/network/X/Labs/Blaser/blaseRtools_binaries")
+# commit and push to github
+renv::install(packages = "blaserlab/blaseRtools", library = "/usr/lib/R/site-library")

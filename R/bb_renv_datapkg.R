@@ -6,6 +6,7 @@
 #' @import tidyverse renv
 bb_renv_datapkg <- function(path) {
   if (str_detect(string = path, pattern = ".tar.gz")) {
+    message(str_glue("Installing {path}.  There may be newer versions available."))
     renv::install(path)
   } else {
     latest_version <- file.info(list.files(path, full.names = T)) %>%
@@ -22,12 +23,15 @@ bb_renv_datapkg <- function(path) {
     latest_version_number <-
       str_replace(latest_version_number, ".tar.gz", "")
     if (packageVersion(datapackage_stem) < latest_version_number) {
+      message(str_glue("A newer data package version is available.  Installing {latest_version}."))
       if (str_sub(path, -1) == "/") {
         renv::install(paste0(path, latest_version))
       } else {
         renv::install(paste0(path, "/", latest_version))
       }
 
+    } else {
+      message(str_glue("Your current version of {datapackage_stem} is up to date."))
     }
   }
 }
