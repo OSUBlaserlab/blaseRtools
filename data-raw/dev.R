@@ -43,6 +43,6 @@ use_data_raw()
 
 renv::init()
 
-check()
+devtools::check()
 devtools::document()
-devtools::install()
+devtools::build(path = "~/network/X/Labs/Blaser/blaseRtools_binaries")

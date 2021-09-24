@@ -7,7 +7,7 @@
 bb_renv_datapkg(path)
 }
 \arguments{
-\item{path}{Path to a directory containing one or more versions of the same data package.  If a directory is specified, this function will install the latest ".tar.gz" binary package in the directory.  If a binary is specifically requested it will install that one.}
+\item{path}{Path to a directory containing one or more versions of the same data package.  If a directory is specified, this function will compare the currently installed version to the latest availaible version in the directory.  If there is a newer version available (based on version number), it will install this version.  If a binary is specifically requested it will install that one.}
 }
 \value{
 Returns nothing. Using renv, it installs the latest version of the binary datapackage or updates it if already installed.

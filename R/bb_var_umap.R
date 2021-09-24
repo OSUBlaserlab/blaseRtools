@@ -20,7 +20,7 @@
 #' @param facet_by Variable or variables to facet by.
 #' @param sample_equally Whether or not you should downsample to the same number of cells in each plot.  Default is FALSE or no.
 #' @param ... Additional params for facetting.
-#' @param man_text_df A data frame in the form of text_x = <numeric vector>, text_y = <numeric vector>, label = <character vector> for manually placing text labels.
+#' @param man_text_df A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.
 #' @return A ggplot
 #' @export
 #' @import tidyverse monocle3 ggrepel MASS hexbin
@@ -46,7 +46,7 @@ bb_var_umap <- function(cds,
                         ...,
                         man_text_df = NULL) {
   plot_data <- plot_cells(cds)[["data"]]
-  
+
   if (sample_equally) {
     if (is.null(facet_by)) {
       return("You need to provide a faceting variable.")
@@ -61,8 +61,8 @@ bb_var_umap <- function(cds,
           group_by(!!sym(facet_by)) %>%
           slice_sample(n = min(sample_sizes$ncells)) %>%
           ungroup()
-        
-        
+
+
       } else if (length(facet_by) == 2) {
         # create a composite variable to group by
         plot_data$cross_product <-
@@ -81,17 +81,17 @@ bb_var_umap <- function(cds,
       }
     }
   }
-  
+
   if (var %in% c("density", "local_n", "log_local_n")) {
     data_long <- plot_data
   } else {
     data_long <-
       plot_data %>% pivot_longer(cols = (!!sym(var)), names_to = "var")
   }
-  
+
   dim_x <- ifelse(is.null(alt_dim_x), "data_dim_1", alt_dim_x)
   dim_y <- ifelse(is.null(alt_dim_y), "data_dim_2", alt_dim_y)
-  
+
   # generate text data frame for variable labels if you are going to use them
   if (is.null(alt_label_col)) {
     if (var %in% c("density", "local_n", "log_local_n")) {
@@ -99,7 +99,7 @@ bb_var_umap <- function(cds,
     } else {
       text_df <- data_long %>% group_by(value)
     }
-    
+
   } else {
     text_df <-
       plot_data %>% pivot_longer(cols = !!sym(alt_label_col),
@@ -118,10 +118,10 @@ bb_var_umap <- function(cds,
     text_df <-
       text_df %>% group_by(label, text_x, text_y) %>% summarise()
   }
-  
+
   if (!is.null(man_text_df))
     text_df <- man_text_df
-  
+
   # make the main plot
   plot <- ggplot()
   if (!is.null(value_to_highlight)) {
@@ -139,7 +139,7 @@ bb_var_umap <- function(cds,
         color = "grey80"
       )
   }
-  
+
   #option to color dots by local density
   if (var == "density") {
     if (!is.null(facet_by)) {
@@ -178,7 +178,7 @@ bb_var_umap <- function(cds,
       data_long <-
         data_long %>% mutate(density = get_density(x = data[, dim_x], y = data[, dim_y], n = nbin))
     }
-    
+
     plot <- ggplot(data_long) +
       geom_point(
         aes_string(
@@ -314,7 +314,7 @@ bb_var_umap <- function(cds,
         )))
     }
   }
-  
+
   plot <- plot + labs(
     x = ifelse(is.null(alt_dim_x), "UMAP 1", alt_dim_x),
     y = ifelse(is.null(alt_dim_y), "UMAP 2", alt_dim_y),
@@ -324,7 +324,7 @@ bb_var_umap <- function(cds,
     theme(plot.title = element_text(hjust = 0.5))
   plot <- plot +
     theme(legend.position = legend_pos)#+coord_fixed()
-  
+
   #option to overwrite labels
   if (overwrite_labels == T && is.null(man_text_df)) {
     plot <- plot +
@@ -357,7 +357,7 @@ bb_var_umap <- function(cds,
       return("Too many dimensions to facet by.")
     }
   }
-  
+
   return(plot)
 }
 
@@ -379,11 +379,11 @@ get_hexcount <- function(data, x, y, n) {
   hexdata_cells_counts <-
     tibble(hexcell = as.character(hexdata@cell),
            local_n = hexdata@count)
-  
+
   data <-
     data %>%
     mutate(hexcell = as.character(hexdata@cID)) %>%
     left_join(hexdata_cells_counts)
   return(data$local_n)
-  
+
 }

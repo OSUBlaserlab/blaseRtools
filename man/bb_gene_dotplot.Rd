@@ -37,6 +37,8 @@ bb_gene_dotplot(
 
 \item{group_ordering}{Defaults to "biclustering" method from pheatmap.  Optionally will take a vector of group values to set the axis order explicitly.  If using group_cells_by = "multifactorial" you will need a df to define facet and axis levels.  See example.}
 
+\item{gene_ordering}{Optional vector of gene names to order the plot.}
+
 \item{pseudocount}{Add to zero expressors.  Default = 1}
 
 \item{scale_max}{Expression scale max}

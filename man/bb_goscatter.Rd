@@ -13,9 +13,15 @@ bb_goscatter(
 )
 }
 \arguments{
-\item{simMatrix}{}
+\item{simMatrix}{Take from output of bb_gosummary}
 
-\item{labelSize}{}
+\item{reducedTerms}{Also take from output of bb_gosummary}
+
+\item{size}{Variable to map to point size.  Defaults to "score".}
+
+\item{addLabel}{Boolean; whether or not to add text labels}
+
+\item{labelSize}{Optional label size}
 }
 \value{
 A ggplot

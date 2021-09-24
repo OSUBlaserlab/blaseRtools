@@ -69,7 +69,7 @@ bb_var_umap(
 
 \item{...}{Additional params for facetting.}
 
-\item{man_text_df}{A data frame in the form of text_x = <numeric vector>, text_y = <numeric vector>, label = <character vector> for manually placing text labels.}
+\item{man_text_df}{A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.}
 }
 \value{
 A ggplot

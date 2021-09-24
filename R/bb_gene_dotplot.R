@@ -7,7 +7,7 @@
 #' @param lower_threshold Lower cutoff for gene expression
 #' @param max.size The maximum size of the dotplot
 #' @param group_ordering Defaults to "biclustering" method from pheatmap.  Optionally will take a vector of group values to set the axis order explicitly.  If using group_cells_by = "multifactorial" you will need a df to define facet and axis levels.  See example.
-#' @param gene_ordering
+#' @param gene_ordering Optional vector of gene names to order the plot.
 #' @param pseudocount Add to zero expressors.  Default = 1
 #' @param scale_max Expression scale max
 #' @param scale_min Expression scale min
