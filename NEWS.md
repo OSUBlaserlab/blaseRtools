@@ -42,6 +42,6 @@
 
 * added bb_goenrichment back to namespace; edited bb_renv_datapkg to allow installation of explicit binary packages
 
-# blaseRtools 0.0.0.9013
+# blaseRtools 0.0.0.9013 - 14
 
 * updated bb_renv_datapkg to check for and install latest package version. 
