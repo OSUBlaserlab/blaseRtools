@@ -5,7 +5,8 @@
 #' @export
 #' @import tidyverse renv
 bb_renv_datapkg <- function(path) {
-  possibly_packageVersion <- purrr::possibly(packageVersion, otherwise = "no such package")
+  possibly_packageVersion <-
+    purrr::possibly(packageVersion, otherwise = "0.0.0.0000")
 
   if (str_detect(string = path, pattern = ".tar.gz")) {
     message(str_glue("Installing {path}.  There may be newer versions available."))
@@ -24,25 +25,30 @@ bb_renv_datapkg <- function(path) {
     latest_version_number <- str_replace(latest_version, "^.*_", "")
     latest_version_number <-
       str_replace(latest_version_number, ".tar.gz", "")
-    if (possibly_packageVersion(datapackage_stem) != "no such package") {
-    if (packageVersion(datapackage_stem) < latest_version_number) {
-      message(str_glue("A newer data package version is available.  Installing {latest_version}."))
-      if (str_sub(path, -1) == "/") {
-        renv::install(paste0(path, latest_version))
-      } else {
-        renv::install(paste0(path, "/", latest_version))
-      }
-
-    } else {
-      message(str_glue("Your current version of {datapackage_stem} is up to date."))
-    }} else {
+    if (possibly_packageVersion(datapackage_stem) == "0.0.0.0000") {
       message(str_glue("Installing {datapackage_stem} for the first time."))
       if (str_sub(path, -1) == "/") {
         renv::install(paste0(path, latest_version))
       } else {
         renv::install(paste0(path, "/", latest_version))
       }
+    } else {
+      if (packageVersion(datapackage_stem) < latest_version_number) {
+        message(
+          str_glue(
+            "A newer data package version is available.  Installing {latest_version}."
+          )
+        )
+        if (str_sub(path, -1) == "/") {
+          renv::install(paste0(path, latest_version))
+        } else {
+          renv::install(paste0(path, "/", latest_version))
+        }
+
+      } else {
+      message(str_glue("Your current version of {datapackage_stem} is up to date."))
 
     }
+
   }
-}
+}}
