@@ -122,7 +122,7 @@ bb_load_cloud_counts <- function (pipestance_path = NULL,
   gbm <-
     monocle3::new_cell_data_set(data, cell_metadata = pd, gene_metadata = feature.names)
   if (!is.null(sample_metadata_tbl)) {
-    sample_metadata_tbl <- pivot_longer(sample_metadata_tbl)
+    sample_metadata_tbl <- pivot_longer(sample_metadata_tbl, cols = everything())
     for (i in 1:nrow(sample_metadata_tbl)) {
       colData(gbm)$new <- sample_metadata_tbl$value[i]
       names(colData(gbm))[names(colData(gbm)) == "new"] <-

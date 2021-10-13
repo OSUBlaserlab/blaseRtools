@@ -46,6 +46,6 @@
 
 * updated bb_renv_datapkg to check for and install latest package version. 
 
-# blaseRtools 0.0.0.9016
+# blaseRtools 0.0.0.9016-17
 
 * new function bb_load_cloud_counts for compatibility with 10X cloud preprocessing output. 
