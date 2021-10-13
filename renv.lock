@@ -37,6 +37,13 @@
       "Source": "Bioconductor",
       "Hash": "de5e346fed0fc44a0424a0531cf5d12d"
     },
+    "BiocManager": {
+      "Package": "BiocManager",
+      "Version": "1.30.16",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "2fdca0877debdd4668190832cdee4c31"
+    },
     "BiocNeighbors": {
       "Package": "BiocNeighbors",
       "Version": "1.10.0",
@@ -1267,11 +1274,11 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "leidenbase",
       "RemoteUsername": "cole-trapnell-lab",
-      "RemoteRef": "HEAD",
+      "RemoteRepo": "leidenbase",
+      "RemoteRef": "master",
       "RemoteSha": "430f22af6982cc7d2e6e77f6b0df47bc970dcbce",
-      "Hash": "226beba7a53f3489dcad071260f0401b"
+      "Hash": "2686238b84006c8cd569ee4d529a4cb7"
     },
     "lifecycle": {
       "Package": "lifecycle",
