@@ -49,3 +49,7 @@
 # blaseRtools 0.0.0.9016-17
 
 * new function bb_load_cloud_counts for compatibility with 10X cloud preprocessing output. 
+
+# blaseRtools 0.0.0.9018
+
+* added cell and feature metadata functions. 

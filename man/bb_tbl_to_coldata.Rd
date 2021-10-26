@@ -2,20 +2,20 @@
 % Please edit documentation in R/bb_tbl_to_coldata.R
 \name{bb_tbl_to_coldata}
 \alias{bb_tbl_to_coldata}
-\title{A function to add tbl columns to cds colData}
+\title{A Function To Add Cell-Level Metadata To CDS ColData}
 \usage{
-bb_tbl_to_coldata(cds, min_tbl, join_col = "barcode_sample")
+bb_tbl_to_coldata(cds, min_tbl, join_col = "cell_id")
 }
 \arguments{
 \item{cds}{A cell data set object}
 
-\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.}
+\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.  Must be cell-level metadata.  For sample level metadata add during loading with bb_load....}
 
-\item{join_col}{The column containing the join information for the cds colData. Defaults to "barcode_sample".}
+\item{join_col}{The column in min_tbl containing the join information for the cds colData. Defaults to "cell_id".}
 }
 \value{
 A celldataset
 }
 \description{
-A function to add tbl columns to cds colData
+A Function To Add Cell-Level Metadata To CDS ColData
 }
