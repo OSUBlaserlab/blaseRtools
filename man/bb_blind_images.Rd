@@ -7,7 +7,7 @@
 bb_blind_images(analysis_file, file_column, output_dir)
 }
 \arguments{
-\item{analysis_file}{The csv that the blinded data is going to be entered into.  It should contain 1 line for every biological sample and should have a filename for every file to be blinded.}
+\item{analysis_file}{The analysis file for the experiment.  It should contain 1 line for every biological sample and should have a filename for every file to be blinded.  It should be read from a csv using read_csv and in the form of a tibble.  If necessary it should be filtered upstream of this function to contain only the samples which you want to have blinded together.  Generally you would filter out unuseable images.  Also you would usually only wish to blind images from treatment groups from the same clutch.  So if you had 2 treatment groups replicated in 3 clutches, you would filter appropriately to generate 3 sets of blinded images across treatment groups.}
 
 \item{file_column}{The column name in the analysis_file with the files to be blinded.}
 

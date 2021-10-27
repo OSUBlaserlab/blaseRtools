@@ -6,20 +6,24 @@
 #' @return A celldataset
 #' @export
 #' @import tidyverse SingleCellExperiment
-bb_tbl_to_rowdata <-
-  function(cds, min_tbl, join_col = "feature_id") {
-    full_tbl <-
-      left_join(
-        bb_rowmeta(cds),
-        min_tbl,
-        by = c("feature_id" = join_col)
-      )
-    stopifnot("Joining min_tbl to rowData failed.  Check for duplicates in min_tbl." = identical(full_tbl$feature_id, rownames(rowData(cds))))
-    full_tbl <- full_tbl %>% select(-feature_id)
-    for (i in 1:ncol(full_tbl)) {
-      rowData(cds)$new <- full_tbl %>% pull(i)
-      names(rowData(cds))[names(rowData(cds)) == "new"] <-
-        colnames(full_tbl)[i]
-    }
-    return(cds)
+bb_tbl_to_rowdata <- function (cds, min_tbl, join_col = "feature_id")
+{
+  cds_row_ids <- bb_rowmeta(cds = cds) %>%
+    select(feature_id)
+  min_tbl %>%
+    rename(feature_id = contains(join_col))
+  full_tbl <-
+    left_join(cds_row_ids,
+              min_tbl)
+  stopifnot(
+    "Joining min_tbl to rowData failed.  Check for duplicates in min_tbl." =
+	    identical(full_tbl$feature_id, rownames(rowData(cds)))
+  )
+  cols_to_add <- full_tbl %>%
+    select(-feature_id)
+  for (i in 1:ncol(cols_to_add)) {
+    rowData(cds)$new <- cols_to_add %>% pull(i)
+    names(rowData(cds))[names(rowData(cds)) == "new"] <- colnames(full_tbl)[i]
   }
+  return(cds)
+}

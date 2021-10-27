@@ -1,7 +1,7 @@
 #' Make a Copy of Image Files and Rename With File Hashes in Blinded Folder
 #'
 #' @description Will copy and rename  the files and generate two files:  "blinding_key.csv" with the original and blinded file names, and "scoresheet.csv" with just the blinded filenames.  Add columns as needed to scoresheet, for example, runx_count.  Then run bb_unblind to rejoin scoresheet to the key and generate an unblinded result file.
-#' @param analysis_file The csv that the blinded data is going to be entered into.  It should contain 1 line for every biological sample and should have a filename for every file to be blinded.
+#' @param analysis_file The analysis file for the experiment.  It should contain 1 line for every biological sample and should have a filename for every file to be blinded.  It should be read from a csv using read_csv and in the form of a tibble.  If necessary it should be filtered upstream of this function to contain only the samples which you want to have blinded together.  Generally you would filter out unuseable images.  Also you would usually only wish to blind images from treatment groups from the same clutch.  So if you had 2 treatment groups replicated in 3 clutches, you would filter appropriately to generate 3 sets of blinded images across treatment groups.
 #' @param file_column The column name in the analysis_file with the files to be blinded.
 #' @param output_dir The linux-style file path for the directory that will hold the blinded images.  The directory will be created by the function.
 #' @return nothing
@@ -11,7 +11,6 @@ bb_blind_images <- function(analysis_file, file_column, output_dir) {
   ts <- str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
   output_dir <- paste0(output_dir, "_", ts)
   dir.create(output_dir)
-  analysis_file <- read_csv(analysis_file)
   stopifnot("You need a column named useable in the analysis file." = "useable" %in% colnames(analysis_file))
   analysis_file <-
     analysis_file %>%
@@ -35,8 +34,8 @@ bb_blind_images <- function(analysis_file, file_column, output_dir) {
       hash_mod <- hash_int %% nrow(wordhash)
       hash_final <- wordhash %>%
         filter(index == hash_mod) %>%
-        pull(word) %>%
-        paste(., "_", hash_short)
+        pull(word) #%>%
+        # paste(., "_", hash_short)
       key <-
         tibble(source_file = x,
                blinded_file = paste0(out, "/", hash_final, extension))
