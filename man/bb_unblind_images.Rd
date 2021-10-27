@@ -7,7 +7,9 @@
 bb_unblind_images(
   directory,
   keyfile = "blinding_key.csv",
-  scorefile = "scoresheet.csv"
+  scorefile = "scoresheet.csv",
+  analysis_file = NULL,
+  file_column = NULL
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ bb_unblind_images(
 \item{keyfile}{Optional:  filename of the key file.  Defaults to "blinding_key.csv".}
 
 \item{scorefile}{Optional:  filename of the score file.  Defaults to "scoresheet.csv".}
+
+\item{analysis_file}{Optional:  complete file path to the the unblinded analysis sheet.  If NULL (default), the function will only produce unblinded_result.csv which you will have to manually copy to the main analysis file.  If a valid file is specified, it will left_join unblinded results to the analysis_file.  In the process, it will necessarily convert windows file paths to linux-style file paths.  Samples not included in the blinding should return with NA values for the added columns.  Since this will overwrite a data file always commit your analysis_file before running with this specification.  The function will ask you to commit before writing.}
+
+\item{file_column}{Optional:  The column in analysis_file containing file paths for the files that were blinded.}
 }
 \value{
 nothing

@@ -54,6 +54,6 @@
 
 * added cell and feature metadata functions. 
 
-# blaseRtools 0.0.0.9019
+# blaseRtools 0.0.0.9019-20
 
 * added blind and unblind functions 

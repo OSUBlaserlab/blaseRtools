@@ -4,12 +4,14 @@
 \alias{bb_blind_images}
 \title{Make a Copy of Image Files and Rename With File Hashes in Blinded Folder}
 \usage{
-bb_blind_images(source_dir, output_dir)
+bb_blind_images(analysis_file, file_column, output_dir)
 }
 \arguments{
-\item{source_dir}{The linux-style file path of the image files to be blinded.}
+\item{analysis_file}{The csv that the blinded data is going to be entered into.  It should contain 1 line for every biological sample and should have a filename for every file to be blinded.}
 
-\item{output_dir}{The linux-style file path for the blinded images.  This will be created by the function.}
+\item{file_column}{The column name in the analysis_file with the files to be blinded.}
+
+\item{output_dir}{The linux-style file path for the directory that will hold the blinded images.  The directory will be created by the function.}
 }
 \value{
 nothing

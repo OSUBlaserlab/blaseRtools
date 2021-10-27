@@ -41,7 +41,7 @@ use_github()
 use_data_raw()
 
 
-renv::init()
+# renv::init()
 
 devtools::check()
 devtools::document()
