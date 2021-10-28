@@ -1,3 +1,4 @@
+data("wordhash", envir = environment())
 #' Make a Copy of Image Files and Rename With File Hashes in Blinded Folder
 #'
 #' @description Will copy and rename  the files and generate two files:  "blinding_key.csv" with the original and blinded file names, and "scoresheet.csv" with just the blinded filenames.  Add columns as needed to scoresheet, for example, runx_count.  Then run bb_unblind to rejoin scoresheet to the key and generate an unblinded result file.
