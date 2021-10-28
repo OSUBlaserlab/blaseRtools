@@ -1,4 +1,3 @@
-data("wordhash", envir = environment())
 #' Make a Copy of Image Files and Rename With File Hashes in Blinded Folder
 #'
 #' @description Will copy and rename  the files and generate two files:  "blinding_key.csv" with the original and blinded file names, and "scoresheet.csv" with just the blinded filenames.  Add columns as needed to scoresheet, for example, runx_count.  Then run bb_unblind to rejoin scoresheet to the key and generate an unblinded result file.
@@ -9,6 +8,7 @@ data("wordhash", envir = environment())
 #' @export
 #' @import tidyverse digest fs
 bb_blind_images <- function(analysis_file, file_column, output_dir) {
+  data("wordhash", envir = environment())
   ts <- str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
   output_dir <- paste0(output_dir, "_", ts)
   dir.create(output_dir)
