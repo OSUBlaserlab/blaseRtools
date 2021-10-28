@@ -8,7 +8,6 @@
 #' @export
 #' @import tidyverse digest fs
 bb_blind_images <- function(analysis_file, file_column, output_dir) {
-  data("wordhash", envir = environment())
   ts <- str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
   output_dir <- paste0(output_dir, "_", ts)
   dir.create(output_dir)

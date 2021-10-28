@@ -39,7 +39,7 @@ use_news_md()
 use_git()
 use_github()
 use_data_raw()
-
+usethis::use_data(wordhash, internal = TRUE)
 
 # renv::init()
 

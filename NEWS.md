@@ -58,6 +58,6 @@
 
 * added blind and unblind functions 
 
-# blaseRtools 0.0.0.9021-23
+# blaseRtools 0.0.0.9021-24
 
 * edited blind function and tbl_to_coldata and tbl_to_rowdata functions 
