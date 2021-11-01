@@ -5,6 +5,7 @@
 #' @param alt_main_title Alternative title for the main plot.  Accepts markdown.
 #' @param alt_color_title Alternative title for the color scale
 #' @param legend_pos Position to place the legend
+#' @param colorscale Named vector of colors to apply to the top plot.
 #' @param assay Name of assay to use
 #' @param group.by A grouping variable
 #' @param idents Set of identities to include in the plot
@@ -29,11 +30,12 @@
 #' theme element_blank geom_label guides guide_legend
 #' @importFrom dplyr group_by summarize top_n
 #' @import cowplot Signac Seurat
-bb_PlotFootprint <- function(object,
+bb_plotfootprint <- function(object,
                             features,
                             alt_main_title = NULL,
                             alt_color_title = NULL,
                             legend_pos = "right",
+                            colorscale = NULL,
                             assay = NULL,
                             group.by = NULL,
                             idents = NULL,
@@ -160,6 +162,9 @@ bb_PlotFootprint <- function(object,
   }
   if (!is.null(alt_color_title)) {
     p <- p + labs(color = alt_color_title)
+  }
+  if (!is.null(colorscale)) {
+    p <- p + ggplot2::scale_color_manual(values = colorscale)
   }
   p <- p +
     theme(plot.subtitle = element_markdown(hjust = 0.5)) +
