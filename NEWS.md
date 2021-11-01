@@ -61,3 +61,7 @@
 # blaseRtools 0.0.0.9021-25
 
 * edited blind function and tbl_to_coldata and tbl_to_rowdata functions 
+
+# blaseRtools 0.0.0.9026
+
+* add bb_plotfootprint function from signac
