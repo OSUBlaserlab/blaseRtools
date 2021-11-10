@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9026
+Version: 0.0.0.9027
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -20,8 +20,8 @@ Suggests:
     DoubletFinder,
     org.Dr.eg.db,
     org.Hs.eg.db,
-    org.Mm.eg.db
-Imports: 
+    org.Mm.eg.db,
+Imports:    
     readxl,
     cowplot,
     monocle3,
