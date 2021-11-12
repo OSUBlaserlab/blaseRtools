@@ -106,7 +106,7 @@ bb_grcz11_ape <-
       }
       start(query_grange) <- start(query_grange) - extend_left
       end(query_grange) <- end(query_grange) + extend_right
-      dna <- getSeq(Drerio, query_grange)
+      dna <- BSgenome::getSeq(Drerio, query_grange)
       names(dna) <- "ape_seq"
       dna_grange <- subsetByOverlaps(zfin_granges, query_grange)
       dna_grange <-
