@@ -11,7 +11,7 @@ dnastring_to_origin <-
       nucleotides <- as.character(dna)
       nucleotides <- str_split(gsub("(.{10})", "\\1 ", nucleotides), pattern = " ", n = Inf)
       nucleotides <- unlist(nucleotides)
-      nucleotides <- imap_chr(.x = nucleotides, ~paste0(.y,"_", .x))
+      nucleotides <- purrr::imap_chr(.x = nucleotides, ~paste0(.y,"_", .x))
 
       nucleotides <- map_chr(.x = nucleotides, .f = function(x) {
          digit <- as.numeric(str_extract(x, "^[:digit:]*"))
