@@ -86,23 +86,21 @@ setGeneric("FEATURES", function(x) standardGeneric("FEATURES"))
 #' @export
 setMethod("FEATURES", "Ape", function(x) x@FEATURES)
 
-# Setter methods
+# Setter methods.
 #' Set the FEATURES Slot of a GRanges Object
 #'
 #' @param x An ape object
 #' @param gr A GRanges object.  This object will become the new FEATURES and granges slots for the Ape object.  So if you want to keep the old features, the new features need to be appended using c(old_gr, new_gr) as the value for the gr argument.
 #' @export
-setGeneric("FEATURES<-", function(x, gr) standardGeneric("FEATURES<-"))
+setGeneric("setFEATURES", function(x, gr)
+  standardGeneric("setFEATURES"))
 #' @export
-setReplaceMethod("FEATURES", "Ape", function(x, gr) {
-  # value should be a GRanges object formatted exactly how you want the features
+setMethod("setFEATURES", "Ape", function(x, gr) {
   x@granges <- gr
-  # write out the string in the necessary format
-  x@FEATURES <- granges_to_features(gr)
+  x@FEATURES <- blaseRtools::granges_to_features(gr)
   validObject(x)
   x
 })
-
 
 # other methods
 #' Save an Ape Instance as a Genebank Format File
@@ -136,6 +134,7 @@ setMethod("Ape.fasta", "Ape", function(x, feature = NULL, out) {
 setValidity("Ape", function(object) {
   if (is.na(object@LOCUS))
     return("LOCUS slot must be defined")
+  # object@FEATURES <- granges_to_features(object@granges)
   if (any(object@FEATURES != granges_to_features(object@granges)))
     return("The granges slot must resolve to FEATURES slot using granges_to_features")
   TRUE
