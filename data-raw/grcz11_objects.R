@@ -4,7 +4,7 @@ suppressPackageStartupMessages(library(tidyverse))
 
 
 # load the zfin gene model-------------------------------------------
-zfin_gff <- read_delim(file = "inst/extdata/zfin_genes.gff3", delim = "\t", skip = 35, col_names = c("seqid", "source", "type", "start", "end", "score", "strand", "phase", "attributes")) %>%
+zfin_gff <- read_delim(file = "~/workspace_pipelines/sc_refdata/zfin_20211111/zfin_genes.gff3", delim = "\t", skip = 35, col_names = c("seqid", "source", "type", "start", "end", "score", "strand", "phase", "attributes")) %>%
   mutate(ENSDAR = str_extract(attributes, pattern = "ENSDAR[:alpha:][:digit:]*")) %>%
   select(-attributes) %>%
   mutate(lookup_var = str_extract(ENSDAR, "ENSDAR[:alpha:]")) %>%
@@ -13,7 +13,7 @@ zfin_gff <- read_delim(file = "inst/extdata/zfin_genes.gff3", delim = "\t", skip
                                 lookup_var == "ENSDARP" ~ "protein_stable_ID",
                                 lookup_var == "ENSDART" ~ "transcript_stable_ID"))
 
-zfin_megalookup <- read_tsv("inst/extdata/zfin_megalookup.txt") %>%
+zfin_megalookup <- read_tsv("~/workspace_pipelines/sc_refdata/zfin_20211111/zfin_megalookup.txt") %>%
   select(gene_stable_ID = `Gene stable ID`, transcript_stable_ID = `Transcript stable ID`, protein_stable_ID = `Protein stable ID`, gene_name = `Gene name`)
 
 zfin_granges_df <- map_dfr(.x = c("gene_stable_ID", "protein_stable_ID", "transcript_stable_ID"),
