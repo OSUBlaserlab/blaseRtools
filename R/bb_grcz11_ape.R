@@ -13,7 +13,7 @@ dnastring_to_origin <-
       nucleotides <- unlist(nucleotides)
       nucleotides <- purrr::imap_chr(.x = nucleotides, ~paste0(.y,"_", .x))
 
-      nucleotides <- map_chr(.x = nucleotides, .f = function(x) {
+      nucleotides <- purrr::map_chr(.x = nucleotides, .f = function(x) {
          digit <- as.numeric(str_extract(x, "^[:digit:]*"))
          new_digit <- (digit-1)*10+1
          chars <- str_extract(x, "[:alpha:]+")
@@ -21,7 +21,7 @@ dnastring_to_origin <-
          return(res)
       })
 
-      nucleotides <- map_chr(.x = nucleotides, .f = function(x) {
+      nucleotides <- purrr::map_chr(.x = nucleotides, .f = function(x) {
          digit <- as.numeric(str_extract(x, "^[:digit:]*"))
          if(digit%%60 == 1) {
             new_digit <- digit
