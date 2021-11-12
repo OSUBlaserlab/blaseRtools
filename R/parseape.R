@@ -18,7 +18,7 @@ granges_to_features <- function(gr) {
       revcolor = gr@elementMetadata$revcolor
     )
   res <-
-    pmap_chr(
+    purrr::pmap_chr(
       .l = grlist,
       .f = function(locus_tag,
                     start,
