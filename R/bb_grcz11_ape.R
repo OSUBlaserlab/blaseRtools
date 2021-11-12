@@ -214,5 +214,3 @@ bb_grcz11_ape <-
 
       return(ape_instance)
    }
-
-unique(zfin_granges@elementMetadata$type)
