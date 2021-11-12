@@ -57,7 +57,7 @@ dnastring_to_origin <-
 #' @param additional_granges A GRanges object with features to add to the Ape Object.  Coordinates should all be relative to the GRCz11 reference, *NOT* the sequence extracted for the ape file.  The Granges object can be constructed with the following syntax:  GenomicRanges::makeGRangesFromDataFrame(data.frame(seqname = "chr6", start = 40523370, end = 40523380, strand = "+", type = "addl_feature", gene_name = "prkcda", label = "feature1"), keep.extra.columns = T).  The gene_name argument here is optional.  If you have defined features based on the extracted sequence, (i.e. relative to position 1 in the ORIGIN section of the Ape object), the best option is to use the feature setting function FEATURES(instance_of_Ape) <- GRanges_Object.
 #' @return An Ape object
 #' @export
-#' @import Biostrings GenomicRanges tidyverse plyranges IRanges
+#' @import Biostrings GenomicRanges tidyverse plyranges IRanges GenomeInfoDb
 bb_grcz11_ape <-
    function(query,
             extend_left = 0,
