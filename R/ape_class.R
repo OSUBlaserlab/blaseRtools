@@ -62,7 +62,6 @@ setMethod("show",
           }
 )
 
-# Getter methods
 #' Get the GRanges Slot from an Ape Object
 #'
 #' @export
@@ -104,7 +103,6 @@ setGeneric("COMMENTS", function(x) standardGeneric("COMMENTS"))
 #' @export
 setMethod("COMMENTS", "Ape", function(x) cat(x@COMMENTS, sep = "\n"))
 
-# Setter methods.
 #' Set the FEATURES Slot of a GRanges Object
 #'
 #' @param x An ape object
@@ -114,6 +112,20 @@ setGeneric("setFeatures", function(x, gr)
   standardGeneric("setFeatures"))
 #' @export
 setMethod("setFeatures", "Ape", function(x, gr) {
+  x@granges <- gr
+  x@FEATURES <- blaseRtools::granges_to_features(gr)
+  validObject(x)
+  x
+})
+
+#' Set the FEATURES Slot of a GRanges Object
+#'
+#' @param x An ape object
+#' @param gr A GRanges object.  This object will become the new FEATURES and granges slots for the Ape object.  So if you want to keep the old features, the new features need to be appended using c(old_gr, new_gr) as the value for the gr argument.
+#' @export
+setGeneric("FEATURES<-", function(x, gr) standardGeneric("FEATURES<-"))
+#' @export
+setReplaceMethod("FEATURES", "Ape", function(x, gr) {
   x@granges <- gr
   x@FEATURES <- blaseRtools::granges_to_features(gr)
   validObject(x)
