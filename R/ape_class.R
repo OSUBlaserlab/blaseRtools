@@ -79,12 +79,30 @@ setMethod("DNAStringSet", "Ape", function(x) x@dna_biostring)
 
 #' Get the Features Slot from an Ape Object
 #'
-#' @description This function gets the features slot from an Ape object.  Depending on console settings this may not be easily readable.  Better to simply show the whole Ape Object.  This may be useful for debugging.
+#' @description This function cats the features slot from an Ape object.
 #'
 #' @export
 setGeneric("FEATURES", function(x) standardGeneric("FEATURES"))
 #' @export
-setMethod("FEATURES", "Ape", function(x) x@FEATURES)
+setMethod("FEATURES", "Ape", function(x) cat(x@FEATURES, sep = "\n"))
+
+#' Get the Locus Slot from an Ape Object
+#'
+#' @description This function cats the Locus slot from an Ape object.
+#'
+#' @export
+setGeneric("LOCUS", function(x) standardGeneric("LOCUS"))
+#' @export
+setMethod("LOCUS", "Ape", function(x) cat(x@LOCUS, sep = "\n"))
+
+#' Get the Comments Slot from an Ape Object
+#'
+#' @description This function gets the comments slot from an Ape object.
+#'
+#' @export
+setGeneric("COMMENTS", function(x) standardGeneric("COMMENTS"))
+#' @export
+setMethod("COMMENTS", "Ape", function(x) cat(x@COMMENTS, sep = "\n"))
 
 # Setter methods.
 #' Set the FEATURES Slot of a GRanges Object
@@ -92,10 +110,10 @@ setMethod("FEATURES", "Ape", function(x) x@FEATURES)
 #' @param x An ape object
 #' @param gr A GRanges object.  This object will become the new FEATURES and granges slots for the Ape object.  So if you want to keep the old features, the new features need to be appended using c(old_gr, new_gr) as the value for the gr argument.
 #' @export
-setGeneric("setFEATURES", function(x, gr)
-  standardGeneric("setFEATURES"))
+setGeneric("setFeatures", function(x, gr)
+  standardGeneric("setFeatures"))
 #' @export
-setMethod("setFEATURES", "Ape", function(x, gr) {
+setMethod("setFeatures", "Ape", function(x, gr) {
   x@granges <- gr
   x@FEATURES <- blaseRtools::granges_to_features(gr)
   validObject(x)

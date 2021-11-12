@@ -7,5 +7,5 @@
 FEATURES(x)
 }
 \description{
-This function gets the features slot from an Ape object.  Depending on console settings this may not be easily readable.  Better to simply show the whole Ape Object.  This may be useful for debugging.
+This function cats the features slot from an Ape object.
 }
