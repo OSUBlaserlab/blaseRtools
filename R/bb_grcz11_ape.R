@@ -152,6 +152,7 @@ bb_grcz11_ape <-
                                   "unconfirmed_transcript" = "#e5f5e0",
                                   "lncRNA_gene" = "#e5f5e0",
                                   "J_gene_segment" = "#e5f5e0"))
+  names(dna_grange) <- dna_grange$locus_tag
       # construct the locus text
       date_string <-
          paste0(
