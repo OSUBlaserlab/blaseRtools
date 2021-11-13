@@ -21,7 +21,7 @@ Suggests:
     org.Dr.eg.db,
     org.Hs.eg.db,
     org.Mm.eg.db,
-Imports:    
+Imports: 
     readxl,
     cowplot,
     monocle3,
@@ -48,6 +48,7 @@ Imports:
     ggplot2,
     renv,
     stringr,
-    Signac
+    Signac,
+    methods
 Depends: 
     R (>= 2.10)
