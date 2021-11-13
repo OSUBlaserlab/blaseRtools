@@ -13,6 +13,7 @@
 #' @slot end_of_file The end of the file signal.
 #' @slot dna_biostring The entire ORIGIN sequence formatted as a DNAStringSet of length 1.
 #' @slot granges Genebank features formatted as a GRanges object.
+#' @import methods
 #' @export Ape
 #' @exportClass Ape
 Ape <- setClass(
