@@ -180,7 +180,7 @@ setMethod("Ape.fimo", "Ape", function(ape, fimo_feature, out = NULL) {
   dir.create(outdir, recursive = T)
 
   # run fimo for all given features
-  write_lines(meme, file = paste0(outdir, "/meme.motif"))
+  readr::write_lines(meme, file = paste0(outdir, "/meme.motif"))
 
   all_fimo_res <- map_dfr(
     .x = fimo_feature,
