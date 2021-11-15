@@ -4,7 +4,7 @@
 \alias{COMMENTS}
 \title{Get the Comments Slot from an Ape Object}
 \usage{
-COMMENTS(x)
+COMMENTS(ape)
 }
 \description{
 This function gets the comments slot from an Ape object.

@@ -4,7 +4,7 @@
 \alias{Ape.save}
 \title{Save an Ape Instance as a Genebank Format File}
 \usage{
-Ape.save(x, out)
+Ape.save(ape, out)
 }
 \arguments{
 \item{out}{Name of genebank/APE file to write}

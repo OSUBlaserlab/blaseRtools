@@ -4,7 +4,7 @@
 \alias{Ape.fasta}
 \title{Save an Ape Instance as a Fasta File}
 \usage{
-Ape.fasta(x, feature = NULL, out)
+Ape.fasta(ape, feature = NULL, out)
 }
 \arguments{
 \item{feature}{Name of feature to select when writing FASTA file.  If null (default), the whole biostring will be saved as a fasta.}

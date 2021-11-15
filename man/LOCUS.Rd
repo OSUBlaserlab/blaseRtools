@@ -4,7 +4,7 @@
 \alias{LOCUS}
 \title{Get the Locus Slot from an Ape Object}
 \usage{
-LOCUS(x)
+LOCUS(ape)
 }
 \description{
 This function cats the Locus slot from an Ape object.

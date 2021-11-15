@@ -4,7 +4,7 @@
 \alias{FEATURES}
 \title{Get the Features Slot from an Ape Object}
 \usage{
-FEATURES(x)
+FEATURES(ape)
 }
 \description{
 This function cats the features slot from an Ape object.

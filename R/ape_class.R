@@ -66,99 +66,209 @@ setMethod("show",
 #' Get the GRanges Slot from an Ape Object
 #'
 #' @export
-setGeneric("GRanges", function(x) standardGeneric("GRanges"))
+setGeneric("Ape.granges", function(ape) standardGeneric("Ape.granges"))
 #' @export
-setMethod("GRanges", "Ape", function(x) x@granges)
+setMethod("Ape.granges", "Ape", function(ape) ape@granges)
 
 #' Get the DNASringSet Slot from an Ape Object
 #'
 #' @export
-setGeneric("DNAStringSet", function(x) standardGeneric("DNAStringSet"))
+setGeneric("Ape.DNA", function(ape) standardGeneric("Ape.DNA"))
 #' @export
-setMethod("DNAStringSet", "Ape", function(x) x@dna_biostring)
+setMethod("Ape.DNA", "Ape", function(ape) ape@dna_biostring)
 
 #' Get the Features Slot from an Ape Object
 #'
 #' @description This function cats the features slot from an Ape object.
 #'
 #' @export
-setGeneric("FEATURES", function(x) standardGeneric("FEATURES"))
+setGeneric("FEATURES", function(ape) standardGeneric("FEATURES"))
 #' @export
-setMethod("FEATURES", "Ape", function(x) cat(x@FEATURES, sep = "\n"))
+setMethod("FEATURES", "Ape", function(ape) cat(ape@FEATURES, sep = "\n"))
 
 #' Get the Locus Slot from an Ape Object
 #'
 #' @description This function cats the Locus slot from an Ape object.
 #'
 #' @export
-setGeneric("LOCUS", function(x) standardGeneric("LOCUS"))
+setGeneric("LOCUS", function(ape) standardGeneric("LOCUS"))
 #' @export
-setMethod("LOCUS", "Ape", function(x) cat(x@LOCUS, sep = "\n"))
+setMethod("LOCUS", "Ape", function(ape) cat(ape@LOCUS, sep = "\n"))
 
 #' Get the Comments Slot from an Ape Object
 #'
 #' @description This function gets the comments slot from an Ape object.
 #'
 #' @export
-setGeneric("COMMENTS", function(x) standardGeneric("COMMENTS"))
+setGeneric("COMMENTS", function(ape) standardGeneric("COMMENTS"))
 #' @export
-setMethod("COMMENTS", "Ape", function(x) cat(x@COMMENTS, sep = "\n"))
+setMethod("COMMENTS", "Ape", function(ape) cat(ape@COMMENTS, sep = "\n"))
 
 #' Set the FEATURES Slot of a GRanges Object
 #'
-#' @param x An ape object
+#' @param ape An ape object
 #' @param gr A GRanges object.  This object will become the new FEATURES and granges slots for the Ape object.  So if you want to keep the old features, the new features need to be appended using c(old_gr, new_gr) as the value for the gr argument.
 #' @export
-setGeneric("setFeatures", function(x, gr)
-  standardGeneric("setFeatures"))
+setGeneric("Ape.setFeatures", function(ape, gr)
+  standardGeneric("Ape.setFeatures"))
 #' @export
-setMethod("setFeatures", "Ape", function(x, gr) {
-  x@granges <- gr
-  x@FEATURES <- blaseRtools::granges_to_features(gr)
-  validObject(x)
-  x
+setMethod("Ape.setFeatures", "Ape", function(ape, gr) {
+  ape@granges <- gr
+  ape@FEATURES <- blaseRtools::granges_to_features(gr)
+  validObject(ape)
+  ape
 })
 
-#' Set the FEATURES Slot of a GRanges Object
-#'
-#' @param x An ape object
-#' @param gr A GRanges object.  This object will become the new FEATURES and granges slots for the Ape object.  So if you want to keep the old features, the new features need to be appended using c(old_gr, new_gr) as the value for the gr argument.
-#' @export
-setGeneric("FEATURES<-", function(x, gr)
-  standardGeneric("FEATURES<-"))
-#' @export
-setReplaceMethod("FEATURES", "Ape", function(x, gr) {
-  x@granges <- gr
-  x@FEATURES <- blaseRtools::granges_to_features(gr)
-  validObject(x)
-  x
-})
+
 # other methods
 #' Save an Ape Instance as a Genebank Format File
 #'
 #' @param out Name of genebank/APE file to write
 #' @export
-setGeneric("Ape.save", function(x, out) standardGeneric("Ape.save"))
+setGeneric("Ape.save", function(ape, out) standardGeneric("Ape.save"))
 #' @export
-setMethod("Ape.save", "Ape", function(x, out) capture.output(x, file = out))
+setMethod("Ape.save", "Ape", function(ape, out) capture.output(ape, file = out))
 
 #' Save an Ape Instance as a Fasta File
 #'
 #' @param out Name of FASTA file to write
 #' @param feature Name of feature to select when writing FASTA file.  If null (default), the whole biostring will be saved as a fasta.
 #' @export
-setGeneric("Ape.fasta", function(x, feature = NULL, out) standardGeneric("Ape.fasta"))
+setGeneric("Ape.fasta", function(ape, feature = NULL, out) standardGeneric("Ape.fasta"))
 #' @export
-setMethod("Ape.fasta", "Ape", function(x, feature = NULL, out) {
+setMethod("Ape.fasta", "Ape", function(ape, feature = NULL, out) {
   if (is.null(feature)) {
-   Biostrings::writeXStringSet(DNAStringSet(x), file = out, format = "fasta")
+   Biostrings::writeXStringSet(Ape.DNA(ape), file = out, format = "fasta")
   } else {
-   stopifnot("Requested feature is not in GRanges" = feature %in% names(x@granges))
-   seq <- getSeq(DNAStringSet(x), x@granges[feature])
+   stopifnot("Requested feature is not in GRanges" = feature %in% names(ape@granges))
+   seq <- getSeq(Ape.DNA(ape), ape@granges[feature])
    Biostrings::writeXStringSet(seq, file = out, format = "fasta")
   }
 
   })
+
+#' Run FIMO on Selected Ape Object Features
+#'
+#' @description For the supplied Ape object, run FIMO to identify putative transcription factor binding sites in a DNA subsequence.
+#'
+#' @param ape An Ape instance
+#' @param fimo_feature A character vector of features from the Ape object that will be used to run fimo.
+#' @param out Directory that will be created to hold the fimo results.  A date/time stamp will be appended.  If null, the objects will not be saved and the function will only return a GRanges object
+#' @import tidyverse GenomicRanges circlize
+#' @export
+setGeneric("Ape.fimo", function(ape, fimo_feature, out = NULL)
+  standardGeneric("Ape.fimo"))
+#' @export
+setMethod("Ape.fimo", "Ape", function(ape, fimo_feature, out = NULL) {
+  # check if fimo exists
+  fimocheck <- Sys.which("fimo")
+
+  stopifnot(
+    "Go to:  https://meme-suite.org/meme/meme_5.3.2/doc/install.html?man_type=web.\nInstall meme suite tools using the Quick Install Instructions.\nThen try again." = str_detect(fimocheck, "meme/bin/fimo")
+  )
+
+  # get the fasta from the ape
+  if (is.null(out)) {
+    outdir <- "fimo_temp"
+  } else {
+    ts <-
+      str_replace_all(Sys.time(), "[:punct:]|[:space:]|[:alpha:]", "")
+    outdir <- paste0(out, "_", ts)
+  }
+
+  dir.create(outdir, recursive = T)
+
+  # run fimo for all given features
+  write_lines(meme, file = paste0(outdir, "/meme.motif"))
+
+  all_fimo_res <- map_dfr(
+    .x = fimo_feature,
+    .f = function(x,
+                  the_ape = ape,
+                  od = outdir,
+                  fc = fimocheck) {
+
+      dir.create(file.path(od, x), recursive = T, showWarnings = F)
+
+      Ape.fasta(
+        the_ape,
+        feature = x,
+        out = paste0(od, "/", x, "/", x, ".fa")
+      )
+
+      cmd <- paste0(
+        fc,
+        " -o ",
+        od,
+        "/",
+        x,
+        "/fimo ",
+        od,
+        "/meme.motif ",
+        od,
+        "/",
+        x,
+        "/",
+        x,
+        ".fa"
+      )
+      message(cmd, "\n")
+      system(cmd)
+
+      # ingest the tsv
+      fimo_res <-
+        read_tsv(
+          str_glue("{od}/{x}/fimo/fimo.tsv"),
+          skip_empty_rows = T,
+          comment = "#",
+          show_col_types = F
+        ) %>%
+        filter(!is.na(motif_alt_id))
+
+      # calculate the startpoint relative to the original Ape object
+      ape_gr <- Ape.granges(the_ape)
+      fimo_feature_start <- start(ape_gr[x])
+      # calculate the number of bases to add
+      bases_to_add <- fimo_feature_start - 1
+      # modify the start and stop in the dataframe
+      fimo_res <- fimo_res %>%
+        mutate(start = start + bases_to_add) %>%
+        mutate(stop = stop + bases_to_add) # strand should be unchanged
+
+      return(fimo_res)
+    }
+  ) %>%
+    mutate(feature = sequence_name) %>%
+    mutate(sequence_name = "ape_seq") %>%
+    mutate(type = "fimo_feature") %>%
+    mutate(strand_1 = recode(strand, "+" = "plus", "-" = "minus")) %>%
+    mutate(locus_tag = paste(motif_alt_id, start, stop, strand_1, sep = "_"))
+
+  # make the color function
+  fwd_col_fun <- circlize::colorRamp2(breaks = c(min(all_fimo_res$`q-value`), max(all_fimo_res$`q-value`)),
+                                      colors = c("red", "white"))
+
+  rev_col_fun <- circlize::colorRamp2(breaks = c(min(all_fimo_res$`q-value`), max(all_fimo_res$`q-value`)),
+                                      colors = c("purple", "white"))
+
+  all_fimo_res <- all_fimo_res %>%
+    mutate(fwdcolor = str_sub(fwd_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)) %>%
+    mutate(revcolor = str_sub(rev_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)) %>%
+    select(-c(motif_alt_id, score, `p-value`, matched_sequence, strand_1))
+
+  # remove meme.motif
+  unlink(file.path(outdir, "meme.motif"))
+
+  # remove the temp dir
+  if (is.null(out)) {
+    unlink(outdir, recursive = T)
+  }
+
+  all_fimo_res <- GenomicRanges::makeGRangesFromDataFrame(df = all_fimo_res, keep.extra.columns = T, seqnames.field = "sequence_name")
+  names(all_fimo_res) <- all_fimo_res$locus_tag
+  return(all_fimo_res)
+})
+
 
 # Validity Check
 #' @export

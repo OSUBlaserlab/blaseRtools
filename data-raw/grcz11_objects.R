@@ -58,4 +58,3 @@ zfin_granges <- makeGRangesFromDataFrame(zfin_granges_df1, keep.extra.columns = 
 # the BS genome object for GRCz11
 Drerio
 
-save(list = c("wordhash", "zfin_granges", "Drerio"), file = "R/sysdata.rda")
