@@ -158,6 +158,7 @@ setMethod("Ape.fasta", "Ape", function(ape, feature = NULL, out) {
 #' @export
 setGeneric("Ape.fimo", function(ape, fimo_feature, out = NULL)
   standardGeneric("Ape.fimo"))
+#' @import tidyverse GenomicRanges circlize
 #' @export
 setMethod("Ape.fimo", "Ape", function(ape, fimo_feature, out = NULL) {
   # check if fimo exists
