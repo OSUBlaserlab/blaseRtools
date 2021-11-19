@@ -115,6 +115,7 @@ bb_grcz11_ape <-
       #transform the seqnames
       seqlevels(dna_grange) <- seqlevelsInUse(dna_grange)
       seqlevels(dna_grange) <- "ape_seq"
+      seqlevels(additional_granges) <- "ape_seq"
       # find the overall start
       overall_start <- start(query_grange)
       # shift the coordinates
@@ -123,6 +124,11 @@ bb_grcz11_ape <-
       additional_granges <-
          GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
       # rename the metadata
+      additional_granges <- additional_granges %>%
+         mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+         select(-c(gene_name, label))
+
+
       dna_grange <- dna_grange %>%
          mutate(locus_tag = paste0(gene_name, "_", label)) %>%
          select(-c(gene_name, label)) %>%
@@ -162,6 +168,7 @@ bb_grcz11_ape <-
                "J_gene_segment" = "#e5f5e0"
             )
          )
+
       dna_grange <- c(dna_grange, additional_granges)
       names(dna_grange) <- dna_grange$locus_tag
       # construct the locus text
