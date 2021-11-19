@@ -66,6 +66,6 @@
 
 * add bb_plotfootprint function from signac
 
-# blaseRtools 0.0.0.9027-31
+# blaseRtools 0.0.0.9027-32
 
 * added ape class and functions

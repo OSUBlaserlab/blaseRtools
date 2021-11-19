@@ -253,8 +253,8 @@ setMethod("Ape.fimo", "Ape", function(ape, fimo_feature, out = NULL) {
                                       colors = c("purple", "white"))
 
   all_fimo_res <- all_fimo_res %>%
-    mutate(fwdcolor = str_sub(fwd_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)) %>%
-    mutate(revcolor = str_sub(rev_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)) %>%
+    mutate(fwdcolor = ifelse(str_detect(fwdcolor, "#"), str_sub(fwd_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)), fwdcolor) %>%
+    mutate(revcolor = ifelse(str_detect(revcolor, "#"), str_sub(rev_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)), revcolor) %>%
     select(-c(motif_alt_id, score, `p-value`, matched_sequence, strand_1))
 
   # remove meme.motif

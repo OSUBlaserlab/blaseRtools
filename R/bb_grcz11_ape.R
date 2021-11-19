@@ -108,10 +108,10 @@ bb_grcz11_ape <-
       end(query_grange) <- end(query_grange) + extend_right
       dna <- BSgenome::getSeq(Drerio, query_grange)
       names(dna) <- "ape_seq"
-      dna_grange <- IRanges::subsetByOverlaps(zfin_granges, query_grange)
+      dna_grange <-
+         IRanges::subsetByOverlaps(zfin_granges, query_grange)
       dna_grange <-
          dna_grange[(elementMetadata(dna_grange)[, "type"] %in% include_type)]
-      dna_grange <- c(dna_grange, additional_granges)
       #transform the seqnames
       seqlevels(dna_grange) <- seqlevelsInUse(dna_grange)
       seqlevels(dna_grange) <- "ape_seq"
@@ -120,39 +120,50 @@ bb_grcz11_ape <-
       # shift the coordinates
       dna_grange <-
          GenomicRanges::shift(dna_grange, shift = -1 * (overall_start - 1))
+      additional_granges <-
+         GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
       # rename the metadata
       dna_grange <- dna_grange %>%
          mutate(locus_tag = paste0(gene_name, "_", label)) %>%
          select(-c(gene_name, label)) %>%
-         mutate(fwdcolor = recode(type,
-                                  "gene" = "#deebf7",
-                                  "mRNA" = "#deebf7",
-                                  "three_prime_UTR" = "#9ecae1",
-                                  "exon" = "#3182bd",
-                                  "CDS" = "#deebf7",
-                                  "five_prime_UTR" = "#9ecae1",
-                                  "lnc_RNA" = "#deebf7",
-                                  "lincRNA_gene" = "#deebf7",
-                                  "pseudogene" = "#deebf7",
-                                  "pseudogenic_transcript" = "#deebf7",
-                                  "unconfirmed_transcript" = "#deebf7",
-                                  "lncRNA_gene" = "#deebf7",
-                                  "J_gene_segment" = "#deebf7")) %>%
-         mutate(revcolor = recode(type,
-                                  "gene" = "#e5f5e0",
-                                  "mRNA" = "#e5f5e0",
-                                  "three_prime_UTR" = "#a1d99b",
-                                  "exon" = "#31a354",
-                                  "CDS" = "#e5f5e0",
-                                  "five_prime_UTR" = "#a1d99b",
-                                  "lnc_RNA" = "#e5f5e0",
-                                  "lincRNA_gene" = "#e5f5e0",
-                                  "pseudogene" = "#e5f5e0",
-                                  "pseudogenic_transcript" = "#e5f5e0",
-                                  "unconfirmed_transcript" = "#e5f5e0",
-                                  "lncRNA_gene" = "#e5f5e0",
-                                  "J_gene_segment" = "#e5f5e0"))
-  names(dna_grange) <- dna_grange$locus_tag
+         mutate(
+            fwdcolor = recode(
+               type,
+               "gene" = "#deebf7",
+               "mRNA" = "#deebf7",
+               "three_prime_UTR" = "#9ecae1",
+               "exon" = "#3182bd",
+               "CDS" = "#deebf7",
+               "five_prime_UTR" = "#9ecae1",
+               "lnc_RNA" = "#deebf7",
+               "lincRNA_gene" = "#deebf7",
+               "pseudogene" = "#deebf7",
+               "pseudogenic_transcript" = "#deebf7",
+               "unconfirmed_transcript" = "#deebf7",
+               "lncRNA_gene" = "#deebf7",
+               "J_gene_segment" = "#deebf7"
+            )
+         ) %>%
+         mutate(
+            revcolor = recode(
+               type,
+               "gene" = "#e5f5e0",
+               "mRNA" = "#e5f5e0",
+               "three_prime_UTR" = "#a1d99b",
+               "exon" = "#31a354",
+               "CDS" = "#e5f5e0",
+               "five_prime_UTR" = "#a1d99b",
+               "lnc_RNA" = "#e5f5e0",
+               "lincRNA_gene" = "#e5f5e0",
+               "pseudogene" = "#e5f5e0",
+               "pseudogenic_transcript" = "#e5f5e0",
+               "unconfirmed_transcript" = "#e5f5e0",
+               "lncRNA_gene" = "#e5f5e0",
+               "J_gene_segment" = "#e5f5e0"
+            )
+         )
+      dna_grange <- c(dna_grange, additional_granges)
+      names(dna_grange) <- dna_grange$locus_tag
       # construct the locus text
       date_string <-
          paste0(
@@ -182,11 +193,12 @@ bb_grcz11_ape <-
             str_pad(date_string, width = 19, side = "left")
          )
 
-      if(is.numeric(query)) {
-         query_text <- paste0("Locus is chr", query["chr"], " ", query["start"], "-", query["end"])
+      if (is.numeric(query)) {
+         query_text <-
+            paste0("Locus is chr", query["chr"], " ", query["start"], "-", query["end"])
       }
 
-      if(is.character(query)) {
+      if (is.character(query)) {
          query_text <- paste0("Gene is ", query)
       }
 
@@ -200,7 +212,11 @@ bb_grcz11_ape <-
             extend_right,
             " bp right.",
             "\nCOMMENT     Final genomic coordinates are:\nCOMMENT     ",
-            as.vector(seqnames(query_grange)), " ", start(query_grange), "-", end(query_grange)
+            as.vector(seqnames(query_grange)),
+            " ",
+            start(query_grange),
+            "-",
+            end(query_grange)
 
          )
 
