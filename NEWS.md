@@ -69,3 +69,7 @@
 # blaseRtools 0.0.0.9027-32
 
 * added ape class and functions
+
+# blaseRtools 0.0.0.9033
+
+* fixed glitch in tbl to coldata and tbl to rowdata

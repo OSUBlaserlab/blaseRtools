@@ -23,7 +23,7 @@ bb_tbl_to_rowdata <- function (cds, min_tbl, join_col = "feature_id")
     select(-feature_id)
   for (i in 1:ncol(cols_to_add)) {
     rowData(cds)$new <- cols_to_add %>% pull(i)
-    names(rowData(cds))[names(rowData(cds)) == "new"] <- colnames(full_tbl)[i]
+    names(rowData(cds))[names(rowData(cds)) == "new"] <- colnames(cols_to_add)[i]
   }
   return(cds)
 }
