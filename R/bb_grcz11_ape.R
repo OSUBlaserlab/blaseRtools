@@ -9,38 +9,53 @@
 dnastring_to_origin <-
    function(dna) {
       nucleotides <- as.character(dna)
-      nucleotides <- str_split(gsub("(.{10})", "\\1 ", nucleotides), pattern = " ", n = Inf)
+      nucleotides <-
+         str_split(gsub("(.{10})", "\\1 ", nucleotides),
+                   pattern = " ",
+                   n = Inf)
       nucleotides <- unlist(nucleotides)
-      nucleotides <- purrr::imap_chr(.x = nucleotides, ~paste0(.y,"_", .x))
+      nucleotides <-
+         purrr::imap_chr(.x = nucleotides, ~ paste0(.y, "_", .x))
 
-      nucleotides <- purrr::map_chr(.x = nucleotides, .f = function(x) {
-         digit <- as.numeric(str_extract(x, "^[:digit:]*"))
-         new_digit <- (digit-1)*10+1
-         chars <- str_extract(x, "[:alpha:]+")
-         res <- paste0(new_digit, " ", chars)
-         return(res)
-      })
+      nucleotides <-
+         purrr::map_chr(
+            .x = nucleotides,
+            .f = function(x) {
+               digit <- as.numeric(str_extract(x, "^[:digit:]*"))
+               new_digit <- (digit - 1) * 10 + 1
+               chars <- str_extract(x, "[:alpha:]+")
+               res <- paste0(new_digit, " ", chars)
+               return(res)
+            }
+         )
 
-      nucleotides <- purrr::map_chr(.x = nucleotides, .f = function(x) {
-         digit <- as.numeric(str_extract(x, "^[:digit:]*"))
-         if(digit%%60 == 1) {
-            new_digit <- digit
-            new_digit <- str_pad(as.character(new_digit), side = "left", width = 9)
-         } else {
-            new_digit <- ""
-         }
-         if((digit+10)%%60 == 1) {
-            end <- "\n"
-         } else {
-            end <- ""
-         }
-         chars <- str_extract(x, "[:alpha:]+")
-         res <- paste0(new_digit, " ", chars, end)
-         return(res)
-      })
+      nucleotides <-
+         purrr::map_chr(
+            .x = nucleotides,
+            .f = function(x) {
+               digit <- as.numeric(str_extract(x, "^[:digit:]*"))
+               if (digit %% 60 == 1) {
+                  new_digit <- digit
+                  new_digit <-
+                     str_pad(as.character(new_digit),
+                             side = "left",
+                             width = 9)
+               } else {
+                  new_digit <- ""
+               }
+               if ((digit + 10) %% 60 == 1) {
+                  end <- "\n"
+               } else {
+                  end <- ""
+               }
+               chars <- str_extract(x, "[:alpha:]+")
+               res <- paste0(new_digit, " ", chars, end)
+               return(res)
+            }
+         )
 
 
-      origin <- c("ORIGIN\n",nucleotides)
+      origin <- c("ORIGIN\n", nucleotides)
       origin <- paste(origin, collapse = "")
 
       return(origin)
@@ -115,18 +130,25 @@ bb_grcz11_ape <-
       #transform the seqnames
       seqlevels(dna_grange) <- seqlevelsInUse(dna_grange)
       seqlevels(dna_grange) <- "ape_seq"
-      seqlevels(additional_granges) <- "ape_seq"
+      if (!is.null(additional_granges)) {
+         seqlevels(additional_granges) <- "ape_seq"
+      }
+
       # find the overall start
       overall_start <- start(query_grange)
       # shift the coordinates
       dna_grange <-
          GenomicRanges::shift(dna_grange, shift = -1 * (overall_start - 1))
-      additional_granges <-
-         GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
-      # rename the metadata
-      additional_granges <- additional_granges %>%
-         mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-         select(-c(gene_name, label))
+      if (!is.null(additional_granges)) {
+         additional_granges <-
+            GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
+         # rename the metadata
+         additional_granges <- additional_granges %>%
+            mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+            select(-c(gene_name, label))
+
+      }
+
 
 
       dna_grange <- dna_grange %>%
