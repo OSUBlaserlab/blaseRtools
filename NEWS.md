@@ -73,3 +73,8 @@
 # blaseRtools 0.0.0.9033
 
 * fixed glitch in tbl to coldata and tbl to rowdata
+
+# blaseRtools 0.0.0.9034-5
+
+* added hg38_ape
+
