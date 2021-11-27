@@ -74,7 +74,10 @@
 
 * fixed glitch in tbl to coldata and tbl to rowdata
 
-# blaseRtools 0.0.0.9034-5
+# blaseRtools 0.0.0.9034-6
 
 * added hg38_ape
 
+# blaseRtools 0.0.0.9037
+
+* fixed plyranges namespace issue

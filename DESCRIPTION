@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9036
+Version: 0.0.0.9037
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -51,6 +51,7 @@ Imports:
     Signac,
     methods,
     circlize,
-    GenomicRanges
+    GenomicRanges,
+    plyranges
 Depends: 
     R (>= 2.10)
