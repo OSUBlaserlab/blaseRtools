@@ -246,15 +246,16 @@ setMethod("Ape.fimo", "Ape", function(ape, fimo_feature, out = NULL) {
     mutate(locus_tag = paste(motif_alt_id, start, stop, strand_1, sep = "_"))
 
   # make the color function
-  fwd_col_fun <- circlize::colorRamp2(breaks = c(min(all_fimo_res$`q-value`), max(all_fimo_res$`q-value`)),
-                                      colors = c("red", "white"))
+  fwd_col_fun <- circlize::colorRamp2(breaks = c(min(-1*log10(all_fimo_res$`q-value`)), max(-1*log10(all_fimo_res$`q-value`))),
+                                      colors = c("white", "red"))
 
-  rev_col_fun <- circlize::colorRamp2(breaks = c(min(all_fimo_res$`q-value`), max(all_fimo_res$`q-value`)),
-                                      colors = c("purple", "white"))
+  rev_col_fun <- circlize::colorRamp2(breaks = c(min(-1*log10(all_fimo_res$`q-value`)), max(-1*log10(all_fimo_res$`q-value`))),
+                                      colors = c("white", "purple"))
 
-  all_fimo_res <- all_fimo_res %>%
-    mutate(fwdcolor = ifelse(str_detect(fwdcolor, "#"), str_sub(fwd_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)), fwdcolor) %>%
-    mutate(revcolor = ifelse(str_detect(revcolor, "#"), str_sub(rev_col_fun(all_fimo_res$`q-value`), start = 1, end = 7)), revcolor) %>%
+  all_fimo_res <-
+    all_fimo_res %>%
+    mutate(fwdcolor = str_sub(fwd_col_fun(-1*log10(all_fimo_res$`q-value`)), start = 1, end = 7)) %>%
+    mutate(revcolor = str_sub(rev_col_fun(-1*log10(all_fimo_res$`q-value`)), start = 1, end = 7)) %>%
     select(-c(motif_alt_id, score, `p-value`, matched_sequence, strand_1))
 
   # remove meme.motif

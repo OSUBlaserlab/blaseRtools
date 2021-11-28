@@ -81,3 +81,7 @@
 # blaseRtools 0.0.0.9037
 
 * fixed plyranges namespace issue
+
+# blaseRtools 0.0.0.9038
+
+* fixed Ape.fimo color bug
