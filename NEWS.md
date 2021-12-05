@@ -85,3 +85,7 @@
 # blaseRtools 0.0.0.9038
 
 * fixed Ape.fimo color bug
+
+# blaseRtools 0.0.0.9039
+
+* Added trace class and functions

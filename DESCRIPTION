@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9038
+Version: 0.0.0.9039
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://github.com/blaserlab/blaseRtools
 BugReports: https://github.com/blaserlab/blaseRtools/issues
 Suggests: 
