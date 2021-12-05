@@ -632,7 +632,7 @@ bb_plot_trace_model <- function(trace,
 #' @param trace A Trace object.
 #' @param xtitle An optional title for the X axis
 #' @import tidyverse
-#' @importFrom GenomicRanges
+#' @import GenomicRanges
 #' @export
 bb_plot_trace_axis <- function(trace,
                                xtitle = NULL) {
