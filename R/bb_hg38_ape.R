@@ -89,17 +89,24 @@ bb_hg38_ape <-
          additional_granges <-
             GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
       # rename the metadata
-         additional_granges <- additional_granges %>%
-            plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-            plyranges::select(-c(gene_name, label))
+         mcols(additional_granges) <-
+            mcols(additional_granges) %>%
+            as_tibble() %>%
+            mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+            select(-c(gene_name, label))
+
+         # additional_granges <- additional_granges %>%
+         #    plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+         #    plyranges::select(-c(gene_name, label))
 
       }
 
-
-      dna_grange <- dna_grange %>%
-         plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-         plyranges::select(-c(gene_name, label)) %>%
-         plyranges::mutate(
+      mcols(dna_grange) <-
+         mcols(dna_grange) %>%
+         as_tibble() %>%
+         mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+         select(-c(gene_name, label)) %>%
+         mutate(
             fwdcolor = recode(
                type,
                "ncRNA_gene" = "#deebf7",
@@ -126,7 +133,7 @@ bb_hg38_ape <-
                "snoRNA" = "#deebf7"
             )
          ) %>%
-         plyranges::mutate(
+         mutate(
             revcolor = recode(
                type,
                "ncRNA_gene" = "#e5f5e0",
@@ -153,6 +160,64 @@ bb_hg38_ape <-
                "snoRNA" = "#e5f5e0"
             )
          )
+
+      # dna_grange <- dna_grange %>%
+      #    plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+      #    plyranges::select(-c(gene_name, label)) %>%
+      #    plyranges::mutate(
+      #       fwdcolor = recode(
+      #          type,
+      #          "ncRNA_gene" = "#deebf7",
+      #          "rRNA" = "#deebf7",
+      #          "exon" = "#3182bd",
+      #          "pseudogene" = "#deebf7",
+      #          "pseudogenic_transcript" = "#deebf7",
+      #          "ncRNA" = "#deebf7",
+      #          "gene" = "#deebf7",
+      #          "CDS" = "#deebf7",
+      #          "lnc_RNA" = "#deebf7",
+      #          "mRNA" = "#deebf7",
+      #          "three_prime_UTR" = "#9ecae1",
+      #          "five_prime_UTR" = "#9ecae1",
+      #          "unconfirmed_transcript" = "#deebf7",
+      #          "scRNA" = "#deebf7",
+      #          "C_gene_segment" = "#deebf7",
+      #          "D_gene_segment" = "#deebf7",
+      #          "J_gene_segment" = "#deebf7",
+      #          "V_gene_segment" = "#deebf7",
+      #          "miRNA" = "#deebf7",
+      #          "tRNA" = "#deebf7",
+      #          "snRNA" = "#deebf7",
+      #          "snoRNA" = "#deebf7"
+      #       )
+      #    ) %>%
+      #    plyranges::mutate(
+      #       revcolor = recode(
+      #          type,
+      #          "ncRNA_gene" = "#e5f5e0",
+      #          "rRNA" = "#e5f5e0",
+      #          "exon" = "#31a354",
+      #          "pseudogene" = "#e5f5e0",
+      #          "pseudogenic_transcript" = "#e5f5e0",
+      #          "ncRNA" = "#e5f5e0",
+      #          "gene" = "#e5f5e0",
+      #          "CDS" = "#e5f5e0",
+      #          "lnc_RNA" = "#e5f5e0",
+      #          "mRNA" = "#e5f5e0",
+      #          "three_prime_UTR" = "#a1d99b",
+      #          "five_prime_UTR" = "#a1d99b",
+      #          "unconfirmed_transcript" = "#e5f5e0",
+      #          "scRNA" = "#e5f5e0",
+      #          "C_gene_segment" = "#e5f5e0",
+      #          "D_gene_segment" = "#e5f5e0",
+      #          "J_gene_segment" = "#e5f5e0",
+      #          "V_gene_segment" = "#e5f5e0",
+      #          "miRNA" = "#e5f5e0",
+      #          "tRNA" = "#e5f5e0",
+      #          "snRNA" = "#e5f5e0",
+      #          "snoRNA" = "#e5f5e0"
+      #       )
+      #    )
 
       dna_grange <- c(dna_grange, additional_granges)
       names(dna_grange) <- dna_grange$locus_tag

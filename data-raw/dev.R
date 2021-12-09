@@ -49,7 +49,7 @@ usethis::use_data(wordhash, internal = TRUE)
 # renv::deactivate()
 
 devtools::load_all()
-devtools::check()
+devtools::check(cran = FALSE)
 devtools::document()
 # commit and push to github
 renv::install(packages = "blaserlab/blaseRtools", library = "/usr/lib/R/site-library")

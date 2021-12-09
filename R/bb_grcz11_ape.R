@@ -143,18 +143,24 @@ bb_grcz11_ape <-
          additional_granges <-
             GenomicRanges::shift(additional_granges, shift = -1 * (overall_start - 1))
          # rename the metadata
-         additional_granges <- additional_granges %>%
-            plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-            plyranges::select(-c(gene_name, label))
+         mcols(additional_granges) <-
+            mcols(additional_granges) %>%
+            as_tibble() %>%
+            mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+            select(-c(gene_name, label))
+         # additional_granges <- additional_granges %>%
+         #    plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+         #    plyranges::select(-c(gene_name, label))
 
       }
 
 
 
-      dna_grange <- dna_grange %>%
-         plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-         plyranges::select(-c(gene_name, label)) %>%
-         plyranges::mutate(
+      mcols(dna_grange) <-
+         mcols(dna_grange) %>%
+         mutate(locus_tag = paste0(gene_name, "_", label)) %>%
+         select(-c(gene_name, label)) %>%
+         mutate(
             fwdcolor = recode(
                type,
                "gene" = "#deebf7",
@@ -172,7 +178,7 @@ bb_grcz11_ape <-
                "J_gene_segment" = "#deebf7"
             )
          ) %>%
-         plyranges::mutate(
+         mutate(
             revcolor = recode(
                type,
                "gene" = "#e5f5e0",

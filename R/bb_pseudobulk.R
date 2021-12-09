@@ -1,18 +1,18 @@
-#' Run pseudobulk analysis using Deseq2  
-#' 
+#' Run pseudobulk analysis using Deseq2
+#'
 #' @param cds_deseq The cell data set object subset to analyze
 #' @param replicate_variable The colData column holding the biological replicate variable identifiers:  one unique identifier per biological replicate.
 #' @param class_variable  The colData column holding the class variable identifiers:  one unique identifier per class; two classes only
 #' @return A list of results from pseudobulk analysis
 #' @export
-#' @import tidyverse DESeq2 pheatmap Matrix.utils monocle3
-bb_pseudobulk <- function(cds_deseq, 
-			  replicate_variable, 
+#' @import tidyverse pheatmap Matrix.utils monocle3
+bb_pseudobulk <- function(cds_deseq,
+			  replicate_variable,
 			  class_variable) {
-  
+
   groups <-
     colData(cds_deseq) %>%
-    as_tibble() %>% 
+    as_tibble() %>%
     select(replicate = !!sym(replicate_variable), class = !!sym(class_variable))
   # get the aggregate counts
   aggregate_counts <-
@@ -24,13 +24,13 @@ bb_pseudobulk <- function(cds_deseq,
   coldata <- data.frame(classes, row.names = samples)
   stopifnot(all(rownames(coldata) == colnames(counts_matrix)))
   # make the deseq object
-  dds <- DESeqDataSetFromMatrix(countData = counts_matrix,
+  dds <- DESeq2::DESeqDataSetFromMatrix(countData = counts_matrix,
                                 colData = coldata,
                                 design = ~ classes)
 
   # do the thing
-  dds <- DESeq(dds)
-  res <- results(dds)
+  dds <- DESeq2::DESeq(dds)
+  res <- DESeq2::results(dds)
   result <-
     as.data.frame(res)  %>% rownames_to_column(var = "id") %>% as_tibble() %>%
     left_join(., as_tibble(rowData(cds_deseq)[, c("id", "gene_short_name")]))
@@ -45,7 +45,7 @@ bb_pseudobulk <- function(cds_deseq,
 
   # Plot heatmap
   heatmap <- pheatmap(rld_cor, annotation = coldata[, c("classes"), drop = F])
-  dispersion <- plotDispEsts(dds)
+  dispersion <- DESeq2::plotDispEsts(dds)
 
   return_list <- list(res@elementMetadata@listData[["description"]],
                       result,

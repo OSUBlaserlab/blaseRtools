@@ -89,3 +89,8 @@
 # blaseRtools 0.0.0.9039
 
 * Added trace class and functions
+
+# blaseRtools 0.0.0.9040
+
+* Removed dependency on plyranges since it was causing so many conflicts and was difficult to install.
+* Changed for importing functions from DESeq2 and DoubletFinder
