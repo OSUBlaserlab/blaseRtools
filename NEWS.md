@@ -94,3 +94,7 @@
 
 * Removed dependency on plyranges since it was causing so many conflicts and was difficult to install.
 * Changed for importing functions from DESeq2 and DoubletFinder
+
+# blaseRtools 0.0.0.9041
+
+* Fixed load cloud counts not to err on multi-genome samples.  Now it will load all genomes and then you have to remove the ones you don't want from the cds.  Just easier to do it that way. 

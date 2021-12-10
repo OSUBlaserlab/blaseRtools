@@ -7,7 +7,6 @@
 bb_load_cloud_counts(
   pipestance_path = NULL,
   specimen = NULL,
-  genome = NULL,
   umi_cutoff = 100,
   allowed_data_types = c("Gene Expression", "Antibody Capture"),
   sample_metadata_tbl = NULL
@@ -18,13 +17,13 @@ bb_load_cloud_counts(
 
 \item{specimen}{The biological specimen name.}
 
-\item{genome}{A character string for multi-genome samples; currently not working as originally intended so leave as null.}
-
 \item{umi_cutoff}{Don't import cells with fewer UMIs than this value}
 
 \item{allowed_data_types}{Control type of data to import.}
 
 \item{sample_metadata_tbl}{A tibble in wide format with one line.  Col names indicate metadata variables to add.}
+
+\item{genome}{A character string for multi-genome samples; currently not working as originally intended so leave as null.}
 }
 \value{
 A cell data set object.

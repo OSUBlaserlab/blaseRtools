@@ -11,7 +11,6 @@
 #' @import monocle3 tidyverse
 bb_load_cloud_counts <- function (pipestance_path = NULL,
                                   specimen = NULL,
-                                  genome = NULL,
                                   umi_cutoff = 100,
                                   allowed_data_types = c("Gene Expression", "Antibody Capture"),
                                   sample_metadata_tbl = NULL) {
@@ -40,19 +39,10 @@ bb_load_cloud_counts <- function (pipestance_path = NULL,
     paste0("tar -xvf temp/sample_feature_bc_matrix.tar.gz -C temp")
   message(cmd, "\n")
   system(cmd)
-  if (is.null(genome)) {
-    features.loc <- "temp/features.tsv.gz"
-    barcode.loc <- "temp/barcodes.tsv.gz"
-    matrix.loc <- "temp/matrix.mtx.gz"
-    summary.loc <- file.path(od, "metrics_summary.csv")
-  }
-  else {
-    genome = get_genome_in_matrix_path(matrix_dir, genome)
-    barcode.loc <- file.path(matrix_dir, genome, "barcodes.tsv")
-    features.loc <- file.path(matrix_dir, genome, "genes.tsv")
-    matrix.loc <- file.path(matrix_dir, genome, "matrix.mtx")
-    summary.loc <- file.path(od, "metrics_summary.csv")
-  }
+  features.loc <- "temp/features.tsv.gz"
+  barcode.loc <- "temp/barcodes.tsv.gz"
+  matrix.loc <- "temp/matrix.mtx.gz"
+  summary.loc <- file.path(od, "metrics_summary.csv")
   if (!file.exists(barcode.loc)) {
     stop("Barcode file missing")
   }
@@ -79,23 +69,6 @@ bb_load_cloud_counts <- function (pipestance_path = NULL,
   }
   data_types = factor(feature.names$V3)
   allowed = data_types %in% (allowed_data_types)
-  if (!is.null(genome)) {
-    gfilter = grepl(genome, feature.names$V1)
-    if (any(gfilter)) {
-      allowed = allowed & grepl(genome, feature.names$V1)
-    }
-    else {
-      message(
-        paste(
-          "Data does not appear to be from a multi-genome sample,",
-          "simply returning all gene feature data without",
-          "filtering by genome."
-        )
-      )
-    }
-  }
-  data = data[allowed,]
-  feature.names = feature.names[allowed, 1:2]
   colnames(feature.names) = c("id", "gene_short_name")
   rownames(data) = feature.names[, "id"]
   rownames(feature.names) = feature.names[, "id"]
