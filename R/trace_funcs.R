@@ -103,7 +103,7 @@ setValidity("Trace", function(object) {
 #' @param links A GRanges object with cicero-style gene links.  Optional
 #'
 #'
-#' @import GenomicRanges tidyverse
+#' @import GenomicRanges tidyverse blaseRdata
 #' @export
 bb_makeTrace <- function(trace_data,
                              startcol = NULL,
@@ -140,13 +140,13 @@ bb_makeTrace <- function(trace_data,
   gr <- buff_granges(gr, gen = genome)
 
   # make the initial plot_range
-  available_genes <- c(mcols(hg38_full_model_gr)$gene_name,
-                       mcols(dr11_full_model_gr)$gene_name)
+  available_genes <- c(mcols(hg38_granges_reduced)$gene_name,
+                       mcols(zfin_granges_reduced)$gene_name)
 
   if (genome == "hg38") {
-    full_gene_model = hg38_full_model_gr
+    full_gene_model = hg38_granges_reduced
   } else if (genome == "danRer11") {
-    full_gene_model = dr11_full_model_gr
+    full_gene_model = zfin_granges_reduced
   } else {
     return("You must specify and available genome.")
   }
@@ -522,7 +522,7 @@ bb_plot_trace_model <- function(trace,
   transcripts <- select_the_transcripts(data_gr)
   if (!is.null(select_transcript)) {
     transcript_lookup <-
-      bind_rows(as_tibble(mcols(hg38_full_model_gr)), as_tibble(mcols(dr11_full_model_gr)))
+      bind_rows(as_tibble(mcols(hg38_granges_reduced)), as_tibble(mcols(zfin_granges_reduced)))
     selected <- transcript_lookup %>%
       filter(parent_transcript %in% select_transcript) %>%
       select(gene_name, parent_transcript) %>%

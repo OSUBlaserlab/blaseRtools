@@ -32,7 +32,7 @@ bb_doubletfinder <-
 
     ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------
     sweep.res.list <-
-      paramSweep_v3(seu_object, PCs = 1:10, sct = FALSE)
+      DoubletFinder::paramSweep_v3(seu_object, PCs = 1:10, sct = FALSE)
     sweep.stats <- DoubletFinder::summarizeSweep(sweep.res.list, GT = FALSE)
     bcmvn <- DoubletFinder::find.pK(sweep.stats)
 

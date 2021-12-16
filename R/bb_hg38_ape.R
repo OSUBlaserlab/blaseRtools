@@ -9,7 +9,7 @@
 #' @param additional_granges A GRanges object with features to add to the Ape Object.  Coordinates should all be relative to the GRCz11 reference, *NOT* the sequence extracted for the ape file.  The Granges object can be constructed with the following syntax:  GenomicRanges::makeGRangesFromDataFrame(data.frame(seqname = "chr6", start = 40523370, end = 40523380, strand = "+", type = "addl_feature", gene_name = "some_gene", label = "feature1"), keep.extra.columns = T).  The gene_name argument here is optional.  If you have defined features based on the extracted sequence, (i.e. relative to position 1 in the ORIGIN section of the Ape object), the best option is to use the feature setting function FEATURES(instance_of_Ape) <- GRanges_Object.
 #' @return An Ape object
 #' @export
-#' @import Biostrings GenomicRanges tidyverse IRanges GenomeInfoDb
+#' @import Biostrings GenomicRanges tidyverse IRanges GenomeInfoDb blaseRdata
 bb_hg38_ape <-
    function(query,
             extend_left = 0,
@@ -95,10 +95,6 @@ bb_hg38_ape <-
             mutate(locus_tag = paste0(gene_name, "_", label)) %>%
             select(-c(gene_name, label))
 
-         # additional_granges <- additional_granges %>%
-         #    plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-         #    plyranges::select(-c(gene_name, label))
-
       }
 
       mcols(dna_grange) <-
@@ -161,63 +157,6 @@ bb_hg38_ape <-
             )
          )
 
-      # dna_grange <- dna_grange %>%
-      #    plyranges::mutate(locus_tag = paste0(gene_name, "_", label)) %>%
-      #    plyranges::select(-c(gene_name, label)) %>%
-      #    plyranges::mutate(
-      #       fwdcolor = recode(
-      #          type,
-      #          "ncRNA_gene" = "#deebf7",
-      #          "rRNA" = "#deebf7",
-      #          "exon" = "#3182bd",
-      #          "pseudogene" = "#deebf7",
-      #          "pseudogenic_transcript" = "#deebf7",
-      #          "ncRNA" = "#deebf7",
-      #          "gene" = "#deebf7",
-      #          "CDS" = "#deebf7",
-      #          "lnc_RNA" = "#deebf7",
-      #          "mRNA" = "#deebf7",
-      #          "three_prime_UTR" = "#9ecae1",
-      #          "five_prime_UTR" = "#9ecae1",
-      #          "unconfirmed_transcript" = "#deebf7",
-      #          "scRNA" = "#deebf7",
-      #          "C_gene_segment" = "#deebf7",
-      #          "D_gene_segment" = "#deebf7",
-      #          "J_gene_segment" = "#deebf7",
-      #          "V_gene_segment" = "#deebf7",
-      #          "miRNA" = "#deebf7",
-      #          "tRNA" = "#deebf7",
-      #          "snRNA" = "#deebf7",
-      #          "snoRNA" = "#deebf7"
-      #       )
-      #    ) %>%
-      #    plyranges::mutate(
-      #       revcolor = recode(
-      #          type,
-      #          "ncRNA_gene" = "#e5f5e0",
-      #          "rRNA" = "#e5f5e0",
-      #          "exon" = "#31a354",
-      #          "pseudogene" = "#e5f5e0",
-      #          "pseudogenic_transcript" = "#e5f5e0",
-      #          "ncRNA" = "#e5f5e0",
-      #          "gene" = "#e5f5e0",
-      #          "CDS" = "#e5f5e0",
-      #          "lnc_RNA" = "#e5f5e0",
-      #          "mRNA" = "#e5f5e0",
-      #          "three_prime_UTR" = "#a1d99b",
-      #          "five_prime_UTR" = "#a1d99b",
-      #          "unconfirmed_transcript" = "#e5f5e0",
-      #          "scRNA" = "#e5f5e0",
-      #          "C_gene_segment" = "#e5f5e0",
-      #          "D_gene_segment" = "#e5f5e0",
-      #          "J_gene_segment" = "#e5f5e0",
-      #          "V_gene_segment" = "#e5f5e0",
-      #          "miRNA" = "#e5f5e0",
-      #          "tRNA" = "#e5f5e0",
-      #          "snRNA" = "#e5f5e0",
-      #          "snoRNA" = "#e5f5e0"
-      #       )
-      #    )
 
       dna_grange <- c(dna_grange, additional_granges)
       names(dna_grange) <- dna_grange$locus_tag

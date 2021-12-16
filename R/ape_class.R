@@ -154,7 +154,7 @@ setMethod("Ape.fasta", "Ape", function(ape, feature = NULL, out) {
 #' @param ape An Ape instance
 #' @param fimo_feature A character vector of features from the Ape object that will be used to run fimo.
 #' @param out Directory that will be created to hold the fimo results.  A date/time stamp will be appended.  If null, the objects will not be saved and the function will only return a GRanges object
-#' @import tidyverse GenomicRanges circlize
+#' @import tidyverse GenomicRanges circlize blaseRdata
 #' @export
 setGeneric("Ape.fimo", function(ape, fimo_feature, out = NULL)
   standardGeneric("Ape.fimo"))

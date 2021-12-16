@@ -6,7 +6,7 @@
 #' @param output_dir The linux-style file path for the directory that will hold the blinded images.  The directory will be created by the function.
 #' @return nothing
 #' @export
-#' @import tidyverse digest fs
+#' @import tidyverse digest fs blaseRdata
 bb_blind_images <- function(analysis_file, file_column, output_dir) {
   ts <- str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
   output_dir <- paste0(output_dir, "_", ts)

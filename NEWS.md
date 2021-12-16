@@ -98,3 +98,7 @@
 # blaseRtools 0.0.0.9041
 
 * Fixed load cloud counts not to err on multi-genome samples.  Now it will load all genomes and then you have to remove the ones you don't want from the cds.  Just easier to do it that way. 
+
+# blaseRtools 0.0.0.9042
+
+* externalized data objects for certain functions
