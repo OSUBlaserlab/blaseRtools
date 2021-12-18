@@ -102,3 +102,7 @@
 # blaseRtools 0.0.0.9042
 
 * externalized data objects for certain functions
+
+# blaseRtools 0.0.0.9043
+
+* added metafeature functions
