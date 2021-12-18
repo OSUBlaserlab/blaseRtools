@@ -139,7 +139,7 @@ bb_read_bam <- function(sortedBam,
     return(reads)
   } else {
     reads_gr <- granges(reads)
-    reads_gr <- blaseRtools:::buff_granges(reads_gr, gen = genome)
+    reads_gr <- buff_granges(reads_gr, gen = genome)
     mcols(reads_gr)$insertSize <- width(reads_gr)
     return(reads_gr)
   }
@@ -147,20 +147,19 @@ bb_read_bam <- function(sortedBam,
 
 }
 
-
 #' A Function to Generate Data For Making MetaPlots
 #'
 #' @description Use this function to generate data for making TSS enrichment plots or other metafeature plots that are centered on a single genomic locus.  This function returns the data you need for the plot.  Use the tibble element that is returned to plot the enrichment plot and the matrix for the heatmap.  The problem currently is that the binwidths for the enrichment plot need to be smaller than the binwidths for the heatmap to look good.  If you use good binwidths for the enrichment plot, the heatmap will crash.  So either reduce the size of the heatmap matrix before plotting that or rerun the function with a different bin size.  This function allows sample names to be added, so several samples can be column-bound together for comparison.  Each gene is normalized to its own outer flanks so this should account for differences in sequencing depth to some degree.  You also have the option to include all possible TSS in the plot (i.e. including zeros) which you may want to do if comparing several samples.  To do this, set select_hits to FALSE.
-#'  @param query A GRanges object.  This should be from a bam file so you can plot read coverage across the metagene.
-#'  @param targets A GRanges object.  The targets you want to plot around.
-#'  @param select_hits Do you want to plot only the targets that have overlappign query reads?  Defaults to true.
-#'  @param width The width of the analysis in bp.
-#'  @param binwidth The binwidth in bp.  Width must be evenly divided by binwidth.
-#'  @param sample_id An optional sample id if you want to join this matrix up with another one.
-#'  @export
-#'  @import tidyverse blaseRdata GenomicRanges IRanges
-bb_metafeature <-
-  function(query,
+#' @param query A GRanges object.  This should be from a bam file so you can plot read coverage across the metagene.
+#' @param targets A GRanges object.  The targets you want to plot around.
+#' @param select_hits Do you want to plot only the targets that have overlappign query reads?  Defaults to true.
+#' @param width The width of the analysis in bp.
+#' @param binwidth The binwidth in bp.  Width must be evenly divided by binwidth.
+#' @param sample_id An optional sample id if you want to join this matrix up with another one.
+#' @return A list including a matrix and a tibble.
+#' @export
+#' @import tidyverse blaseRdata GenomicRanges IRanges
+bb_metafeature <- function(query,
            targets,
            select_hits = TRUE,
            width = 2000,

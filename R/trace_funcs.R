@@ -2,7 +2,30 @@
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
 #' @importFrom BiocGenerics as.data.frame
 #' @importFrom dplyr mutate filter
-buff_granges <- function(x, gen) {
+buff_granges <- function(x, gen = NULL) {
+    std_chroms <-c(as.character(1:25), paste0("chr", 1:25), "X", "Y", "chrX", "chrY")
+    x_df <- as.data.frame(x) %>%
+      as_tibble() %>%
+      mutate(seqnames = as.character(seqnames)) %>%
+      filter(seqnames %in% std_chroms) %>%
+      mutate(seqnames = ifelse(str_detect(seqnames, "chr"), seqnames, paste0("chr", seqnames)))
+
+    x <- makeGRangesFromDataFrame(x_df, keep.extra.columns = T)
+    genome(x) <- gen
+    return(x)
+}
+
+#' Clean Up Your GRanges Object
+#'
+#' @description This function does several things.  It removes ranges with non-standard chromosomes and drops their levels.  It will optionally set the genome to the user-provided value.  Typically we would use "hg38" or "danRer11". This is the exported version because it is so useful.
+#' @param x A Granges object to buff.
+#' @param gen An optional genome name to provide.  Recommend "hg38" or "danRer11".
+#' @return A GRanges object
+#' @export
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom BiocGenerics as.data.frame
+#' @importFrom dplyr mutate filter
+bb_buff_granges <- function(x, gen) {
     std_chroms <-c(as.character(1:25), paste0("chr", 1:25), "X", "Y", "chrX", "chrY")
     x_df <- as.data.frame(x) %>%
       as_tibble() %>%
