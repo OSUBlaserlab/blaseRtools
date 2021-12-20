@@ -202,8 +202,36 @@ bb_metafeature <- function(query,
       ))))
     )
 
+    # split the query into reads mapping to positive and negative strands
+    query_pos <- query[strand(query) == "+"]
+    query_neg <- query[strand(query) == "-"]
+
+    # make GPos to mark start and ends and shift to account for Tn5 insertion
+    query_pos_start <- GPos(seqnames = seqnames(query_pos),
+                            pos = start(query_pos) + 4,
+                            strand = strand(query_pos),
+                            seqinfo = seqinfo(query_pos))
+    query_pos_end <- GPos(seqnames = seqnames(query_pos),
+                            pos = end(query_pos) - 5,
+                            strand = strand(query_pos),
+                            seqinfo = seqinfo(query_pos))
+    query_neg_start <- GPos(seqnames = seqnames(query_neg),
+                            pos = start(query_neg) +4,
+                            strand = strand(query_neg),
+                            seqinfo = seqinfo(query_neg))
+    query_neg_end <- GPos(seqnames = seqnames(query_neg),
+                            pos = end(query_neg) - 5,
+                            strand = strand(query_neg),
+                            seqinfo = seqinfo(query_neg))
+
+
     # count the number of query ranges that overlap each tile
-    tile_overlaps <- IRanges::countOverlaps(tiles, query)
+    tile_overlaps <-
+      IRanges::countOverlaps(tiles, query_pos_start) +
+      IRanges::countOverlaps(tiles, query_pos_end) +
+      IRanges::countOverlaps(tiles, query_neg_start) +
+      IRanges::countOverlaps(tiles, query_neg_end)
+
     # convert to matrix with 1 row for each target hit and 1 column for each bin
     tile_overlap_matrix <-
       matrix(
