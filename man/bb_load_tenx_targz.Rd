@@ -4,12 +4,7 @@
 \alias{bb_load_tenx_targz}
 \title{Load 10X Data Into CDS}
 \usage{
-bb_load_tenx_targz(
-  targz_file,
-  umi_cutoff = 100,
-  allowed_data_types = c("Gene Expression", "Antibody Capture"),
-  sample_metadata_tbl = NULL
-)
+bb_load_tenx_targz(targz_file, umi_cutoff = 100, sample_metadata_tbl = NULL)
 }
 \arguments{
 \item{targz_file}{A character string of the file path to the multi pipestance directory}

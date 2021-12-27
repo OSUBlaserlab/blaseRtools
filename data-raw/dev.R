@@ -54,4 +54,5 @@ devtools::load_all()
 devtools::check(cran = FALSE)
 devtools::document()
 # commit and push to github
-renv::install(packages = "blaserlab/blaseRtools", library = "/usr/lib/R/site-library")
+devtools::install_github("blaserlab/blaseRtools")
+

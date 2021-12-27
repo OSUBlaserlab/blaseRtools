@@ -5,10 +5,9 @@
 #' @param sample_metadata_tbl A tibble in wide format with one line.  Col names indicate metadata variables to add.
 #' @return A cell data set object.
 #' @export
-#' @import monocle3 tidyverse
+#' @import monocle3 tidyverse SingleCellExperiment
 bb_load_tenx_targz <- function (targz_file,
                                   umi_cutoff = 100,
-                                  allowed_data_types = c("Gene Expression", "Antibody Capture"),
                                   sample_metadata_tbl = NULL) {
   if (!file.exists(targz_file))
     stop(
