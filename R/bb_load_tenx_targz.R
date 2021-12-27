@@ -1,48 +1,37 @@
-#' Load 10X Cloud Pipestances Into CDS
+#' Load 10X Data Into CDS
 #'
-#' @param pipestance_path A character string of the file path to the multi pipestance directory
-#' @param specimen The biological specimen name.
-#' @param genome A character string for multi-genome samples; currently not working as originally intended so leave as null.
-#' @param umi_cutoff Don't import cells with fewer UMIs than this value
-#' @param allowed_data_types Control type of data to import.
+#' @param targz_file A character string of the file path to the multi pipestance directory
+#' @param umi_cutoff Don't import cells with fewer UMIs than this value.  Defaults to 100.
 #' @param sample_metadata_tbl A tibble in wide format with one line.  Col names indicate metadata variables to add.
 #' @return A cell data set object.
 #' @export
 #' @import monocle3 tidyverse
-bb_load_cloud_counts <- function (pipestance_path = NULL,
-                                  specimen = NULL,
+bb_load_tenx_targz <- function (targz_file,
                                   umi_cutoff = 100,
                                   allowed_data_types = c("Gene Expression", "Antibody Capture"),
                                   sample_metadata_tbl = NULL) {
-  if (!dir.exists(pipestance_path))
+  if (!file.exists(targz_file))
     stop(
-      "Could not find the pipestance path: '",
-      pipestance_path,
-      "'.\n         Please double-check if the directory exists.\n"
-    )
-  od = file.path(pipestance_path, "per_sample_outs", specimen)
-  if (!dir.exists(od))
-    stop(
-      "Could not find the pipestance output directory: '",
-      file.path(pipestance_path, "outs"),
-      "'. Please double-check if the directory exists.\n"
+      "Could not find the .tar.gz file: '",
+      targz_file,
+      "'.\n         Please double-check if the file exists.\n"
     )
   # create a temporary working directory in the active project
-  dir.create("temp")
-  # copy the tarball from the 10X directory
+  temp <- tempdir(check = T)
+  # copy the tarball
   cmd <-
-    paste0("cp ", od, "/count/sample_feature_bc_matrix.tar.gz temp")
+    paste0("cp ", targz_file, " ", temp)
   message(cmd, "\n")
   system(cmd)
+  targz <- list.files(temp, full.names = T)
   #unzip
   cmd <-
-    paste0("tar -xvf temp/sample_feature_bc_matrix.tar.gz -C temp")
+    paste0("tar -xvf ", targz,  " -C ", temp)
   message(cmd, "\n")
   system(cmd)
-  features.loc <- "temp/features.tsv.gz"
-  barcode.loc <- "temp/barcodes.tsv.gz"
-  matrix.loc <- "temp/matrix.mtx.gz"
-  summary.loc <- file.path(od, "metrics_summary.csv")
+  features.loc <- file.path(temp, "features.tsv.gz")
+  barcode.loc <- file.path(temp, "barcodes.tsv.gz")
+  matrix.loc <- file.path(temp, "matrix.mtx.gz")
   if (!file.exists(barcode.loc)) {
     stop("Barcode file missing")
   }
@@ -67,9 +56,7 @@ bb_load_cloud_counts <- function (pipestance_path = NULL,
       matrix.loc
     ))
   }
-  data_types = factor(feature.names$V3)
-  allowed = data_types %in% (allowed_data_types)
-  colnames(feature.names) = c("id", "gene_short_name")
+  colnames(feature.names) = c("id", "gene_short_name", "data_type")
   rownames(data) = feature.names[, "id"]
   rownames(feature.names) = feature.names[, "id"]
   barcodes <-
@@ -102,6 +89,6 @@ bb_load_cloud_counts <- function (pipestance_path = NULL,
         sample_metadata_tbl$name[i]
     }
   }
-  unlink("temp", recursive = T)
+  unlink(temp, recursive = TRUE)
   return(gbm)
 }

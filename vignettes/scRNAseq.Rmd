@@ -1,0 +1,82 @@
+---
+title: "scRNA-seq Data Processing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{scRNAseq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Introduction
+
+This vignette will show you how to load 10X single cell RNA seq data into R and to perform "vanilla" processing. Here is an overview of the steps we will cover here:
+
+1.  Pre-processing data using 10X genomics cloud.
+2.  Loading data into a list of cellDataSet objects.
+3.  QC Functions
+4.  Merging into a single cellDataSet object.
+5.  Dimension reduction
+6.  Batch correction
+7.  Clustering
+8.  Cell assignments using label transfer
+9.  Gene modules
+10. UMAP Plot Types
+11. Gene Dotplots
+12. Differential Gene Expression
+
+I use these steps on almost every scRNA-seq analysis I perform. With proper configuration, steps 1-8 can mostly be run non-interactively. I usually will make a "dry run" interactively as I build the processing script. Then I will refresh the R session and source the script to run from beginning to end.
+
+The last steps require some interactive input and may be customized depending on the analysis you are doing. These usually become small standalone scripts.
+
+### An important note about data management
+
+An important fact to note is that the way we run these algorithms (UMAP dimension reduction and clustering in particular), the results are subtly non-deterministic. By this I mean that there will be subtle or at least arbitrary changes in the way the clusters are defined or the exact dimensions of particular cells. This does not change the underlying expression data or affect the analysis negatively except that if you were to run the same script twice, cluster 5 may become cluster 6 and UMAP dimensions may look different. The bottom line is that it is important to know which steps are deterministic and which are not. Also, which steps are computationally intensive and which are not.
+
+In order to deal with these issues, there are particular data objects which you will want to save as .rda files and then go back to if needed in the future. Usually this will be the final cellDataSet object and some qc files. Using these things you can quickly and reproducibly generate a large number of plots. I will point out the points where you want to save these objects in this vignette.
+
+A further note is that I am in the practice of packaging all of the pre-computed data objects into formal R packages. This aids portability, prevents unintentional overwriting, lost data, manages versions...basically a lot of good things for rigorous reproducible science. However, building R packages is outside the scope of this vignette. I may create a vignette on this in the future, but in the mean time here is a very good source: <https://kbroman.org/pkg_primer/> This is where I learned 90% of how to build an R package.
+
+Good luck!!
+
+## Pre-processing data using 10X genomics cloud
+
+As of 2021/2022, the preferred method of going from sequence data (FASTQs) to cell-barcode matrices is using the 10X genomics cloud: <https://www.10xgenomics.com/products/cloud-analysis>. The benefits over running this locally are too numerous to list. The only drawback is that it requires some time to upload your data and you have to do some point and click to get things configured. So anyways, if you are working with FASTQs, this is what you should do.
+
+Using 10X genomics cloud is free for the most part. It only restricts the number of downloads you can perform for a given dataset. It does require some very basic familiarity with the unix/linux command-line interface, but it does provide premade commands for you to copy and paste into the terminal.
+
+The 10X Cloud outputs a "pipestance". This is a standard data structure which you should always download as-is and not edit or add to once you have downloaded. Including BAM files and dimensionality reduction is optional and I recommend against it in most cases. Unless you are doing things like RNA velocity or spliceoform analysis you don't need the BAMs and they are very large. We will be doing our own dimensionality reduction and clustering so we don't need those files either.
+
+The recommended approach is to download these files directly to high-capacity storage, usually on an institutional network drive. That way you don't have to worry about backup and size. Once the data is archived there you will read from it very few times so data transfer time is not really an issue. Most of your downstream work will be with compressed R objects which are small and portable. I usually keep the FASTQs and the pipestances for each project together. You'll want to make it very clear using either README files or with the file structure itself, which FASTQs generated which pipestances. It isn't scripted (the drawback I mentioned above) so if you want to know what you did a year from now, you have to find a way to make it completely obvious to yourself.
+
+## Loading data into a list of cellDataSet objects
+
+The first thing you have to do is load the 10X Data for each specimen into a list of cellDataSet objects. You will use a configuration file to do this. First some more detail on these topics:
+
+-   10X Data: At minimum, you need 1 file which is a zipped tar file containing the cell barcodes, genes, and gene/barcode matrix.  Depending on the specific analysis pipeline run, it may be name "filtered_feature_bc_matrix.tar.gz", or "sample_feature_bc_matrix.tar.gz".  The difference depends whether you are running the "counts" pipeline or the "multi" pipeline.  You don't want the raw_feature_bc_matrix which contains droplets below the UMI cutoff (basically empty droplets) and un-de-multiplexed data if you are using multiplexing.  If you are using 5' with VDJ sequencing, it will automatically run it through the multi pipeline even if you aren't using multiplexing, so you have to navigate a bit deeper to find the per_sample_outs directory.  It isn't hard to find if you know what to look for.
+
+    The other things you will most likely want but we won't cover in detail here are the metrics summary file and any VDJ sequencing if you are doing that.  It is easier just to look at the html metrics summary file but if you want to programmatically look at the sequencing metrics file in R you can read that in.  VDJ may be covered in another vignette.
+
+-   cellDataSet: Abbreviated CDS, this is the main data structure for holding the single cell data. It is derived from the Bioconductor SingleCellExperiment class. It can be thought of as a database holding a table of cell metadata, a table of gene metadata, and matrix of expression data, all of which are built from the pipestance data you load in. There are additional "slots" available in the CDS class for reduced dimensions of various types and cluster assignments. These we don't interact with directly for the most part. I find the data structure very simple and straighforward to understand and work with. All of the scRNA-seq functions in this package operate on this data structure. I find the Seurat data structure less user-friendly. Where we need to use Seurat-only functions (like label transfer and Doubletfinder), Seurat objects are generated "behind the scenes", so you don't really need to know them well to use the blaseRtools functions. If you understood this paragraph then you already understand the CDS data structure which is half the battle.
+
+-   configuration file: Abbreviated config, this is a text file (csv) that you can edit in excel and which will hold sample-level metadata, including the file path where the pipestance is stored. You can see an example I used for this vignette here: `system.file("extdata/vignette_config.csv", package = "blaseRdata")`.
+
+-   sample: This seems very arbitrary, but when you are making the config file, you'll want to be very careful about what you mean by "sample" and how you enter this variable. When you are loading the data, you have to have a column in your config named "sample". This needs to match the text you provided in the field labeled "Analysis Name" on the 10X cloud website. Also, when multiple samples are merged together, the software will look for a cell metadata variable called "sample" and add that to the cell barcode to make a unique cell ID across the data set. This field is generated from the config file. This is mostly done to reduce the possibility of confusion and ensure you can always trace a cell back to the pipestance that made it. So if you want to change the name of the sample after the fact for clarity, brevity or any other reason, you will need to make a new column in your config labeled "specimen_new" or something like that.
+
+```{r setup, results = "hide"}
+# Attach the packages you will need for the analysis.
+library(blaseRtools)
+library(blaseRdata)
+```
+
+```{r eval = FALSE}
+
+```

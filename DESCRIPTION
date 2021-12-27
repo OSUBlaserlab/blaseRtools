@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9045
+Version: 0.0.0.9046
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -18,9 +18,11 @@ BugReports: https://github.com/blaserlab/blaseRtools/issues
 Suggests: 
     DESeq2,
     DoubletFinder,
+    knitr,
     org.Dr.eg.db,
     org.Hs.eg.db,
     org.Mm.eg.db,
+    rmarkdown
 Imports: 
     readxl,
     cowplot,
@@ -64,3 +66,4 @@ Imports:
     Rsamtools
 Depends: 
     R (>= 2.10)
+VignetteBuilder: knitr
