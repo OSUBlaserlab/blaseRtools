@@ -69,7 +69,7 @@ The first thing you have to do is load the 10X Data for each specimen into a lis
 
 -   configuration file: Abbreviated config, this is a text file (csv) that you can edit in excel and which will hold sample-level metadata, including the file path where the pipestance is stored. You can see an example I used for this vignette here: `system.file("extdata/vignette_config.csv", package = "blaseRdata")`.  At a minimum it should have a column named "sample" and a column named "targz_path" (the name for the latter is not critical).
 
--   sample: When you are making the config file, you'll want to be very thoughtful about what you mean by "sample" and how you enter this variable. When multiple samples are merged together, the software will look for a cell metadata variable called "sample" and add that to the cell barcode to make a unique cell ID across the data set. This field is generated from the config file. If you want to change the name of the sample after the fact for clarity, brevity or any other reason, you will need to make a new column in your config labeled "specimen_new" or something like that.  Or you will need to change them manually after making the CDS.
+-   sample: It is natural for most people to refer to the biological specimen that produced the data as a "sample".  However this term gets rather overloaded in these analyses, meaning that it gets used for too many things in too many different places.  If you want to be safer, you can call it "specimen" or something else.  If you want to use "sample" as I do here, you have to make sure it is not added explicitly as a cell metadata column.  If you do it will cause an error with a function that will try to create a "sample" column automatically.  Hopefully that will be more clear below.    
 
 One final note:  since some of the data processing are time-consuming, most of the code listed here will not be executed with the vignette.  You can copy the code blocks, modify and use them on your own if you want.  I have included a final CDS object which you can access with `blaseRdata::vignette_cds`.  You can use this to make the plots and do differential gene expression if you like.  
 
@@ -79,6 +79,7 @@ Getting started then:
 # Attach the packages you will need for the analysis.
 library(blaseRtools)
 library(blaseRdata)
+library(monocle3)
 library(tidyverse)
 ```
 
@@ -87,10 +88,11 @@ Read in the analysis configuration file.  Here I am reading it from the blaseRda
 
 ```{r}
 # Read in and inspect the configuration file.
-vignette_config <- read_csv(system.file("extdata/vignette_config.csv", package = "blaseRdata"))
+vignette_config <- read_csv(system.file("extdata/vignette_config.csv", package = "blaseRdata"), col_type = list(.default = col_character()))
 vignette_config
 
 ```
+
 
 You'll notice that I added a couple of sample metadata features in addition to the required information.  We will add those to the cds.  Also notice the format of the file path.  This linux reading a windows file path.  In the config file, I used the windows "copy path" feature and simply pasted it into the csv.  The double backslashes stand in for the single backslash which is basically toxic to anything running on linux.  So this is not a problem. However, the X: stands for our network drive where the data are located.  Linux doesn't know how to access that.  So I have a helper function that will translate it for you.  This only works with the OSUMC X drive.  If you are using another drive you will have to translate that to a linux-compatible file path manually.  Here is how you use that function.  
 
@@ -106,15 +108,86 @@ This uses the pipe notation and tidyverse functions, which you should become fam
 Now we are ready to read in the data using the bb_load_tenx_targz function.  We will use the "apply" functional programming paradigm and the purrr package to map this function across each sample in the config file.  This will produce a list of cds objects for us.
 
 ```{r, eval = TRUE}
+# Generate a list of CDS objects using purrr::map
 cds_list <- map(
   .x = vignette_config$sample,
   .f = function(x, conf = vignette_config) {
     conf_filtered <- conf %>%
       filter(sample == x)
     cds <- bb_load_tenx_targz(targz_file = conf_filtered$targz_path,
-                              sample_metadata_tbl = conf_filtered %>% select(-targz_path)
+                              sample_metadata_tbl = conf_filtered %>% 
+                                select(-c(sample, targz_path))
                               )
-    return(x = cds)
+    return(cds)
   }
-)
+) %>% 
+  set_names(nm = vignette_config$sample)
 ```
+
+Note that the line `select(-c(sample, targz_path))` removes the sample column and the file path from the sample metadata.  We don't need the file path.  As mentioned above, having "sample" in the cell metadata will cause an error later.  We use `set_names(nm = vignette_config$sample)` to name the CDS object with the sample name.  That will get added into the cell metadata later.
+
+```{r}
+# Inspect the CDS list
+cds_list
+
+# Inspect the cell metadata for the chromium_controller CDS
+bb_cellmeta(cds_list$chromium_controller)
+```
+
+
+## QC Functions
+
+Next we want to remove low quality cells from the analysis.  First we identify low quality cells based on a high percentage of reads mapped to mitochondrial genes or a low number of genes detected.  We will map the function bb_qc to each element of cds_list.  bb_qc itself returns a list of data objects, so we will get a list of lists.  The qc calls will be returned to the CDS objects later, but the whole output of this step is worth saving for future reference.
+
+```{r}
+ind_qc_res <- pmap(.l = list(cds = cds_list,
+                             cds_name = names(cds_list),
+                             genome = rep("human", times = length(cds_list))),
+                   .f = bb_qc
+                   ) %>%
+  set_names(nm = names(cds_list))
+
+```
+
+For example:
+```{r}
+ind_qc_res$chromium_controller[3]
+ind_qc_res$chromium_controller[4]
+```
+
+Next we want to remove potential cell doublets.  We identify these using a function from the *Doubletfinder* package.  This generates "pseudodoublets" and marks any real cells that map in the same area as the pseudodoublets.
+
+First we have to figure out the anticipated doublet rate which is estimated by the number of cells in the cds/100000.
+
+We also have to supply the qc results so we only run the prediction on high-quality cells.  
+
+
+```{r}
+
+anticipated_doublet_rate <- unlist(map(cds_list, ncol))/100000
+qc_calls <- map(ind_qc_res,1)
+
+doubletfinder_list <-
+  pmap(
+    .l = list(
+      cds = cds_list,
+      doublet_prediction = anticipated_doublet_rate,
+      qc_table = qc_calls
+    ),
+    .f = bb_doubletfinder
+  ) %>%
+  set_names(names(cds_list))
+
+
+```
+
+```{r}
+
+cds_list_rejoined <- pmap(
+  .l = list(
+    cds = cds_list_human,
+    qc_data = purrr::map(ind_qc_res, 1),
+    doubletfinder_data = doubletfinder_list
+  ),
+  .f = bb_rejoin
+)

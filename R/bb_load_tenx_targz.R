@@ -16,21 +16,21 @@ bb_load_tenx_targz <- function (targz_file,
       "'.\n         Please double-check if the file exists.\n"
     )
   # create a temporary working directory in the active project
-  temp <- tempdir(check = T)
+  dir.create("temp")
   # copy the tarball
   cmd <-
-    paste0("cp ", targz_file, " ", temp)
+    paste0("cp ", targz_file, " temp")
   message(cmd, "\n")
   system(cmd)
-  targz <- list.files(temp, full.names = T)
+  targz <- list.files("temp", full.names = T)
   #unzip
   cmd <-
-    paste0("tar -xvf ", targz,  " -C ", temp)
+    paste0("tar -xvf ", targz,  " -C temp")
   message(cmd, "\n")
   system(cmd)
-  features.loc <- file.path(temp, "features.tsv.gz")
-  barcode.loc <- file.path(temp, "barcodes.tsv.gz")
-  matrix.loc <- file.path(temp, "matrix.mtx.gz")
+  features.loc <- "temp/features.tsv.gz"
+  barcode.loc <- "temp/barcodes.tsv.gz"
+  matrix.loc <- "temp/matrix.mtx.gz"
   if (!file.exists(barcode.loc)) {
     stop("Barcode file missing")
   }
@@ -88,6 +88,6 @@ bb_load_tenx_targz <- function (targz_file,
         sample_metadata_tbl$name[i]
     }
   }
-  unlink(temp, recursive = TRUE)
+  unlink("temp", recursive = TRUE)
   return(gbm)
 }
