@@ -27,8 +27,9 @@ This vignette will show you how to load 10X single cell RNA seq data into R and 
 5.  Dimension reduction
 6.  Batch correction
 7.  Clustering
-8.  Cell assignments using label transfer
 9.  Gene modules
+8.  Label transfer using Seurat
+1.  Cell assignments
 10. UMAP Plot Types
 11. Gene Dotplots
 12. Differential Gene Expression
@@ -80,7 +81,10 @@ Getting started then:
 library(blaseRtools)
 library(blaseRdata)
 library(monocle3)
+library(Seurat)
 library(tidyverse)
+library(cowplot)
+theme_set(theme_cowplot(font_size = 12))
 ```
 
 
@@ -107,7 +111,7 @@ This uses the pipe notation and tidyverse functions, which you should become fam
 
 Now we are ready to read in the data using the bb_load_tenx_targz function.  We will use the "apply" functional programming paradigm and the purrr package to map this function across each sample in the config file.  This will produce a list of cds objects for us.
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 # Generate a list of CDS objects using purrr::map
 cds_list <- map(
   .x = vignette_config$sample,
@@ -126,21 +130,13 @@ cds_list <- map(
 
 Note that the line `select(-c(sample, targz_path))` removes the sample column and the file path from the sample metadata.  We don't need the file path.  As mentioned above, having "sample" in the cell metadata will cause an error later.  We use `set_names(nm = vignette_config$sample)` to name the CDS object with the sample name.  That will get added into the cell metadata later.
 
-```{r}
-# Inspect the CDS list
-cds_list
-
-# Inspect the cell metadata for the chromium_controller CDS
-bb_cellmeta(cds_list$chromium_controller)
-```
-
 
 ## QC Functions
 
 Next we want to remove low quality cells from the analysis.  First we identify low quality cells based on a high percentage of reads mapped to mitochondrial genes or a low number of genes detected.  We will map the function bb_qc to each element of cds_list.  bb_qc itself returns a list of data objects, so we will get a list of lists.  The qc calls will be returned to the CDS objects later, but the whole output of this step is worth saving for future reference.
 
-```{r}
-ind_qc_res <- pmap(.l = list(cds = cds_list,
+```{r eval = FALSE}
+vig_qc_res <- pmap(.l = list(cds = cds_list,
                              cds_name = names(cds_list),
                              genome = rep("human", times = length(cds_list))),
                    .f = bb_qc
@@ -151,8 +147,8 @@ ind_qc_res <- pmap(.l = list(cds = cds_list,
 
 For example:
 ```{r}
-ind_qc_res$chromium_controller[3]
-ind_qc_res$chromium_controller[4]
+vig_qc_res$chromium_controller[3]
+vig_qc_res$chromium_controller[4]
 ```
 
 Next we want to remove potential cell doublets.  We identify these using a function from the *Doubletfinder* package.  This generates "pseudodoublets" and marks any real cells that map in the same area as the pseudodoublets.
@@ -162,10 +158,13 @@ First we have to figure out the anticipated doublet rate which is estimated by t
 We also have to supply the qc results so we only run the prediction on high-quality cells.  
 
 
-```{r}
+```{r eval = FALSE}
 
+# gets the number of cells in each cds and divides it by 100000
 anticipated_doublet_rate <- unlist(map(cds_list, ncol))/100000
-qc_calls <- map(ind_qc_res,1)
+
+# extracts the first element of the qc result list for each cds
+qc_calls <- map(vig_qc_res,1)
 
 doubletfinder_list <-
   pmap(
@@ -181,13 +180,307 @@ doubletfinder_list <-
 
 ```
 
-```{r}
+Now join the qc data and the doubletfinder data back onto cds_list
 
-cds_list_rejoined <- pmap(
+
+```{r, eval = FALSE}
+
+cds_list <- pmap(
   .l = list(
-    cds = cds_list_human,
-    qc_data = purrr::map(ind_qc_res, 1),
+    cds = cds_list,
+    qc_data = qc_calls,
     doubletfinder_data = doubletfinder_list
   ),
   .f = bb_rejoin
 )
+```
+
+## Merging into a single cellDataSet object.
+
+```{r eval = FALSE}
+# Merge the CDS list into a single CDS
+vignette_cds <- monocle3::combine_cds(cds_list = cds_list)
+```
+
+We can now remove some genes that are not going to be helpful.  Since we have already used the mitochondrial genes to identify poor-quality cells, and since we are not interested in looking at them specifically we can remove them.  Likewise we can typically remove any ribosomal RNA genes.  Pre-calculated lists of genes to remove for human, mouse, and zebrafish are provided in the blaseRdata package.
+
+```{r eval = FALSE}
+# Remove mitochondrial and ribosomal genes.
+vignette_cds <- vignette_cds[rowData(vignette_cds)$gene_short_name %notin% hg38_remove_genes,]
+```
+
+Now we can remove the low quality cells and cell doublets.  The doubletfinder function provides doublet calls at two confidence levels. If you like you can previzualize and select which ones you want to remove.  I ususally just remove the high confidence doublets.
+
+```{r eval = FALSE}
+# Remove the low-quality cells
+vignette_cds <- vignette_cds[,colData(vignette_cds)$qc.any == FALSE]
+
+# Remove the high-confidence doublets
+vignette_cds <- vignette_cds[,colData(vignette_cds)$doubletfinder_high_conf == "Singlet"]
+
+# Now remove the qc and doubletfinder columns from the cell metadata because we are done with them.
+colData(vignette_cds)$qc.any <- NULL
+colData(vignette_cds)$doubletfinder_low_conf <- NULL
+colData(vignette_cds)$doubletfinder_high_conf <- NULL
+
+
+```
+
+## Dimension reduction
+
+Now we are ready to perform the dimensionality reduction.  This is done in two steps and we use unmodified monocle functions. First, we calculate PCA components for each cell to reduce the number of dimensions from the number of genes (thousands) to something like 50.  Monocle provides an option to set the number of PCAs you want to calculate.  Some people like exploring different PCAs and picking exactly how many you want to calculate.  I don't find this to be a particularly useful exercise so I usually just run it with the default setting which is 50.  The additional variance explained with PCAs 51 and greater is tiny.
+
+```{r eval = FALSE}
+# Calculate the PCA dimensions
+vignette_cds <- preprocess_cds(vignette_cds)
+```
+
+Now we can run the UMAP algorithm to reduce the dimensions down to 2.  There are several options available here.  You should set the number of cores the algorithm will use.  
+```{r eval = FALSE}
+# Calculate UMAP dimensions
+vignette_cds <- reduce_dimension(vignette_cds, cores = 40)
+```
+
+Running UMAP with multiple cores will generate slightly different results each time you run it, so you want to get to this point and then save your data object with `save(vignette_cds, file = "<directory>/vignette_cds.rda", compress = "gzip")`.
+
+At this point it is worth exploring the cell and gene metadata to understand how things are arranged.  We can use the bb_cellmeta and bb_rowmeta convenience functions to return the metadata in the form of a tibble.  This is more convenient for exploring and manipulating, but if you want to modify or add back to the CDS object, you should use the form `colData(CDS)$new_column <- data`
+
+```{r}
+# Cell metadata
+bb_cellmeta(vignette_cds) 
+
+# Gene metadata
+bb_rowmeta(vignette_cds)
+```
+
+Note that the sample names have been added into the cell metadata.
+
+
+At this point you want to visualize your cells and determine if you need to perform any batch-correction techniques:
+
+```{r}
+bb_var_umap(vignette_cds, "sample")
+```
+
+
+## Batch correction
+
+It looks like these data are very similar.  But let's say there was some batch effect you wanted to reduce between these two samples.  You can align any number of samples by selecting a cell metadata column to align by.  This will reduce the variability in UMAP dimension based on that column.  If you want to align by more than one column, you should create a composite variable of all columns you want to align by, say by date and facility.
+
+The important thing to remember here is that alignment/batch correction does not change the underlying expression data.  It only changes the PCAs and UMAP calculations.  So if you also want to account for these variables when doing differential gene expression, then you need to model that in your calculations (see below).  So why do batch correction?  It helps reduce the heterogeneity of your dataset so you can put similar cells together in clusters.  This is an important concept for finding differences between samples.
+
+The function bb_align performs these steps:  calculate aligned PCA dimensions, recalculate umap dimensions, add the pre-alignment dimensions into the cell metadata in case you want to use them again.
+
+Usually I will save this to a temporary object until I find a useful alignment formula.  Then we can save as the original CDS and discard the temporary object once we are satisfied. 
+
+```{r eval = FALSE}
+# Align samples according to the equipment metadata column
+vignette_cds_aligned_temp <- bb_align(vignette_cds, align_by = "sample")
+
+# Replace the original CDS with the Aligned CDS
+vignette_cds <- vignette_cds_aligned_temp
+rm(vignette_cds_aligned_temp)
+```
+
+```{r}
+bb_var_umap(vignette_cds, var = "sample")
+```
+
+```{r}
+bb_cellmeta(vignette_cds)
+```
+
+
+
+## Clustering
+
+There are three clustering methods we use.  Louvain (ref: PMID 30914743) are the finest/smallest, Leiden (ref: PMID 30914743) are medium, and Partitions (ref: PMID 30890159) are the largest/coarsest.  We have a function to calculate all three using default parameters and add them explicitly into the CDS cell metadata.  In addition, this function will calculate the top markers for each and produce a csv file which you can look at externally or read back into R as I do here.  Usually you want to read it back into R so when you identify what the clusters are, you can label them in the table.
+
+Using this function requires using default clustering parameters in the underlying monocle functions.  If you want to modify those (usually not necessary) you need to use the original monocle functions.
+
+```{r eval = FALSE}
+# Identify clusters and calculate top markers
+marker_file <- tempfile()
+vignette_cds <- bb_triplecluster(vignette_cds, n_top_markers = 50, outfile = marker_file, n_cores = 8)
+vignette_top_markers <- read_csv(marker_file)
+```
+
+```{r}
+vignette_top_markers
+```
+
+Now you can plot the cells and color by cluster type
+```{r}
+bb_var_umap(vignette_cds, var = "partition")
+bb_var_umap(vignette_cds, var = "leiden")
+bb_var_umap(vignette_cds, var = "louvain")
+```
+
+## Gene modules
+
+Gene modules are groups of genes that are similarly co-regulated from cell to cell in the data set.  We use monocle functions to identify gene modules and store them as gene metadata.  
+
+Gene modules in this sense can only be defined using single cell data.  Essentially the algorithm reverses the UMAP calculation and plots "coordintes" for each gene according to the cell it is expressed in.  Then it clusters the genes according to the UMAP coordinates just like we did for the cells.  These are modules and super modules.
+
+Gene modules can have dozens or thousands of genes depending on your dataset.  If they are evenly expressed across all cells (like housekeeping genes), some genes may not end up in a module.
+
+Note:  this is a computationally-intensive operation which may overload your computer if you use too many cores.  It is also non-deterministic so you need to save the CDS object when you are done.
+
+```{r eval = FALSE}
+# Identify gene modules and add them to the gene metadata.
+vignette_cds <- bb_gene_modules(vignette_cds, n_cores = 24)
+```
+
+```{r}
+bb_rowmeta(vignette_cds)
+```
+
+
+## Label transfer using Seurat 
+
+This is an optional step you can use to generate automatic cell labels.  I have fairly strong opinions on the subject of cell labeling.  However you do it, you need to take the results with a grain of salt and always explore the automated cell labels before believing them. 
+
+For example if you are looking at leukemia cells and you generate cell labels based on a normal PBMC dataset, you will provide normal celltype labels to leukemia cells which is misleading.  
+
+Another issue is that there are many programs that claim to be able to do this but only Seurat seems to be useful in my opinion.  However the Seurat people have put most of their effort in this area into developing web apps which have significant limitations for us.  Their raw reference data is difficult to find and implement and is only available for human PBMC.  For now, we can only use this technique for human PBMC.
+
+If you want to use this, you need to download this file:  https://atlas.fredhutch.org/data/nygc/multimodal/pbmc_multimodal.h5seurat.  It is about 2GB so we don't even distribute it with blaseRdata.  You need to download that and put it somewhere on your system where you are running the analysis.  Then run this, substituting in the appropriate file path:
+
+```{r eval = FALSE}
+# Annotate the PBMC data
+vignette_cds <- bb_seurat_anno(vignette_cds, reference = "~/workspace_pipelines/sc_refdata/seurat_pbmc_reference_20210506/pbmc_multimodal.h5seurat")
+```
+
+This function has added two celltype assignments to the cell metadata.  It has also added suerat umap dims.  These are where the cells would've landed if they were processed in the reference dataset. 
+
+```{r}
+bb_cellmeta(vignette_cds)
+```
+
+You can plot the cells using the Seurat coordinates:
+
+```{r}
+bb_var_umap(vignette_cds, 
+            var = "seurat_celltype_l1", 
+            alt_dim_x = "seurat_dim1", 
+            alt_dim_y = "seurat_dim2", 
+            overwrite_labels = TRUE, 
+            group_label_size = 4)
+```
+
+Or you can plot them using their own dimension reduction coordinates.  I think this method is better because it reflects the data more accurately.
+
+```{r}
+bb_var_umap(vignette_cds, var = "seurat_celltype_l1")
+```
+
+## Cell Assignments
+
+This completes the basic loading and processing of single cell data in terms of what can be scripted and run non-interactively.  Usually what I will do is build up a script of all of the preceeding commands and then refresh the R session and source the whole script again.  Even if it takes hours to run again (doubletfinder, seurat annotations and gene modules are computationally intensive), it is easy enough to let it run overnight and then you can be confident that your output (the final CDS) is really derived from the data and code you have in the script.  
+
+Once this is done, I make new scripts for other analysis steps, such as Cell Assignments.  Making cell assignments is scientifically challenging but computationally very easy, so you want to put some thought into it.  I usually resave the CDS object with cell assignemnts when I am done but these can be edited or new cell assignments can be made very easily if you need to do so.
+
+Usually you want to pick a cluster resolution that is going to be useful and give all of the cells in that cluster the same name.  
+
+```{r}
+bb_var_umap(vignette_cds, var = "leiden", plot_title = "Leiden Clusters")
+```
+
+This is a low-throughput dataset with relatively low resolution, but it illustrates the method. 
+
+
+There are a few resources you have available:  1.  Cluster top markers.  2. Gene modules  3. Seurat assignments.  We already defined all of these.  Gene modules are very powerful for finding out what clusters are but it takes a few more steps to extract those data which I will show later.  Let's say in this case we've inspected the cluster top markers and we need some help from the Seurat assignments. As I said previously, I never use the Seurat assignments as is.  You can explore them visually as above or you can do something more quantitative.
+
+```{r}
+leiden_seurat <- bb_cellmeta(vignette_cds) %>%
+  group_by(leiden, seurat_celltype_l1) %>%
+  summarise(n = n())
+leiden_seurat
+```
+
+That may be enough to tell you that Leiden cluster 1 is T/NK, Cluster 2 is Mono/DC and Cluster 3 is B cells.
+
+If you have a complicated dataset you can use the more detailed seurat_celltype_l2 assignments and/or you can plot it like this:
+
+
+```{r}
+ggplot(leiden_seurat, 
+       mapping = aes(x = leiden, 
+                     y = n, 
+                     fill = seurat_celltype_l1)) +
+  geom_bar(position="fill", stat="identity") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+Then we add a new cell metadata column by recoding the leiden column into our designated assignments:
+
+```{r eval = FALSE}
+# Recode the leiden clusters with our cell assignments
+colData(vignette_cds)$leiden_assignment <- recode(colData(vignette_cds)$leiden, 
+                                                  "1" = "T/NK",
+                                                  "2" = "DC/Mono",
+                                                  "3" = "B")
+```
+
+```{r}
+bb_var_umap(vignette_cds, var = "leiden_assignment")
+```
+
+## UMAP Plot Types
+
+We've already used the main umap plotting function, bb_var_umap.  This allows you to color the cells by any cell metadata variable you choose.  You set the variable name as the "var" argument.  You can also highlight a specific value.
+
+```{r}
+bb_var_umap(vignette_cds, 
+            var = "leiden_assignment", 
+            value_to_highlight = "T/NK", 
+            cell_size = 2, 
+            foreground_alpha = 0.4)
+```
+
+This function returns a ggplot so if you don't like the colors you just have to add on a different scale.  Color palettes can also be set internally in the function.  
+
+```{r}
+bb_var_umap(vignette_cds, 
+            var = "leiden_assignment", 
+            value_to_highlight = "T/NK", 
+            palette = "green4", 
+            cell_size = 2, 
+            foreground_alpha = 0.4)
+```
+
+An important concept for the overall analysis is understanding the distribution of cell states between experimental conditions.  We use a density function to calculate the local density of cells in UMAP space after facetting the plot by our experimental variable.  
+
+```{r}
+bb_var_umap(vignette_cds, 
+            var = "density", 
+            facet_by = "equipment", 
+            cell_size = 2, 
+            plot_title = "Local Cell Density")
+```
+
+As you can see, these are basically the same, which is what you would expect.  
+
+Density is by definition normalized to the number of cells in the local area.  This can produce some over-normalization which may not be useful.  In this case you can map the color to the number of cells in local bins.  This may also work better with log normalization which you can do.  You would also want to use this with the option to downsample to the same number of overall cells so your plot isn't biased by the number of cells recovered.
+
+```{r}
+bb_var_umap(vignette_cds, 
+            var = "local_n", 
+            nbin = 10, sample_equally = T, 
+            facet_by = "equipment", 
+            cell_size = 2, 
+            plot_title = "Local N in 10 Bins")
+
+bb_var_umap(vignette_cds, 
+            var = "log_local_n", 
+            nbin = 10, 
+            sample_equally = T, 
+            facet_by = "equipment", 
+            cell_size = 2, 
+            plot_title = "Log Local N in 10 Bins")
+```
+
+As in this case, usually Density looks better.
+
+
+Since the concept of distribution between cell states is so important, we have a dedicated function for plotting this.

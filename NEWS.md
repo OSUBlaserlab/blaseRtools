@@ -110,3 +110,7 @@
 # blaseRtools 0.0.0.9046
 
 * added bb_load_tenx_targz and removed other 10X loading functions since they were very confusing.
+
+# blaseRtools 0.0.0.9047
+
+* added bb_cluster_representation
