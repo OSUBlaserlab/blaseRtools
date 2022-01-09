@@ -1,5 +1,5 @@
 ---
-title: "scRNA-seq Data Processing"
+title: "scRNA-seq Data Analysis"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{scRNAseq}
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette will show you how to load 10X single cell RNA seq data into R and to perform "vanilla" processing. Here is an overview of the steps we will cover here:
+This vignette will show you how to load 10X single cell RNA seq data into R and to perform "vanilla" processing. Here is an overview of the steps we will cover:
 
 1.  Pre-processing data using 10X genomics cloud.
 2.  Loading data into a list of cellDataSet objects.
@@ -34,13 +34,13 @@ This vignette will show you how to load 10X single cell RNA seq data into R and 
 11. Gene Dotplots
 12. Differential Gene Expression
 
-I use these steps on almost every scRNA-seq analysis I perform. With proper configuration, steps 1-8 can mostly be run non-interactively. I usually will make a "dry run" interactively as I build the processing script. Then I will refresh the R session and source the script to run from beginning to end.
+I use these steps on almost every scRNA-seq analysis I perform. With proper configuration, steps 1-9 can be run non-interactively. I usually will make a "dry run" interactively as I build the processing script. Then I will refresh the R session and source the script to run from beginning to end.
 
 The last steps require some interactive input and may be customized depending on the analysis you are doing. These usually become small standalone scripts.
 
 ### An important note about data management
 
-An important fact to note is that the way we run these algorithms (UMAP dimension reduction and clustering in particular), the results are subtly non-deterministic. By this I mean that there will be subtle or at least arbitrary changes in the way the clusters are defined or the exact dimensions of particular cells. This does not change the underlying expression data or affect the analysis negatively except that if you were to run the same script twice, cluster 5 may become cluster 6 and UMAP dimensions may look different. The bottom line is that it is important to know which steps are deterministic and which are not. Also, which steps are computationally intensive and which are not.
+An important fact to note is that the way we run these algorithms (UMAP dimension reduction and clustering in particular), the results are subtly non-deterministic. By this I mean that there will be subtle, arbitrary changes in the way the clusters are defined or the exact dimensions assigned to particular cells. This does not change the underlying expression data or affect the analysis negatively except that if you were to run the same script twice, cluster 5 may become cluster 6 and UMAP dimensions may look different. The bottom line is that it is important to know which steps are deterministic and which are not. Also, which steps are computationally intensive and which are not.
 
 In order to deal with these issues, there are particular data objects which you will want to save as .rda files and then go back to if needed in the future. Usually this will be the final cellDataSet object and some qc files. Using these things you can quickly and reproducibly generate a large number of plots. I will point out the points where you want to save these objects in this vignette.
 
@@ -50,23 +50,23 @@ Good luck!!
 
 ## Pre-processing data using 10X genomics cloud
 
-As of 2021/2022, the preferred method of going from sequence data (FASTQs) to cell-barcode matrices is using the 10X genomics cloud: <https://www.10xgenomics.com/products/cloud-analysis>. The benefits over running this locally are too numerous to list. The only drawback is that it requires some time to upload your data and you have to do some point and click to get things configured. So anyways, if you are working with FASTQs, this is what you should do.
+As of 2021/2022, the preferred method of going from sequence data (FASTQs) to cell-barcode matrices is using the 10X genomics cloud: <https://www.10xgenomics.com/products/cloud-analysis>. The benefits over running this locally are too numerous to list. The only drawbacks are that it requires some time to upload your data and you have to do some point and click to get things configured. So anyways, if you are working with FASTQs, this is what you should do.
 
 Using 10X genomics cloud is free for the most part. It only restricts the number of downloads you can perform for a given dataset. It does require some very basic familiarity with the unix/linux command-line interface, but it does provide premade commands for you to copy and paste into the terminal.
 
-The 10X Cloud outputs a "pipestance". This is a standard data structure which you should always download as-is and not edit or add to once you have downloaded. Including BAM files and dimensionality reduction is optional and I recommend against it in most cases. Unless you are doing things like RNA velocity or spliceoform analysis you don't need the BAMs and they are very large. We will be doing our own dimensionality reduction and clustering so we don't need those files either.
+The 10X Cloud outputs a set of files I refer to as a "pipestance". This is an archaic term dating from the time when we had to run the analysis on our local machine.  You will want to download the whole set of files into their own directory with one subdirectory for each biological sample. Including BAM files and dimensionality reduction in the 10X Cloud analysis is optional and I recommend against it in most cases. Unless you are doing things like RNA velocity or spliceoform analysis you don't need the BAMs and they are very large. We will be doing our own dimensionality reduction and clustering so we don't need those files either.  Once you have downloaded the files you should not edit, move or rename them.
 
-The recommended approach is to download these files directly to high-capacity storage, usually on an institutional network drive. That way you don't have to worry about backup and size. Once the data is archived there you will read from it very few times so data transfer time is not really an issue. Most of your downstream work will be with compressed R objects which are small and portable. I usually keep the FASTQs and the pipestances for each project together. You'll want to make it very clear using either README files or with the file structure itself, which FASTQs generated which pipestances. It isn't scripted (the drawback I mentioned above) so if you want to know what you did a year from now, you have to find a way to make it completely obvious to yourself.
+The recommended approach is to download the pipestance directly to high-capacity storage, usually on an institutional network drive. That way you don't have to worry about backup or size. Once the data is archived there you will read from it very few times so data transfer time is not really an issue. Most of your downstream work will be with compressed R objects which are small and portable. I usually keep the FASTQs and the pipestances for each project together. You'll want to make it very clear using either README files or with the file structure itself, which FASTQs generated which pipestances. It isn't scripted (the drawback I mentioned above) so if you want to know what you did a year from now, you have to find a way to make it completely obvious to yourself.
 
 ## Loading data into a list of cellDataSet objects
 
 The first thing you have to do is load the 10X Data for each specimen into a list of cellDataSet objects. You will use a configuration file to do this. First some more detail on these topics:
 
--   10X Data: At minimum, you need 1 file which is a zipped tar file containing the cell barcodes, genes, and gene/barcode matrix.  Depending on the specific analysis pipeline run, it may be named "filtered_feature_bc_matrix.tar.gz", or "sample_feature_bc_matrix.tar.gz".  The difference depends whether you are running the "counts" pipeline or the "multi" pipeline.  You don't want the raw_feature_bc_matrix which contains droplets below the UMI cutoff (basically empty droplets) and un-de-multiplexed data if you are using multiplexing.  If you are using 5' with VDJ sequencing, it will automatically run it through the multi pipeline even if you aren't using multiplexing, so you have to navigate a bit deeper to find the per_sample_outs directory.  It isn't hard to find if you know what to look for.
+-   10X Data: The most important file is a zipped tar file containing the cell barcodes, genes, and gene/barcode matrix.  Depending on the specific analysis pipeline run, it may be named "filtered_feature_bc_matrix.tar.gz", or "sample_feature_bc_matrix.tar.gz".  The difference depends whether you are running the "counts" pipeline or the "multi" pipeline.  You don't want the raw_feature_bc_matrix which contains droplets below the UMI cutoff (basically empty droplets) and un-de-multiplexed data if you are using multiplexing.  
 
     The other things you will most likely want but we won't cover in detail here are the metrics summary file and any VDJ sequencing if you are doing that.  It is easier just to look at the html metrics summary file but if you want to programmatically look at the sequencing metrics file in R you can read that in.  VDJ may be covered in another vignette.
 
--   cellDataSet: Abbreviated CDS, this is the main data structure for holding the single cell data. It is derived from the Bioconductor SingleCellExperiment class. It can be thought of as a database holding a table of cell metadata, a table of gene metadata, and matrix of expression data, all of which are built from the pipestance data you load in. There are additional "slots" available in the CDS class for reduced dimensions of various types and cluster assignments. These we don't interact with directly for the most part. I find the data structure very simple and straighforward to understand and work with. All of the scRNA-seq functions in this package operate on this data structure. I find the Seurat data structure less user-friendly. Where we need to use Seurat-only functions (like label transfer and Doubletfinder), Seurat objects are generated "behind the scenes", so you don't really need to know them well to use the blaseRtools functions. If you understood this paragraph then you already understand the CDS data structure which is half the battle.
+-   cellDataSet: Abbreviated CDS, this is the main data structure for holding the single cell data. It is derived from the Bioconductor SingleCellExperiment class. It can be thought of as a database holding a table of cell metadata, a table of gene metadata, and matrix of expression data, all of which are built from the pipestance data you load in. There are additional "slots" available in the CDS class for reduced dimensions of various types and cluster assignments. These we don't interact with directly for the most part. I find the data structure very simple and straightforward to understand and work with. All of the scRNA-seq functions in this package operate on this data structure. I find the Seurat data structure less user-friendly. Where we need to use Seurat-only functions (like label transfer and Doubletfinder), Seurat objects are generated "behind the scenes", so you don't really need to know them well to use the blaseRtools functions. If you understood this paragraph then you already understand the CDS data structure which is half the battle.
 
 -   configuration file: Abbreviated config, this is a text file (csv) that you can edit in excel and which will hold sample-level metadata, including the file path where the pipestance is stored. You can see an example I used for this vignette here: `system.file("extdata/vignette_config.csv", package = "blaseRdata")`.  At a minimum it should have a column named "sample" and a column named "targz_path" (the name for the latter is not critical).
 
@@ -87,18 +87,20 @@ library(cowplot)
 theme_set(theme_cowplot(font_size = 12))
 ```
 
-
 Read in the analysis configuration file.  Here I am reading it from the blaseRdata package but you would substitute your own file path. 
 
 ```{r}
 # Read in and inspect the configuration file.
-vignette_config <- read_csv(system.file("extdata/vignette_config.csv", package = "blaseRdata"), col_type = list(.default = col_character()))
+vignette_config <- read_csv(system.file("extdata/vignette_config.csv", 
+                                        package = "blaseRdata"), 
+                            col_type = list(.default = col_character()))
 vignette_config
 
 ```
 
+The data we are using here is a very small sample dataset provided by 10X.  It includes 2 PBMC samples run on different 10X machines:  the standard Chromium machine and the new Chromium X.  
 
-You'll notice that I added a couple of sample metadata features in addition to the required information.  We will add those to the cds.  Also notice the format of the file path.  This linux reading a windows file path.  In the config file, I used the windows "copy path" feature and simply pasted it into the csv.  The double backslashes stand in for the single backslash which is basically toxic to anything running on linux.  So this is not a problem. However, the X: stands for our network drive where the data are located.  Linux doesn't know how to access that.  So I have a helper function that will translate it for you.  This only works with the OSUMC X drive.  If you are using another drive you will have to translate that to a linux-compatible file path manually.  Here is how you use that function.  
+You'll notice that I added a couple of sample metadata features in addition to the required information.  We will add those to the cds.  Also notice the format of the file path.  This is linux reading a windows file path.  In the config file, I used the windows "copy path" feature and simply pasted it into the csv.  The double backslashes stand in for the single backslash which is basically toxic to anything running on linux.  So this is not a problem. However, the X: stands for our network drive where the data are located.  Linux doesn't know how to access that.  So I have a helper function that will translate it for you.  This only works with the OSUMC X drive.  If you are using another drive you will have to translate that to a linux-compatible file path manually.  Here is how you use that function.  
 
 ```{r}
 # Fix the windows-style file path.
@@ -136,6 +138,7 @@ Note that the line `select(-c(sample, targz_path))` removes the sample column an
 Next we want to remove low quality cells from the analysis.  First we identify low quality cells based on a high percentage of reads mapped to mitochondrial genes or a low number of genes detected.  We will map the function bb_qc to each element of cds_list.  bb_qc itself returns a list of data objects, so we will get a list of lists.  The qc calls will be returned to the CDS objects later, but the whole output of this step is worth saving for future reference.
 
 ```{r eval = FALSE}
+# generate a list of qc results for individual CDS objects
 vig_qc_res <- pmap(.l = list(cds = cds_list,
                              cds_name = names(cds_list),
                              genome = rep("human", times = length(cds_list))),
@@ -146,7 +149,7 @@ vig_qc_res <- pmap(.l = list(cds = cds_list,
 ```
 
 For example:
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 vig_qc_res$chromium_controller[3]
 vig_qc_res$chromium_controller[4]
 ```
@@ -166,6 +169,7 @@ anticipated_doublet_rate <- unlist(map(cds_list, ncol))/100000
 # extracts the first element of the qc result list for each cds
 qc_calls <- map(vig_qc_res,1)
 
+# generates a list of tables with doubletfinder results
 doubletfinder_list <-
   pmap(
     .l = list(
@@ -184,7 +188,7 @@ Now join the qc data and the doubletfinder data back onto cds_list
 
 
 ```{r, eval = FALSE}
-
+# rejoins doubletfinder and qc data onto the list of CDS objects
 cds_list <- pmap(
   .l = list(
     cds = cds_list,
@@ -206,7 +210,8 @@ We can now remove some genes that are not going to be helpful.  Since we have al
 
 ```{r eval = FALSE}
 # Remove mitochondrial and ribosomal genes.
-vignette_cds <- vignette_cds[rowData(vignette_cds)$gene_short_name %notin% hg38_remove_genes,]
+vignette_cds <- 
+  vignette_cds[rowData(vignette_cds)$gene_short_name %notin% hg38_remove_genes,]
 ```
 
 Now we can remove the low quality cells and cell doublets.  The doubletfinder function provides doublet calls at two confidence levels. If you like you can previzualize and select which ones you want to remove.  I ususally just remove the high confidence doublets.
@@ -216,13 +221,13 @@ Now we can remove the low quality cells and cell doublets.  The doubletfinder fu
 vignette_cds <- vignette_cds[,colData(vignette_cds)$qc.any == FALSE]
 
 # Remove the high-confidence doublets
-vignette_cds <- vignette_cds[,colData(vignette_cds)$doubletfinder_high_conf == "Singlet"]
+vignette_cds <- 
+  vignette_cds[,colData(vignette_cds)$doubletfinder_high_conf == "Singlet"]
 
 # Now remove the qc and doubletfinder columns from the cell metadata because we are done with them.
 colData(vignette_cds)$qc.any <- NULL
 colData(vignette_cds)$doubletfinder_low_conf <- NULL
 colData(vignette_cds)$doubletfinder_high_conf <- NULL
-
 
 ```
 
@@ -235,7 +240,8 @@ Now we are ready to perform the dimensionality reduction.  This is done in two s
 vignette_cds <- preprocess_cds(vignette_cds)
 ```
 
-Now we can run the UMAP algorithm to reduce the dimensions down to 2.  There are several options available here.  You should set the number of cores the algorithm will use.  
+Now we can run the UMAP algorithm to reduce the dimensions down to 2.  There are several options available here.  You should set the number of cores the algorithm will use. 
+
 ```{r eval = FALSE}
 # Calculate UMAP dimensions
 vignette_cds <- reduce_dimension(vignette_cds, cores = 40)
@@ -256,16 +262,11 @@ bb_rowmeta(vignette_cds)
 Note that the sample names have been added into the cell metadata.
 
 
-At this point you want to visualize your cells and determine if you need to perform any batch-correction techniques:
-
-```{r}
-bb_var_umap(vignette_cds, "sample")
-```
-
+At this point you want to visualize your cells and determine if you need to perform any batch-correction techniques.
 
 ## Batch correction
 
-It looks like these data are very similar.  But let's say there was some batch effect you wanted to reduce between these two samples.  You can align any number of samples by selecting a cell metadata column to align by.  This will reduce the variability in UMAP dimension based on that column.  If you want to align by more than one column, you should create a composite variable of all columns you want to align by, say by date and facility.
+The data from these samples is very similar but let's say there was some batch effect you wanted to reduce between these two samples.  You can align any number of samples by selecting a cell metadata column to align by.  This will reduce the variability in UMAP dimension based on that column.  If you want to align by more than one column, you should create a composite variable of all columns you want to align by, say by date and facility.
 
 The important thing to remember here is that alignment/batch correction does not change the underlying expression data.  It only changes the PCAs and UMAP calculations.  So if you also want to account for these variables when doing differential gene expression, then you need to model that in your calculations (see below).  So why do batch correction?  It helps reduce the heterogeneity of your dataset so you can put similar cells together in clusters.  This is an important concept for finding differences between samples.
 
@@ -282,14 +283,20 @@ vignette_cds <- vignette_cds_aligned_temp
 rm(vignette_cds_aligned_temp)
 ```
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "sample")
 ```
 
+You can see that the pre-alignment dimensions are stored in the cell metadata so you can plot them later if you want.
 ```{r}
 bb_cellmeta(vignette_cds)
 ```
 
+```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
+bb_var_umap(vignette_cds, var = "sample", 
+            alt_dim_x = "prealignment_dim1", 
+            alt_dim_y = "prealignment_dim2")
+```
 
 
 ## Clustering
@@ -310,7 +317,7 @@ vignette_top_markers
 ```
 
 Now you can plot the cells and color by cluster type
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "partition")
 bb_var_umap(vignette_cds, var = "leiden")
 bb_var_umap(vignette_cds, var = "louvain")
@@ -320,7 +327,7 @@ bb_var_umap(vignette_cds, var = "louvain")
 
 Gene modules are groups of genes that are similarly co-regulated from cell to cell in the data set.  We use monocle functions to identify gene modules and store them as gene metadata.  
 
-Gene modules in this sense can only be defined using single cell data.  Essentially the algorithm reverses the UMAP calculation and plots "coordintes" for each gene according to the cell it is expressed in.  Then it clusters the genes according to the UMAP coordinates just like we did for the cells.  These are modules and super modules.
+Gene modules in this sense can only be defined using single cell data.  Essentially the algorithm reverses the UMAP calculation and plots "coordinates" for each gene according to the cell it is expressed in.  Then it clusters the genes according to the UMAP coordinates just like we did for the cells.  These are modules and super modules.
 
 Gene modules can have dozens or thousands of genes depending on your dataset.  If they are evenly expressed across all cells (like housekeeping genes), some genes may not end up in a module.
 
@@ -338,7 +345,7 @@ bb_rowmeta(vignette_cds)
 
 ## Label transfer using Seurat 
 
-This is an optional step you can use to generate automatic cell labels.  I have fairly strong opinions on the subject of cell labeling.  However you do it, you need to take the results with a grain of salt and always explore the automated cell labels before believing them. 
+This is an optional step you can use to generate automatic cell labels. You need to take these results with a grain of salt and always explore the automated cell labels before believing them. 
 
 For example if you are looking at leukemia cells and you generate cell labels based on a normal PBMC dataset, you will provide normal celltype labels to leukemia cells which is misleading.  
 
@@ -359,7 +366,7 @@ bb_cellmeta(vignette_cds)
 
 You can plot the cells using the Seurat coordinates:
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=5.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "seurat_celltype_l1", 
             alt_dim_x = "seurat_dim1", 
@@ -370,7 +377,7 @@ bb_var_umap(vignette_cds,
 
 Or you can plot them using their own dimension reduction coordinates.  I think this method is better because it reflects the data more accurately.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "seurat_celltype_l1")
 ```
 
@@ -382,14 +389,13 @@ Once this is done, I make new scripts for other analysis steps, such as Cell Ass
 
 Usually you want to pick a cluster resolution that is going to be useful and give all of the cells in that cluster the same name.  
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "leiden", plot_title = "Leiden Clusters")
 ```
 
 This is a low-throughput dataset with relatively low resolution, but it illustrates the method. 
 
-
-There are a few resources you have available:  1.  Cluster top markers.  2. Gene modules  3. Seurat assignments.  We already defined all of these.  Gene modules are very powerful for finding out what clusters are but it takes a few more steps to extract those data which I will show later.  Let's say in this case we've inspected the cluster top markers and we need some help from the Seurat assignments. As I said previously, I never use the Seurat assignments as is.  You can explore them visually as above or you can do something more quantitative.
+There are a few resources you have available to make cell assignments:  1.  Cluster top markers.  2. Gene modules  3. Seurat assignments.  We already defined all of these.  Gene modules are very powerful for finding out what clusters are but it takes a few more steps to extract those data which I will show later.  Let's say in this case we've inspected the cluster top markers and we need some help from the Seurat assignments. As I said previously, I never use the Seurat assignments as is.  You can explore them visually as above or you can do something more quantitative.
 
 ```{r}
 leiden_seurat <- bb_cellmeta(vignette_cds) %>%
@@ -403,7 +409,7 @@ That may be enough to tell you that Leiden cluster 1 is T/NK, Cluster 2 is Mono/
 If you have a complicated dataset you can use the more detailed seurat_celltype_l2 assignments and/or you can plot it like this:
 
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 ggplot(leiden_seurat, 
        mapping = aes(x = leiden, 
                      y = n, 
@@ -422,7 +428,7 @@ colData(vignette_cds)$leiden_assignment <- recode(colData(vignette_cds)$leiden,
                                                   "3" = "B")
 ```
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "leiden_assignment")
 ```
 
@@ -430,7 +436,7 @@ bb_var_umap(vignette_cds, var = "leiden_assignment")
 
 We've already used the main umap plotting function, bb_var_umap.  This allows you to color the cells by any cell metadata variable you choose.  You set the variable name as the "var" argument.  You can also highlight a specific value.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "leiden_assignment", 
             value_to_highlight = "T/NK", 
@@ -440,7 +446,7 @@ bb_var_umap(vignette_cds,
 
 This function returns a ggplot so if you don't like the colors you just have to add on a different scale.  Color palettes can also be set internally in the function.  
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "leiden_assignment", 
             value_to_highlight = "T/NK", 
@@ -449,9 +455,9 @@ bb_var_umap(vignette_cds,
             foreground_alpha = 0.4)
 ```
 
-An important concept for the overall analysis is understanding the distribution of cell states between experimental conditions.  We use a density function to calculate the local density of cells in UMAP space after facetting the plot by our experimental variable.  
+An important concept for the overall analysis is understanding the distribution of cell states between experimental conditions.  We use a density function to calculate the local density of cells in UMAP space after faceting the plot by our experimental variable.  
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=7.0, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "density", 
             facet_by = "equipment", 
@@ -463,7 +469,7 @@ As you can see, these are basically the same, which is what you would expect.
 
 Density is by definition normalized to the number of cells in the local area.  This can produce some over-normalization which may not be useful.  In this case you can map the color to the number of cells in local bins.  This may also work better with log normalization which you can do.  You would also want to use this with the option to downsample to the same number of overall cells so your plot isn't biased by the number of cells recovered.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=7.0, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "local_n", 
             nbin = 10, sample_equally = T, 
@@ -485,7 +491,7 @@ As in this case, usually Density looks better.
 
 Since the concept of distribution between cell states is so important, we have a dedicated function for plotting this.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_cluster_representation(cds = vignette_cds, 
                           cluster_var = "leiden_assignment", 
                           class_var = "equipment", 
@@ -496,7 +502,7 @@ bb_cluster_representation(cds = vignette_cds,
 
 This function tells you which class of sample is enriched in each cluster.  The values are normalized according to the number of total cells captured for that class and presented as log fold change relative to one of the classes (control) which you designate.  Significance is determined using Fisher's exact test.  You can test any number of clusters but only two classes using this function.  As shown above, this function returns a ggplot which you can modify with any additional ggplot layers you like.  If this doesn't work for you, you can ask the function to return a data table which you can plot manually.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_cluster_representation(cds = vignette_cds, 
                           cluster_var = "leiden_assignment", 
                           class_var = "equipment", 
@@ -512,7 +518,7 @@ In addition to plotting cell metadata variables, we can plot gene expression in 
 
 For example:
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_gene_umap(vignette_cds, 
              gene_or_genes = "CD3D")
 ```
@@ -522,14 +528,14 @@ Now a word of caution/advice.  I find that these plots are most useful for explo
 
 We can also plot multiple individual genes or aggregate gene scores (e.g. modules) using this function:
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3}
 bb_gene_umap(vignette_cds, gene_or_genes = c("CD19", "CD3D", "CD14"))
 
 ```
 
 Note that for plotting aggregate genes, the parameter gene_or_genes should be provided with a data frame of two columns with the first column being ensembl cell id and the second being the gene grouping.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 agg_genes <- 
   bb_rowmeta(vignette_cds) %>%
   select(id, module_labeled) %>%
@@ -548,7 +554,7 @@ A more information-dense way to plot these data is as a gene dotplot.  This plot
 
 As it currently stands, this function requires 2 or more genes to be plotted at the same time.  This is usally not a problem because the point of this type of plot is to show how gene expression differs between clusters.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_gene_dotplot(vignette_cds, 
                 markers = c("CD3E", "CD14", "CD19"), 
                 group_cells_by = "leiden_assignment")
@@ -556,7 +562,7 @@ bb_gene_dotplot(vignette_cds,
 
 If run with default settings, this will order the genes and cell groups using a biclustering algorithm.  But you can also specify the order:
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_gene_dotplot(vignette_cds, 
                 markers = c("CD3E", "CD14", "CD19"), 
                 group_cells_by = "leiden_assignment", 
@@ -565,9 +571,9 @@ bb_gene_dotplot(vignette_cds,
 
 ```
 
-This function also provides a way to group cells by 2 factors.  You specify which factors you want as plot facets and which as ticks on the X axis.  You have to provide a pretty verbose tibble in order to do this, but is is a pretty useful feature.
+This function also provides a way to group cells by 2 factors.  You specify which factors you want as plot facets and which as ticks on the X axis.  You have to provide a pretty verbose table in order to do this, but it is a useful feature.
 
-```{r}
+```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
 cell_groupings <-
   tribble(
   ~aesthetic,~variable, ~value, ~level,
@@ -596,11 +602,11 @@ This is an important point for your experimental design.  Here we are using thes
 
 ### Pseudobulk Analysis
 
-Pseudobulk analysis is generally considered more robust than other methods of differential gene expression because it treats biological samples as biological replciates rather than individual cells.  
+Pseudobulk analysis is generally considered more robust than other methods of differential gene expression because it treats biological samples as biological replciates rather than individual cells as biological replicates.  
 
-In order to perform this, we aggregate the raw counts from groups of cells that we have to define and then use a bulk RNAseq differential expression program called DESeq2 to generate log fold change and p/q values between the cell groups we define.
+In order to perform this, we aggregate the raw counts from groups of cells that we have to define and then use a bulk RNAseq differential expression program called DESeq2 to generate log fold change and p/q values between the cell groups.
 
-Setting this up requires a little advance thought.  You will need to consider that there may be fixed sample-level covariates that may confound interpretation of the comparison you want to perform.  For example, let's say you want to compare gene expression between a heterogeneous cluster of cells from 20 patient samples; 10 patients are responders and 10 are non-responders to therapy.  Your goal is to identify a set of genes that are predicted to be differentially expressed based on the response variable (responders/non-responders).  However, you may know other things about these patients such as age, sex, tumor histology, genotype etc. that also explain these differences in gene expression or perhaps explain them better than response to therapy.  So you have to model these variables if you want to understand this.
+Setting this up requires a little advance thought.  You will need to consider that there may be fixed sample-level covariates that could confound interpretation of the comparison you want to perform.  For example, let's say you want to compare gene expression between a heterogeneous cluster of cells from 20 patient samples; 10 patients are responders and 10 are non-responders to therapy.  Your goal is to identify a set of genes that are predicted to be differentially expressed based on the response variable (responders/non-responders).  However, you may know other things about these patients such as age, sex, tumor histology, genotype etc. that also explain these differences in gene expression or perhaps explain them better than response to therapy.  So you have to model these variables if you want to understand this.
 
 **If you are working with experimental animal models you should never allow such confounders to enter your experiment.  Always use true biological replicates so that you may interpret differential gene expression based on a single experimental variable.**
 
@@ -618,7 +624,7 @@ vignette_exp_design
 
 Each row in this table we will call a "pseudosample".  This is because it represents a group of cells from either a biologically distinct sample or cell cluster.  For this simple comparison, we are now ready to run the pseudobulk function.  
 
-```{r}
+```{r, eval=FALSE}
 vignette_pseudobulk_res <-
   bb_pseudobulk_mf(cds = vignette_cds,
                    pseudosample_table = vignette_exp_design, 
@@ -626,10 +632,7 @@ vignette_pseudobulk_res <-
                    result_recipe = c("leiden_assignment", "T/NK", "DC/Mono"))
 ```
 
-
 Now explore the result:
-
-
 
 ```{r}
 # Detailed column headers for the results tables.
@@ -667,11 +670,26 @@ The regression function is based on the generalized linear regression in R and b
 The blaseRtools package has a function that wraps the multivariate regression function from *monocle3* and add some minor functionality.
 
 ```{r}
-bb_monocle_regression(cds = vignette_cds, 
+vignette_regression_res <- bb_monocle_regression(cds = vignette_cds, 
                       gene_or_genes = c("CD19", "CD3D", "CD14"), 
-                      form = "~leiden_assignment", 
-                      ncores = 1)
+                      form = "~leiden_assignment")
+vignette_regression_res
 
 ```
 
+If you look at the term column you can see the comparisons being made:
 
+```{r}
+vignette_regression_res$term
+```
+
+Here "leiden_assignmentDC/Mono" means that the comparison is DC/Mono vs T/NK cells.  You know this because T/NK does not show up in the term column.  It was chosen alphabetically as the reference condition.  In this case, a positive estimate means that the gene is up in DC/Mono vs T/NK cells.
+
+## Conclusion
+
+Using these steps you should be able to go from sequencing data to figures, gene lists and p values for many 10X datasets you come across.  
+
+Please contact me by email with questions, corrections or enhancements or post in github if you are so inclined.  
+
+bradley.blaser@osumc.edu
+https://github.com/blaserlab/blaseRtools

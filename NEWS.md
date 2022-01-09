@@ -118,3 +118,7 @@
 # blaseRtools 0.0.0.9048
 
 * added bb_pseudobulk_mf
+
+# blaseRtools 0.0.0.9049
+
+* added scRNA-seq vignette
