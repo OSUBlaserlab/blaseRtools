@@ -592,6 +592,86 @@ These are simple ggplots which can be altered as usual.  We also provide paramet
 
 At this point I think our example dataset demonstrates that outside of a small difference in the number of B cells captured, there is a high degree of similarity between the samples run on the chromium and the chromium_X machines.  Therefore it is plausible that we can use these as experimental replicates to determine differential gene expression between cell clusters.
 
-This is an important point for your experimental design.  Here we are using these sample datasets because they are small and happen to be available.  This of course is not how you do experiemnts.  You want to design your experiment to include the best possible biological replicates you can find:  clutchmates or littermates if possible.  If you are working with patient samples you are not going to be able to achieve this so you may want to try to model the potential confounding variables like age, sex, treatments etc. in your analysis.  Likewise if your mice are coming from different litters or were processed in different batches you may want to model those confounders.  We have functions that can handle this sort of complexity.  The most robust of these is called *pseudobulk analysis*.  It extracts the counts from groups of cells, generates an aggregate count profile and performs differential gene expression according to the experimental model you provide.  Alternatively you can use a function based on *generalized linear models* and *multivariable regression*.  The latter function does not require experimental replicates but has some drawbacks in terms of inflated significance values.  
+This is an important point for your experimental design.  Here we are using these sample datasets because they are small and happen to be available.  This of course is not how you do experiemnts.  You want to design your experiment to include the best possible biological replicates you can find:  clutchmates or littermates if possible.  If you are working with patient samples you are not going to be able to achieve this so you may want to try to model the potential confounding variables like age, sex, treatments etc. in your analysis.  Likewise if your mice are coming from different litters or were processed in different batches you may want to model those confounders.  We have functions that can handle this sort of complexity.  The most robust of these is called *pseudobulk analysis*.  It extracts the counts from groups of cells, generates an aggregate count profile and performs differential gene expression according to the experimental model you provide.  Alternatively you can use a function based on *generalized linear models* and *multivariate regression*.  The latter function does not require experimental replicates but has some drawbacks in terms of inflated significance values.  
 
 ### Pseudobulk Analysis
+
+Pseudobulk analysis is generally considered more robust than other methods of differential gene expression because it treats biological samples as biological replciates rather than individual cells.  
+
+In order to perform this, we aggregate the raw counts from groups of cells that we have to define and then use a bulk RNAseq differential expression program called DESeq2 to generate log fold change and p/q values between the cell groups we define.
+
+Setting this up requires a little advance thought.  You will need to consider that there may be fixed sample-level covariates that may confound interpretation of the comparison you want to perform.  For example, let's say you want to compare gene expression between a heterogeneous cluster of cells from 20 patient samples; 10 patients are responders and 10 are non-responders to therapy.  Your goal is to identify a set of genes that are predicted to be differentially expressed based on the response variable (responders/non-responders).  However, you may know other things about these patients such as age, sex, tumor histology, genotype etc. that also explain these differences in gene expression or perhaps explain them better than response to therapy.  So you have to model these variables if you want to understand this.
+
+**If you are working with experimental animal models you should never allow such confounders to enter your experiment.  Always use true biological replicates so that you may interpret differential gene expression based on a single experimental variable.**
+
+The next important feature to consider is that for your primary comparison (say response to therapy) you must always have biological replicates of some sort.  In other words if you want to identify an effect of response on gene expression, you must have a minimum of 2 responders and 2 non-responders.
+
+You will need to come up with a table describing all of the variables you may wish include in your experimental design.  The best place to start is with the CDS cell metadata.  You will need the unique biological replicate identifier, the variable you wish to compare and any covariates that you wish to include in the design.  In the example CDS we are working with, "sample" identifies the biological replicates and "leiden_assignment" identifies the cell groups we wish to compare.  There are no other non-redundant sample variables.
+
+```{r}
+vignette_exp_design <- 
+  bb_cellmeta(vignette_cds) %>%
+  group_by(sample, leiden_assignment) %>%
+  summarise()
+vignette_exp_design
+```
+
+Each row in this table we will call a "pseudosample".  This is because it represents a group of cells from either a biologically distinct sample or cell cluster.  For this simple comparison, we are now ready to run the pseudobulk function.  
+
+```{r}
+vignette_pseudobulk_res <-
+  bb_pseudobulk_mf(cds = vignette_cds,
+                   pseudosample_table = vignette_exp_design, 
+                   design_formula = "~ leiden_assignment",
+                   result_recipe = c("leiden_assignment", "T/NK", "DC/Mono"))
+```
+
+
+Now explore the result:
+
+
+
+```{r}
+# Detailed column headers for the results tables.
+vignette_pseudobulk_res$Header 
+```
+
+```{r}
+# Differential expression results.  Positive L2FC indicates up in T/NK vs DC/Mono
+
+vignette_pseudobulk_res$Result %>%
+  filter(log2FoldChange > 0) %>%
+  arrange(padj)
+  
+vignette_pseudobulk_res$Result %>%
+  filter(log2FoldChange < 0) %>%
+  arrange(padj)
+```
+
+These genes look as expected.  These tables show pairwise comparisons.  Since there were three levels to the "leiden_assignment" variable, we can select 2 of the three to compare in our "result_recipe".  The first one lised will always be the "experimental" value and genes specific to this condition will be positive while the second will be the "reference" value and genes specific to this condition will be negative.
+
+If you do not specify a "result_recipe" the program will revert to default behavior which is to calculate results based on the final variable in the design_formula using the first two values by alphabetical order.  This may or may not be what you want, so be aware of this behavior.
+
+This approach of making an experimental design based on the full CDS and then selecting the result recipe you want to produce (technically called "contrast") is preferred rather than filtering the CDS to include only T/NK and DC/Mono and running with default settings.  This is because the results vary somewhat and using the full CDS in this case gives a more complete picture.
+
+However, consider the case (which we will discuss but not demonstrate here) where you have a sample-level variable of interest such as response to therapy and you only want to look at the effect of this variable on gene expression in a subset of cells.  In this case it is OK to subset the CDS to include only this subset of cells (say blasts or leukemic cells) and then use a design formula such as "~ age + sex + genotype + response".  This will give you the effect of response only in blast cells, accounting for age, sex and genotype as potential confounders.
+
+### Multivariate Regression
+
+This is a type of analysis you would want to use if you do not have biological replicates suitable for the type of comparison you want to make.  In a way it considers each cell as a biological replicate which is an arguable assumption many times.
+
+The major practical limitations of this function are that it can consider only a few genes at a time and does not generate a "log fold change" that we would normally expect.  Instead it generates an "estimate" which is basically the slope of a regression line with p and q values.
+
+The regression function is based on the generalized linear regression in R and by default uses the negative binomial distribution which is similar to DESeq2 which we ahve already used.
+
+The blaseRtools package has a function that wraps the multivariate regression function from *monocle3* and add some minor functionality.
+
+```{r}
+bb_monocle_regression(cds = vignette_cds, 
+                      gene_or_genes = c("CD19", "CD3D", "CD14"), 
+                      form = "~leiden_assignment", 
+                      ncores = 1)
+
+```
+
+

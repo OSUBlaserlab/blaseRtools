@@ -10,8 +10,7 @@ bb_monocle_regression(
   stratification_variable = NULL,
   stratification_value = NULL,
   form,
-  linking_function = "negbinomial",
-  ncores = 8
+  linking_function = "negbinomial"
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ bb_monocle_regression(
 \item{form}{The regression formula in the form of "~var1+var2+..."}
 
 \item{linking_function}{For the generalized linear model.}
-
-\item{ncores}{number of cores to use.}
 }
 \value{
 A tibble containing the regression results.

@@ -6,7 +6,6 @@
 #' @param stratification_value Optional value to stratify by.
 #' @param form The regression formula in the form of "~var1+var2+..."
 #' @param linking_function For the generalized linear model.
-#' @param ncores number of cores to use.
 #' @return A tibble containing the regression results.
 #' @export
 #' @import tidyverse monocle3
@@ -16,30 +15,37 @@ bb_monocle_regression <-
            stratification_variable = NULL,
            stratification_value = NULL,
            form,
-           linking_function = "negbinomial",
-           ncores = 8) {
+           linking_function = "negbinomial") {
     if (!is.null(stratification_variable)) {
       cds <-
-        cds[rowData(cds)$gene_short_name %in% gene_or_genes, colData(cds)[[stratification_variable]] == stratification_value]
+        cds[rowData(cds)$gene_short_name %in% gene_or_genes,
+            colData(cds)[[stratification_variable]] == stratification_value]
     } else {
-      cds <- cds[rowData(cds)$gene_short_name %in% gene_or_genes, ]
+      cds <- cds[rowData(cds)$gene_short_name %in% gene_or_genes,]
     }
     gene_fits <-
       fit_models(
         cds = cds,
         model_formula_str = form,
         expression_family = linking_function,
-        cores = ncores
+        cores = 1
       )
     fit_coefs <- coefficient_table(gene_fits)
-    
+
     if (!is.null(stratification_variable)) {
       fit_coefs_return <-
-        fit_coefs %>% filter(term != "(Intercept)") %>% mutate(stratification = stratification_value, formula = form) %>% select(stratification, formula, term, estimate, p_value, q_value)
+        fit_coefs %>%
+        filter(term != "(Intercept)") %>%
+        mutate(stratification = stratification_value, formula = form) %>%
+        select(id, gene_short_name, stratification, formula, term, estimate, p_value, q_value)
+        # select(stratification, formula, term, estimate, p_value, q_value)
     } else {
       fit_coefs_return <-
-        fit_coefs %>% filter(term != "(Intercept)") %>% mutate(stratification = "no stratification", formula = form) %>% select(stratification, formula, term, estimate, p_value, q_value)
-      
+        fit_coefs %>%
+        filter(term != "(Intercept)") %>%
+        mutate(stratification = "no stratification", formula = form) %>%
+        select(id, gene_short_name, stratification, formula, term, estimate, p_value, q_value)
+
     }
     return(fit_coefs_return)
   }
