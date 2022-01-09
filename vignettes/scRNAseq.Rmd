@@ -484,3 +484,114 @@ As in this case, usually Density looks better.
 
 
 Since the concept of distribution between cell states is so important, we have a dedicated function for plotting this.
+
+```{r}
+bb_cluster_representation(cds = vignette_cds, 
+                          cluster_var = "leiden_assignment", 
+                          class_var = "equipment", 
+                          experimental_class = "X", 
+                          control_class = "chromium", 
+                          return_value = "plot")
+```
+
+This function tells you which class of sample is enriched in each cluster.  The values are normalized according to the number of total cells captured for that class and presented as log fold change relative to one of the classes (control) which you designate.  Significance is determined using Fisher's exact test.  You can test any number of clusters but only two classes using this function.  As shown above, this function returns a ggplot which you can modify with any additional ggplot layers you like.  If this doesn't work for you, you can ask the function to return a data table which you can plot manually.
+
+```{r}
+bb_cluster_representation(cds = vignette_cds, 
+                          cluster_var = "leiden_assignment", 
+                          class_var = "equipment", 
+                          experimental_class = "X", 
+                          control_class = "chromium", 
+                          return_value = "table")
+
+```
+
+This table shows the normalized cell count for each class of sample.  You can seee that after normalizing for the number of cells captured, there were 64.5 B cells in the chromium sample and 42.6 B cells in the X sample.  This barely reaches signficance using the Fisher exact test.  If you look at the density and log local N UMAPs above, you can probably appreciate the difference in cell color.  I would say there is a subtle difference but in the end it is up to your reader (or reviewer) if this is convincing or not.
+
+In addition to plotting cell metadata variables, we can plot gene expression in UMAP plots.
+
+For example:
+
+```{r}
+bb_gene_umap(vignette_cds, 
+             gene_or_genes = "CD3D")
+```
+
+
+Now a word of caution/advice.  I find that these plots are most useful for exploratory analysis and possibly supplemental figures but often not main figures.  The reason is that they convey less information per unit area than other plot types, such as gene dotplots.  It is often also more difficult to visually distinguish differences between plots.  This is related mostly to the problem of overplotting.  If you have many cells, often the points will be plotted more or less on top of each other.  If you have a gene which is expressed in only a few of these cells, it will be buried underneath all of the non-expressing cells.  In order to highlight these rare cells, this function makes the choice to plot all non-expressing cells first on the bottom layer and then plot all of the expressing cells on top.  This ensures you can see the rare expressing cells but may lead to overestimation of their number in some cases.  So it should be used with caution.
+
+We can also plot multiple individual genes or aggregate gene scores (e.g. modules) using this function:
+
+```{r}
+bb_gene_umap(vignette_cds, gene_or_genes = c("CD19", "CD3D", "CD14"))
+
+```
+
+Note that for plotting aggregate genes, the parameter gene_or_genes should be provided with a data frame of two columns with the first column being ensembl cell id and the second being the gene grouping.
+
+```{r}
+agg_genes <- 
+  bb_rowmeta(vignette_cds) %>%
+  select(id, module_labeled) %>%
+  filter(module_labeled == "Module 1")
+  
+
+bb_gene_umap(vignette_cds, 
+             gene_or_genes = agg_genes)
+```
+
+
+
+## Gene Dotplots
+
+A more information-dense way to plot these data is as a gene dotplot.  This plot is less susceptible to misleading the reader because of overplotting.
+
+As it currently stands, this function requires 2 or more genes to be plotted at the same time.  This is usally not a problem because the point of this type of plot is to show how gene expression differs between clusters.
+
+```{r}
+bb_gene_dotplot(vignette_cds, 
+                markers = c("CD3E", "CD14", "CD19"), 
+                group_cells_by = "leiden_assignment")
+```
+
+If run with default settings, this will order the genes and cell groups using a biclustering algorithm.  But you can also specify the order:
+
+```{r}
+bb_gene_dotplot(vignette_cds, 
+                markers = c("CD3E", "CD14", "CD19"), 
+                group_cells_by = "leiden_assignment", 
+                gene_ordering = c("CD19", "CD14", "CD3E"),
+                group_ordering = c("T/NK", "DC/Mono", "B"))
+
+```
+
+This function also provides a way to group cells by 2 factors.  You specify which factors you want as plot facets and which as ticks on the X axis.  You have to provide a pretty verbose tibble in order to do this, but is is a pretty useful feature.
+
+```{r}
+cell_groupings <-
+  tribble(
+  ~aesthetic,~variable, ~value, ~level,
+  "facet","equipment", "chromium", 1,
+  "facet","equipment", "X", 2,
+  "axis", "leiden_assignment", "B", 1,
+  "axis", "leiden_assignment", "T/NK", 2,
+  "axis", "leiden_assignment", "DC/Mono", 3 
+  )
+    
+
+bb_gene_dotplot(vignette_cds, 
+                markers = c("CD3E", "CD14", "CD19"), 
+                group_cells_by = "multifactorial", 
+                gene_ordering = c("CD19", "CD14", "CD3E"),
+                group_ordering = cell_groupings)
+```
+
+These are simple ggplots which can be altered as usual.  We also provide parameters to modify legend titles internally if desired.
+
+## Differential Gene Expression
+
+At this point I think our example dataset demonstrates that outside of a small difference in the number of B cells captured, there is a high degree of similarity between the samples run on the chromium and the chromium_X machines.  Therefore it is plausible that we can use these as experimental replicates to determine differential gene expression between cell clusters.
+
+This is an important point for your experimental design.  Here we are using these sample datasets because they are small and happen to be available.  This of course is not how you do experiemnts.  You want to design your experiment to include the best possible biological replicates you can find:  clutchmates or littermates if possible.  If you are working with patient samples you are not going to be able to achieve this so you may want to try to model the potential confounding variables like age, sex, treatments etc. in your analysis.  Likewise if your mice are coming from different litters or were processed in different batches you may want to model those confounders.  We have functions that can handle this sort of complexity.  The most robust of these is called *pseudobulk analysis*.  It extracts the counts from groups of cells, generates an aggregate count profile and performs differential gene expression according to the experimental model you provide.  Alternatively you can use a function based on *generalized linear models* and *multivariable regression*.  The latter function does not require experimental replicates but has some drawbacks in terms of inflated significance values.  
+
+### Pseudobulk Analysis

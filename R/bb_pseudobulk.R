@@ -4,12 +4,11 @@
 #' @param replicate_variable The colData column holding the biological replicate variable identifiers:  one unique identifier per biological replicate.
 #' @param class_variable  The colData column holding the class variable identifiers:  one unique identifier per class; two classes only
 #' @return A list of results from pseudobulk analysis
-#' @export
 #' @import tidyverse pheatmap Matrix.utils monocle3
 bb_pseudobulk <- function(cds_deseq,
 			  replicate_variable,
 			  class_variable) {
-
+  message("This function has been deprecated.  You should consider using bb_pseudobulk_mf for multifactorial pseudobulk analysis.")
   groups <-
     colData(cds_deseq) %>%
     as_tibble() %>%

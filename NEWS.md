@@ -114,3 +114,7 @@
 # blaseRtools 0.0.0.9047
 
 * added bb_cluster_representation
+
+# blaseRtools 0.0.0.9048
+
+* added bb_pseudobulk_mf
