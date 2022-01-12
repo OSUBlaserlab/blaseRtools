@@ -122,3 +122,7 @@
 # blaseRtools 0.0.0.9049
 
 * added scRNA-seq vignette
+
+# blaseRtools 0.0.0.9050
+
+* added bb_extract_msig
