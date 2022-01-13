@@ -4,8 +4,6 @@
 #' @param filter_list A named list to filter the MSIGDB by.  Defaults to NULL which will return the whole MSIGDB
 #' @param return_form Select from a list of gene ids or a list of gene names by gene set.  This is a useful format for the fgsea package.  Alternatively "tibble" can be select and all filtered gene sets will be bound into a long-form (tidy) tibble.
 #' @return Gene set as a list or tibble.
-#' @example
-#' bb_extract_msig(filter_list = list("STANDARD_NAME" = "RICKMAN_METASTASIS_UP"), return_form = "tibble)
 #' @export
 #' @import blaseRdata tidyverse
 bb_extract_msig <- function(filter_list = NULL,

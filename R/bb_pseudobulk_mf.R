@@ -22,8 +22,8 @@ bb_pseudobulk_mf <- function(cds,
     pseudosample_table %>%
     ungroup() %>%
     mutate(across(.cols = everything(), ~ str_replace_all(., "[^[:alnum:]]", "_"))) %>%
-    mutate(ps_id = paste0("pseudosample_", row_number())) %>%
     mutate(across(.cols = everything(), as.factor)) %>%
+    mutate(ps_id = factor(row_number(), labels = "pseudosample_")) %>%
     relocate(ps_id)
 
   # convert to data frame
@@ -35,12 +35,11 @@ bb_pseudobulk_mf <- function(cds,
     select(matches(colnames(pseudosample_df))) %>%
     mutate(across(.cols = everything(), ~ str_replace_all(., "[^[:alnum:]]", "_"))) %>%
     mutate(across(.cols = everything(), as.factor))
-
   # join the pseudosample id onto the cell metadata to generate groupings
 
   groups <-
-    left_join(cellmeta, pseudosample_table) %>% select(ps_id)
-
+    left_join(cellmeta, pseudosample_table) %>%
+    select(ps_id)
   # get the aggregate counts
   aggregate_counts <-
     aggregate.Matrix(t(as.matrix(exprs(cds))), groupings = groups, fun = "sum")

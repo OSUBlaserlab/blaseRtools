@@ -126,3 +126,7 @@
 # blaseRtools 0.0.0.9050
 
 * added bb_extract_msig
+
+# blaseRtools 0.0.0.9050
+
+* fixed pseudobulk mf
