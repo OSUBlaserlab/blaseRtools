@@ -29,7 +29,7 @@ Functions related to the "Ape" and "Trace" classes are prefixed "Ape." and "Trac
 
 ## Function Modules
 
-All functions are documented.  Vignettes describing useage are noted where available.
+All functions are documented and have help pages which can be reviewed after installation.  Tutorials describing typical use-cases for each module of functions are linked when available.
 
 * [scRNA-seq]({{ site.baseurl }}{% link pages/scRNAseq.html %}) 
     * bb_align
