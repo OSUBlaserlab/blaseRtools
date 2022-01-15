@@ -1,37 +1,99 @@
-## Welcome to GitHub Pages
+# blaseRtools
 
-You can use the [editor on GitHub](https://github.com/blaserlab/blaseRtools/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+This R package includes commonly used functions for R analysis in the Blaser Lab.      
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Installation
 
-### Markdown
+You can install the latest version of blaseRtools with:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+``` r
+devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE)
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+The package uses a number of precomputed data objects which we keep in a separate repository.  It should be installed automatically as a dependency but if not it can be installed using:
 
-### Jekyll Themes
+``` r
+devtools::install_github("blaserlab/blaseRdata")
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/blaserlab/blaseRtools/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+All commonly used functions for the end user are prefixed "bb_".  If you load the blaseRtools package and supporting data with 
 
-### Support or Contact
+``` r
+library(blaseRtools)
+library(blaseRdata)
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Then you can access functions by typing "bb_" and an autocomplete window with selections should pop up.
+
+Functions related to the "Ape" and "Trace" classes are prefixed "Ape." and "Trace.", respectively.
+
+## Function Modules
+
+All functions are documented.  Vignettes describing useage are noted where available.
+
+* scRNA-seq ```vignette("scRNAseq", package = "blaseRtools")```
+    * bb_align
+    * bb_annotate_npc
+    * bb_cellmeta
+    * bb_cluster_representation
+    * bb_doubletfinder
+    * bb_gene_dotplot
+    * bb_gene_modules
+    * bb_gene_pseudotime
+    * bb_gene_umap
+    * bb_gene_violinplot
+    * bb_goenrichment
+    * bb_gosummary
+    * bb_load_tenx_targz
+    * bb_monocle_regression
+    * bb_pseudobulk_mf
+    * bb_qc
+    * bb_rejoin
+    * bb_rowmeta
+    * bb_seurat_anno
+    * bb_triplecluster
+    * bb_var_umap
+
+* Ape class:  Programmatic methods for working with genbank files.
+    * Ape.DNA
+    * Ape.fasta
+    * Ape.fimo
+    * Ape.granges
+    * Ape.save
+    * Ape.setFeatures
+    * bb_grcz11_ape
+    * bb_hg38_ape
+    * bb_parseape
+    
+* Trace class:  A container for working with range-based data from ATAC and ChIP-seq experiments.
+    * bb_buff_granges
+    * bb_makeTrace
+    * bb_merge_narrowpeaks
+    * bb_metafeature
+    * bb_plot_trace_axis
+    * bb_plot_trace_data
+    * bb_plot_trace_feature
+    * bb_plot_trace_links
+    * bb_plot_trace_model
+    * bb_plot_footprint
+    * bb_promoter_overlap
+    * bb_read_bam
+    * bb_read_narrowpeak
+    * Trace.data
+    * Trace.features
+    * Trace.gene_model
+    * Trace.links
+    * Trace.plot_range
+    * Trace.setFeatures
+    * Trace.setLinks
+    * Trace.setRange
+    
+* Image blinding for quantitative analysis
+    * bb_blind_images
+    * bb_unblind_images
+    
+    
+    
+    
+    
+
