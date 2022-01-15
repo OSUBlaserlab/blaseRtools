@@ -31,7 +31,7 @@ Functions related to the "Ape" and "Trace" classes are prefixed "Ape." and "Trac
 
 All functions are documented.  Vignettes describing useage are noted where available.
 
-* [scRNA-seq]({% link /blaseRtools/pages/scRNAseq.html %}) 
+* [scRNA-seq]({% link /pages/scRNAseq.html %}) 
     * bb_align
     * bb_annotate_npc
     * bb_cellmeta
