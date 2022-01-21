@@ -7,81 +7,77 @@
 #' @import Biostrings GenomicRanges tidyverse
 #' @export
 granges_to_features <- function(gr) {
-  if (gr == "") {
-    res <- ""
-  } else {
-    grlist <-
-      list(
-        locus_tag = gr@elementMetadata$locus_tag,
-        start = gr@ranges@start,
-        end = gr@ranges@width + gr@ranges@start - 1,
-        strand = as.vector(strand(gr)),
-        type = gr@elementMetadata$type,
-        fwdcolor = gr@elementMetadata$fwdcolor,
-        revcolor = gr@elementMetadata$revcolor
-      )
-    res <-
-      purrr::pmap_chr(
-        .l = grlist,
-        .f = function(locus_tag,
-                      start,
-                      end,
-                      strand,
-                      type,
-                      fwdcolor,
-                      revcolor) {
-          if (strand == "-") {
-            paste0(
-              str_pad(
-                paste0("     ", type),
-                width = 21,
-                side = "right",
-                pad = " "
-              ),
-              "complement(",
-              start,
-              "..",
-              end,
-              ")\n                     /locus_tag=",
-              "\"",
-              locus_tag,
-              "\"\n                     /ApEinfo_fwdcolor=",
-              "\"",
-              fwdcolor,
-              "\"\n                     /ApEinfo_revcolor=",
-              "\"",
-              revcolor,
-              "\n"
-            )
-          } else {
-            paste0(
-              str_pad(
-                paste0("     ", type),
-                width = 21,
-                side = "right",
-                pad = " "
-              ),
-              start,
-              "..",
-              end,
-              "\n                     /locus_tag=",
-              "\"",
-              locus_tag,
-              "\"\n                     /ApEinfo_fwdcolor=",
-              "\"",
-              fwdcolor,
-              "\"\n                     /ApEinfo_revcolor=",
-              "\"",
-              revcolor,
-              "\n"
-            )
-          }
-
-
+  grlist <-
+    list(
+      locus_tag = gr@elementMetadata$locus_tag,
+      start = gr@ranges@start,
+      end = gr@ranges@width + gr@ranges@start - 1,
+      strand = as.vector(strand(gr)),
+      type = gr@elementMetadata$type,
+      fwdcolor = gr@elementMetadata$fwdcolor,
+      revcolor = gr@elementMetadata$revcolor
+    )
+  res <-
+    purrr::pmap_chr(
+      .l = grlist,
+      .f = function(locus_tag,
+                    start,
+                    end,
+                    strand,
+                    type,
+                    fwdcolor,
+                    revcolor) {
+        if (strand == "-") {
+          paste0(
+            str_pad(
+              paste0("     ", type),
+              width = 21,
+              side = "right",
+              pad = " "
+            ),
+            "complement(",
+            start,
+            "..",
+            end,
+            ")\n                     /locus_tag=",
+            "\"",
+            locus_tag,
+            "\"\n                     /ApEinfo_fwdcolor=",
+            "\"",
+            fwdcolor,
+            "\"\n                     /ApEinfo_revcolor=",
+            "\"",
+            revcolor,
+            "\n"
+          )
+        } else {
+          paste0(
+            str_pad(
+              paste0("     ", type),
+              width = 21,
+              side = "right",
+              pad = " "
+            ),
+            start,
+            "..",
+            end,
+            "\n                     /locus_tag=",
+            "\"",
+            locus_tag,
+            "\"\n                     /ApEinfo_fwdcolor=",
+            "\"",
+            fwdcolor,
+            "\"\n                     /ApEinfo_revcolor=",
+            "\"",
+            revcolor,
+            "\n"
+          )
         }
-      )
-    res <- c("FEATURES             Location/Qualifiers\n", res)
-  }
+
+
+      }
+    )
+  res <- c("FEATURES             Location/Qualifiers\n", res)
   return(res)
 }
 
