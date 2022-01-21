@@ -127,6 +127,10 @@
 
 * added bb_extract_msig
 
-# blaseRtools 0.0.0.9050
+# blaseRtools 0.0.0.9051
 
 * fixed pseudobulk mf
+
+# blaseRtools 0.0.0.9052
+
+* Ape vignette, fixed bugs in Ape functions and bb_renv_datapkg.

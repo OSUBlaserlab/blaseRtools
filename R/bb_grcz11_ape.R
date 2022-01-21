@@ -155,6 +155,7 @@ bb_grcz11_ape <-
 
       mcols(dna_grange) <-
          mcols(dna_grange) %>%
+	 as_tibble() %>%
          mutate(locus_tag = paste0(gene_name, "_", label)) %>%
          select(-c(gene_name, label)) %>%
          mutate(

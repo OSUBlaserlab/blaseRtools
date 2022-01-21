@@ -7,48 +7,65 @@
 bb_renv_datapkg <- function(path) {
   possibly_packageVersion <-
     purrr::possibly(packageVersion, otherwise = "0.0.0.0000")
-
-  if (str_detect(string = path, pattern = ".tar.gz")) {
-    message(str_glue("Installing {path}.  There may be newer versions available."))
-    renv::install(path)
-  } else {
-    latest_version <- file.info(list.files(path, full.names = T)) %>%
-      as_tibble(rownames = "file") %>%
-      filter(str_detect(file, pattern = ".tar.gz")) %>%
-      arrange(desc(mtime)) %>%
-      dplyr::slice(1) %>%
-      pull(file) %>%
-      str_split(pattern = "/") %>%
-      map(tail, n = 1) %>%
-      unlist()
-    datapackage_stem <- str_replace(latest_version, "_.*", "")
-    latest_version_number <- str_replace(latest_version, "^.*_", "")
-    latest_version_number <-
-      str_replace(latest_version_number, ".tar.gz", "")
-    if (possibly_packageVersion(datapackage_stem) == "0.0.0.0000") {
-      message(str_glue("Installing {datapackage_stem} for the first time."))
-      if (str_sub(path, -1) == "/") {
-        renv::install(paste0(path, latest_version))
+  tryCatch(
+    expr = {
+      if (str_detect(string = path, pattern = ".tar.gz")) {
+        message(str_glue("Installing {path}.  There may be newer versions available."))
+        renv::install(path)
       } else {
-        renv::install(paste0(path, "/", latest_version))
-      }
-    } else {
-      if (packageVersion(datapackage_stem) < latest_version_number) {
-        message(
-          str_glue(
-            "A newer data package version is available.  Installing {latest_version}."
-          )
-        )
-        if (str_sub(path, -1) == "/") {
-          renv::install(paste0(path, latest_version))
+        latest_version <- file.info(list.files(path, full.names = T)) %>%
+          as_tibble(rownames = "file") %>%
+          filter(str_detect(file, pattern = ".tar.gz")) %>%
+          arrange(desc(mtime)) %>%
+          dplyr::slice(1) %>%
+          pull(file) %>%
+          str_split(pattern = "/") %>%
+          map(tail, n = 1) %>%
+          unlist()
+        datapackage_stem <- str_replace(latest_version, "_.*", "")
+        latest_version_number <- str_replace(latest_version, "^.*_", "")
+        latest_version_number <-
+          str_replace(latest_version_number, ".tar.gz", "")
+        if (possibly_packageVersion(datapackage_stem) == "0.0.0.0000") {
+          message(str_glue("Installing {datapackage_stem} for the first time."))
+          if (str_sub(path,-1) == "/") {
+            renv::install(paste0(path, latest_version))
+          } else {
+            renv::install(paste0(path, "/", latest_version))
+          }
         } else {
-          renv::install(paste0(path, "/", latest_version))
+          if (packageVersion(datapackage_stem) < latest_version_number) {
+            message(
+              str_glue(
+                "A newer data package version is available.  Installing {latest_version}."
+              )
+            )
+            if (str_sub(path,-1) == "/") {
+              renv::install(paste0(path, latest_version))
+            } else {
+              renv::install(paste0(path, "/", latest_version))
+            }
+
+          } else {
+            message(str_glue(
+              "Your current version of {datapackage_stem} is up to date."
+            ))
+
+          }
+
         }
-
-      } else {
-      message(str_glue("Your current version of {datapackage_stem} is up to date."))
-
+      }
+    },
+    error = function(cond) {
+      message(
+        "The most common reason for this function to err is you are disconnected from the OSUMC network drive."
+      )
+      message("Here's the original error message:")
+      message(cond)
+      message(
+        "Try reconnecting to the network by going to the Terminal tab and entering cccnetmount at the prompt."
+      )
+      message("You will have to enter your network password.  Then try running the function again.")
     }
-
-  }
-}}
+  )
+}

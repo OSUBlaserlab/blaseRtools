@@ -54,7 +54,7 @@ All functions are documented and have help pages which can be reviewed after ins
     * bb_triplecluster
     * bb_var_umap
 
-* Ape class:  Programmatic methods for working with genbank files.
+* [Ape class]({{ site.baseurl }}{% link pages/Ape.html %}):  Programmatic methods for working with genbank files.
     * Ape.DNA
     * Ape.fasta
     * Ape.fimo

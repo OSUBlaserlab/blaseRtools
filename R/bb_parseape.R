@@ -7,77 +7,81 @@
 #' @import Biostrings GenomicRanges tidyverse
 #' @export
 granges_to_features <- function(gr) {
-  grlist <-
-    list(
-      locus_tag = gr@elementMetadata$locus_tag,
-      start = gr@ranges@start,
-      end = gr@ranges@width + gr@ranges@start - 1,
-      strand = as.vector(strand(gr)),
-      type = gr@elementMetadata$type,
-      fwdcolor = gr@elementMetadata$fwdcolor,
-      revcolor = gr@elementMetadata$revcolor
-    )
-  res <-
-    purrr::pmap_chr(
-      .l = grlist,
-      .f = function(locus_tag,
-                    start,
-                    end,
-                    strand,
-                    type,
-                    fwdcolor,
-                    revcolor) {
-        if (strand == "-") {
-          paste0(
-            str_pad(
-              paste0("     ", type),
-              width = 21,
-              side = "right",
-              pad = " "
-            ),
-            "complement(",
-            start,
-            "..",
-            end,
-            ")\n                     /locus_tag=",
-            "\"",
-            locus_tag,
-            "\"\n                     /ApEinfo_fwdcolor=",
-            "\"",
-            fwdcolor,
-            "\"\n                     /ApEinfo_revcolor=",
-            "\"",
-            revcolor,
-            "\n"
-          )
-        } else {
-          paste0(
-            str_pad(
-              paste0("     ", type),
-              width = 21,
-              side = "right",
-              pad = " "
-            ),
-            start,
-            "..",
-            end,
-            "\n                     /locus_tag=",
-            "\"",
-            locus_tag,
-            "\"\n                     /ApEinfo_fwdcolor=",
-            "\"",
-            fwdcolor,
-            "\"\n                     /ApEinfo_revcolor=",
-            "\"",
-            revcolor,
-            "\n"
-          )
+  if (gr == "") {
+    res <- ""
+  } else {
+    grlist <-
+      list(
+        locus_tag = gr@elementMetadata$locus_tag,
+        start = gr@ranges@start,
+        end = gr@ranges@width + gr@ranges@start - 1,
+        strand = as.vector(strand(gr)),
+        type = gr@elementMetadata$type,
+        fwdcolor = gr@elementMetadata$fwdcolor,
+        revcolor = gr@elementMetadata$revcolor
+      )
+    res <-
+      purrr::pmap_chr(
+        .l = grlist,
+        .f = function(locus_tag,
+                      start,
+                      end,
+                      strand,
+                      type,
+                      fwdcolor,
+                      revcolor) {
+          if (strand == "-") {
+            paste0(
+              str_pad(
+                paste0("     ", type),
+                width = 21,
+                side = "right",
+                pad = " "
+              ),
+              "complement(",
+              start,
+              "..",
+              end,
+              ")\n                     /locus_tag=",
+              "\"",
+              locus_tag,
+              "\"\n                     /ApEinfo_fwdcolor=",
+              "\"",
+              fwdcolor,
+              "\"\n                     /ApEinfo_revcolor=",
+              "\"",
+              revcolor,
+              "\n"
+            )
+          } else {
+            paste0(
+              str_pad(
+                paste0("     ", type),
+                width = 21,
+                side = "right",
+                pad = " "
+              ),
+              start,
+              "..",
+              end,
+              "\n                     /locus_tag=",
+              "\"",
+              locus_tag,
+              "\"\n                     /ApEinfo_fwdcolor=",
+              "\"",
+              fwdcolor,
+              "\"\n                     /ApEinfo_revcolor=",
+              "\"",
+              revcolor,
+              "\n"
+            )
+          }
+
+
         }
-
-
-      }
-    )
-  res <- c("FEATURES             Location/Qualifiers\n", res)
+      )
+    res <- c("FEATURES             Location/Qualifiers\n", res)
+  }
   return(res)
 }
 
@@ -97,10 +101,8 @@ bb_parseape <- function(input_file) {
     str_extract(ape, "^[:alpha:]*")[which(str_extract(ape, "^[:alpha:]*") %notin% c(""))]
   toplevel_nocomments <-
     str_extract(ape, "^[:alpha:]*")[which(str_extract(ape, "^[:alpha:]*") %notin% c("", "COMMENT"))]
-
   # get the indices of the top level items
   level0 <- which(str_detect(ape, "^[:alpha:]"))
-
   # first level chunking
   # make a list of rows that contain metadata
   chunked_ape <- map2(
@@ -170,7 +172,8 @@ bb_parseape <- function(input_file) {
 
   ) %>%
     compact() %>%
-    flatten() %>%
+    flatten()  %>%
+    purrr::discard(~ is.null(.x)) %>%
     set_names(toplevel_nocomments)
 
   # get the indices of teh subelements of the feature section
@@ -293,10 +296,10 @@ bb_parseape <- function(input_file) {
   ape_instance <-
     Ape(
       LOCUS = ape_plus$LOCUS,
-      DEFINITION = ape_plus$DEFINITION,
-      ACCESSION = ape_plus$ACCESSION,
-      VERSION = ape_plus$VERSION,
-      SOURCE = ape_plus$SOURCE,
+      DEFINITION = ifelse(is.null(ape_plus$DEFINITION), "DEFINITION     ", ape_plus$DEFINITION),
+      ACCESSION = ifelse(is.null(ape_plus$ACCESSION), "ACCESSION     ", ape_plus$ACCESSION),
+      VERSION = ifelse(is.null(ape_plus$VERSION), "VERSION     ", ape_plus$VERSION),
+      SOURCE = ifelse(is.null(ape_plus$SOURCE), "SOURCE     ", ape_plus$SOURCE),
       COMMENT = ape_plus$COMMENT,
       FEATURES = granges_to_features(ape_plus$granges),
       ORIGIN = ape_plus$ORIGIN,
