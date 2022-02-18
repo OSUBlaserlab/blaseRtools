@@ -8,6 +8,7 @@ bb_gene_dotplot(
   cds,
   markers,
   group_cells_by,
+  reduction_method = "UMAP",
   norm_method = c("size_log", "log_only"),
   scale_expression_by_gene = FALSE,
   lower_threshold = 0,
