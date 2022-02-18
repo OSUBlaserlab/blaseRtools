@@ -22,6 +22,7 @@
 bb_gene_dotplot <- function(cds,
                             markers,
                             group_cells_by,
+                            reduction_method = "UMAP",
                             norm_method = c("size_log", "log_only"),
                             scale_expression_by_gene = FALSE,
                             lower_threshold = 0,
@@ -62,6 +63,7 @@ bb_gene_dotplot <- function(cds,
   } else {
     colnames(exprs_mat) <- c("Cell", "Gene", "Expression")
   }
+
   exprs_mat$Gene <- as.character(exprs_mat$Gene)
 
   # set up the cell groupings
@@ -77,7 +79,6 @@ bb_gene_dotplot <- function(cds,
   exprs_mat$Group <- cell_group[exprs_mat$Cell]
   exprs_mat = exprs_mat %>%
     dplyr::filter(is.na(Group) == FALSE)
-
   # calculate the expression values
   # log transform the expression values
   exprs_mat <- exprs_mat %>%
@@ -107,7 +108,7 @@ bb_gene_dotplot <- function(cds,
   ExpVal$Gene <- fData(cds)[ExpVal$Gene, "gene_short_name"]
 
 
-  if (length(markers > 1)) {
+  if (length(markers) > 1) {
     res <-
       reshape2::dcast(ExpVal[, 1:4], Group ~ Gene, value.var = colnames(ExpVal)[2 +
                                                                                   major_axis])
@@ -163,29 +164,47 @@ bb_gene_dotplot <- function(cds,
   }
 
   if (group_cells_by == "multifactorial") {
-    facet_choice <- group_ordering %>% filter(aesthetic == "facet") %>% pull(value) %>% paste(collapse = "|")
-    axis_choice <- group_ordering %>% filter(aesthetic == "axis") %>% pull(value) %>% paste(collapse = "|")
+    facet_choice <-
+      group_ordering %>%
+      filter(aesthetic == "facet") %>%
+      pull(value) %>% paste(collapse = "|")
+    axis_choice <-
+      group_ordering %>%
+      filter(aesthetic == "axis") %>%
+      pull(value) %>%
+      paste(collapse = "|")
     ExpVal <-
       ExpVal %>%
       mutate(facet = str_extract(Group, pattern = facet_choice)) %>%
-      mutate(facet = factor(facet, levels = group_ordering %>% filter(aesthetic == "facet") %>% arrange(level) %>% pull(value))) %>%
+      mutate(facet = factor(
+        facet,
+        levels = group_ordering %>%
+          filter(aesthetic == "facet") %>%
+          arrange(level) %>%
+          pull(value)
+      )) %>%
       mutate(axis = str_extract(Group, pattern = axis_choice)) %>%
-      mutate(axis = factor(axis, levels = group_ordering %>% filter(aesthetic == "axis") %>% arrange(level) %>% pull(value)))
-      g <-
+      mutate(axis = factor(
+        axis,
+        levels = group_ordering %>%
+          filter(aesthetic == "axis") %>%
+          arrange(level) %>%
+          pull(value)
+      ))
+    g <-
       ggplot(ExpVal, mapping = aes(y = Gene, x = axis)) +
       geom_point(aes(colour = mean,
                      size = percentage)) +
       viridis::scale_color_viridis(name = ifelse(is.null(colorscale_name),
                                                  "Expression",
-                                                 colorscale_name
-                                                                )) +
+                                                 colorscale_name)) +
       scale_size(
         name = ifelse(is.null(sizescale_name), "Proportion", sizescale_name),
         range = c(0, max.size)
       ) +
-      facet_wrap(facets = vars(facet),...) +
+      facet_wrap(facets = vars(facet), ...) +
       theme(strip.background = element_blank())
-     return(g)
+    return(g)
   }
 
 }
