@@ -47,6 +47,7 @@
 # use_data_raw()
 # use_vignette(name = "scRNAseq")
 # use_vignette(name = "Ape")
+# use_vignette(name = "R_Intro_1")
 
 # renv::init()
 # renv::deactivate()
@@ -55,5 +56,5 @@ devtools::load_all()
 devtools::check(cran = FALSE)
 devtools::document()
 # commit and push to github
-devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE)
+devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE, force = TRUE)
 

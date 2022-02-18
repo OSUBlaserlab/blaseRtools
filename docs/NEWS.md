@@ -134,3 +134,7 @@
 # blaseRtools 0.0.0.9052
 
 * Ape vignette, fixed bugs in Ape functions and bb_renv_datapkg.
+
+# blaseRtools 0.0.0.9053
+
+* Changes to bb_gene_dotplot

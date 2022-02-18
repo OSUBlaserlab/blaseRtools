@@ -8,8 +8,8 @@ bb_gene_dotplot(
   cds,
   markers,
   group_cells_by,
-  reduction_method = "UMAP",
-  norm_method = c("log", "size_only"),
+  norm_method = c("size_log", "log_only"),
+  scale_expression_by_gene = FALSE,
   lower_threshold = 0,
   max.size = 10,
   group_ordering = "bicluster",
@@ -29,7 +29,9 @@ bb_gene_dotplot(
 
 \item{group_cells_by}{A cds colData column.  Use "multifactorial" to pick 2 categorical variables to put on X axis and to facet by.  See ordering below.}
 
-\item{norm_method}{How to normalize gene expression.  Default = "log"}
+\item{norm_method}{How to normalize gene expression. Size_factor and log normalized or only log normalized.}
+
+\item{scale_expression_by_gene}{Whether to scale expression values according to gene.  Defaults to FALSE.}
 
 \item{lower_threshold}{Lower cutoff for gene expression}
 
