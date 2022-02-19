@@ -55,6 +55,20 @@
 devtools::load_all()
 devtools::check(cran = FALSE)
 devtools::document()
-# commit and push to github
+
+# make the documents for the website
+purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = FALSE),
+     .f = function(x) {
+       rmarkdown::render(input = file.path("vignettes", x), output_dir = "docs/pages", output_format = "html_document")
+       rfile <- str_replace(x, ".Rmd", ".R")
+       knitr::purl(input = file.path("vignettes", x), output = file.path("docs", "pages",rfile))
+     })
+
+# commit and push
+gert::git_add("*")
+gert::git_commit("added vignette R files")
+gert::git_push()
+
+# install
 devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE, force = TRUE)
 
