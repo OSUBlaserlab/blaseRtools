@@ -16,28 +16,26 @@ RoxygenNote: 7.1.2
 URL: https://github.com/blaserlab/blaseRtools
 BugReports: https://github.com/blaserlab/blaseRtools/issues
 Suggests: 
-    DoubletFinder,
     knitr,
     org.Dr.eg.db,
     org.Hs.eg.db,
     org.Mm.eg.db,
     rmarkdown
 Imports: 
-    DESeq2,
+    DESeq2 (>= 1.34.0),
     genefilter,
     annotate,
     geneplotter,
     ashr,
     readxl,
     cowplot,
-    monocle3,
+    monocle3 (>= 1.0.0),
     tidyverse,
-    fastSave,
     MASS,
     Matrix,
     Matrix.utils,
     Seurat,
-    SeuratDisk,
+    SeuratDisk (>= 0.0.0.9019),
     SingleCellExperiment,
     broom,
     ggpubr,
@@ -45,9 +43,9 @@ Imports:
     grid,
     hexbin,
     pheatmap,
-    rrvgo,
-    topGO,
-    scater,
+    rrvgo (>= 1.6.0),
+    topGO (>= 2.46.0),
+    scater (>= 1.22.0),
     huxtable,
     stats,
     dplyr,
@@ -65,10 +63,28 @@ Imports:
     digest,
     fs,
     ggforce,
-    blaseRdata,
-    GenomicAlignments,
-    Rsamtools,
-    rstatix
+    blaseRdata (>= 0.0.0.9008),
+    GenomicAlignments (>= 1.30.0),
+    Rsamtools (>= 2.10.0),
+    rstatix,
+    batchelor (>= 1.10.0),
+    limma (>= 3.50.0),
+    leidenbase (>= 0.1.3),
+    DoubletFinder (>= 2.0.3)
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
+Remotes:  
+    bioc::DESeq2,
+    github::blaserlab/blaseRdata,
+    github::cole-trapnell-lab/monocle3,
+    bioc::batchelor,
+    bioc::limma,
+    cole-trapnell-lab/leidenbase,
+    mojaveazure/seurat-disk,
+    bioc::rrvgo,
+    bioc::topGO,
+    bioc::scater,
+    bioc::Rsamtools,
+    bioc::GenomicAlignments,
+    github::chris-mcginnis-ucsf/DoubletFinder
