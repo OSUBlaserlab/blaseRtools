@@ -138,3 +138,7 @@
 # blaseRtools 0.0.0.9053-4
 
 * Changes to bb_gene_dotplot
+
+# blaseRtools 0.0.0.9055
+
+* Changed dependencies
