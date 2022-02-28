@@ -146,3 +146,7 @@
 # blaseRtools 0.0.0.9056
 
 * Added filter_cds
+
+# blaseRtools 0.0.0.9057
+
+* edited dependencies
