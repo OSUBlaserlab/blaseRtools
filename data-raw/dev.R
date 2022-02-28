@@ -4,7 +4,7 @@
 # use_mit_license("Brad Blaser")
 # use_dev_package("blaseRdata", type = "Imports", remote = "github::blaserlab/blaseRdata")
 # use_dev_package("DESeq2", type = "Imports", remote = "bioc::DESeq2")
-use_dev_package("DoubletFinder", type = "Imports", remote = "github::chris-mcginnis-ucsf/DoubletFinder")
+# use_dev_package("DoubletFinder", type = "Imports", remote = "github::chris-mcginnis-ucsf/DoubletFinder")
 # use_package("tidyverse", type = "imports")
 # use_dev_package("monocle3", type = "Imports", remote = "github::cole-trapnell-lab/monocle3")
 # use_dev_package("batchelor", type = "Imports", remote = "bioc::batchelor")
@@ -26,9 +26,9 @@ use_dev_package("DoubletFinder", type = "Imports", remote = "github::chris-mcgin
 # use_package("grid", type = "imports")
 # use_package("hexbin", type = "imports")
 # use_package("pheatmap", type = "imports")
-use_dev_package("rrvgo", type = "imports", remote = "bioc::rrvgo")
-use_dev_package("topGO", type = "imports", remote = "bioc::topGO")
-use_dev_package("scater", type = "imports", remote = "bioc::scater")
+# use_dev_package("rrvgo", type = "imports", remote = "bioc::rrvgo")
+# use_dev_package("topGO", type = "imports", remote = "bioc::topGO")
+# use_dev_package("scater", type = "imports", remote = "bioc::scater")
 # use_package("huxtable", type = "imports")
 # use_package("stats", type = "imports")
 # use_package("org.Hs.eg.db", type = "suggests")
@@ -42,8 +42,8 @@ use_dev_package("scater", type = "imports", remote = "bioc::scater")
 # use_package("methods", type = "imports")
 # use_package("circlize", type = "imports")
 # use_package("GenomicRanges", type = "imports")
-use_dev_package("GenomicAlignments", type = "imports", remote = "bioc::GenomicAlignments")
-use_dev_package("Rsamtools", type = "imports", remote = "bioc::Rsamtools")
+# use_dev_package("GenomicAlignments", type = "imports", remote = "bioc::GenomicAlignments")
+# use_dev_package("Rsamtools", type = "imports", remote = "bioc::Rsamtools")
 # usethis::use_package("Signac", type = "imports")
 # use_readme_md()
 # use_news_md()
@@ -57,8 +57,8 @@ use_dev_package("Rsamtools", type = "imports", remote = "bioc::Rsamtools")
 # renv::init()
 # renv::deactivate()
 
-devtools::load_all()
-devtools::check(cran = FALSE)
+# devtools::load_all()
+# devtools::check(cran = FALSE)
 devtools::document()
 
 # make the documents for the website
@@ -70,8 +70,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
      })
 
 # commit and push
-gert::git_add("*")
-gert::git_commit("added vignette R files")
+gert::git_commit_all("dev version 0.0.0.9056")
 gert::git_push()
 
 # install
