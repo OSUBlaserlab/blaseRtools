@@ -70,7 +70,8 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
      })
 
 # commit and push
-gert::git_commit_all("dev version 0.0.0.9056")
+gert::git_add("*")
+gert::git_commit("dev version 0.0.0.9056")
 gert::git_push()
 
 # install
