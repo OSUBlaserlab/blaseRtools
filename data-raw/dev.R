@@ -75,5 +75,5 @@ gert::git_commit("dev version 0.0.0.9057")
 gert::git_push()
 
 # install
-devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE, force = TRUE)
+renv::install("blaserlab/blaseRtools", build_vignettes = TRUE, force = TRUE)
 
