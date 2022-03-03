@@ -150,3 +150,7 @@
 # blaseRtools 0.0.0.9057
 
 * edited dependencies
+
+# blaseRtools 0.0.0.9058
+
+* added bb_cds_anno and bb_cds_heatmap functions
