@@ -155,6 +155,6 @@
 
 * added bb_cds_anno and bb_cds_heatmap functions
 
-# blaseRtools 0.0.0.9059
+# blaseRtools 0.0.0.9059 - 60
 
 * edited DESCRIPTION to include ComplexHeatmap 

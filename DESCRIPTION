@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9059
+Version: 0.0.0.9060
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -87,5 +87,5 @@ Remotes:
     bioc::scater,
     bioc::Rsamtools,
     bioc::GenomicAlignments,
-    github::chris-mcginnis-ucsf/DoubletFinder
+    github::chris-mcginnis-ucsf/DoubletFinder,
     bioc::ComplexHeatmap
