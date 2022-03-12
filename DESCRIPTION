@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9060
+Version: 0.0.0.9061
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -70,7 +70,8 @@ Imports:
     batchelor,
     limma,
     leidenbase,
-    DoubletFinder
+    DoubletFinder,
+    ComplexHeatmap
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
