@@ -59,7 +59,13 @@
 
 # devtools::load_all()
 # devtools::check(cran = FALSE)
+renv::init(bioconductor = TRUE)
+
+remotes::install_github("blaserlab/blaseRtemplates")
+
 devtools::document()
+
+renv::install("blaserlab/blaseRtemplates")
 
 # make the documents for the website
 purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = FALSE),
