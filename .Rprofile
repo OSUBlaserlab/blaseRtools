@@ -16,4 +16,7 @@ options(Biostrings.coloring = FALSE)
 # make the R prompt show the active git branch
 if (prompt::is_git_dir()) prompt::set_prompt(paste0("[ ", gert::git_branch(), " ] > "))
 
+# copy the git credential store pat to the environment variable so they are in sync
+Sys.setenv(GITHUB_PAT = gitcreds::gitcreds_get(use_cache = FALSE)$password)
+
 if (file.exists("~/.Rprofile")) source("~/.Rprofile")

@@ -1148,15 +1148,15 @@
     },
     "blaseRtemplates": {
       "Package": "blaseRtemplates",
-      "Version": "0.0.0.9038",
+      "Version": "0.0.0.9039",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "blaserlab",
       "RemoteRepo": "blaseRtemplates",
       "RemoteRef": "main",
-      "RemoteSha": "90318461d46cd6994e0a27a9edc920cf6c5c537c",
-      "Hash": "cdfaaa5b069ef0b34c5448aa917fddba",
+      "RemoteSha": "2df87fe613cbfeaef81f1aa0c40317b6643bf795",
+      "Hash": "211f006088349310b2222b08bfb50b2d",
       "Requirements": [
         "fs",
         "gert",

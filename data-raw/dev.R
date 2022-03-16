@@ -59,13 +59,9 @@
 
 # devtools::load_all()
 # devtools::check(cran = FALSE)
-renv::init(bioconductor = TRUE)
-
-remotes::install_github("blaserlab/blaseRtemplates")
+# blaseRtemplates::easy_install("blaserlab/blaseRtemplates", "new_or_update")
 
 devtools::document()
-
-renv::install("blaserlab/blaseRtemplates")
 
 # make the documents for the website
 purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = FALSE),
@@ -77,7 +73,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
 
 # commit and push
 gert::git_add("*")
-gert::git_commit("dev version 0.0.0.9061")
+gert::git_commit("dev version 0.0.0.9062")
 gert::git_push()
 
 # install

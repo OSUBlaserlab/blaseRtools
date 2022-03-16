@@ -3,7 +3,7 @@
 #' @param path Path to a directory containing one or more versions of the same data package.  If a directory is specified, this function will compare the currently installed version to the latest availaible version in the directory.  If there is a newer version available (based on version number), it will install this version.  If a binary is specifically requested it will install that one. If the package hasn't been installed, it will install it.
 #' @return Returns nothing. Using renv, it installs the latest version of the binary datapackage or updates it if already installed.
 #' @export
-#' @import tidyverse renv
+#' @import tidyverse renv blaseRtemplates
 bb_renv_datapkg <- function(path) {
   possibly_packageVersion <-
     purrr::possibly(packageVersion, otherwise = "0.0.0.0000")
@@ -11,7 +11,8 @@ bb_renv_datapkg <- function(path) {
     expr = {
       if (str_detect(string = path, pattern = ".tar.gz")) {
         message(str_glue("Installing {path}.  There may be newer versions available."))
-        renv::install(path)
+        # renv::install(path)
+        blaseRtemplates::easy_install(package = path, how = "tarball")
       } else {
         latest_version <- file.info(list.files(path, full.names = T)) %>%
           as_tibble(rownames = "file") %>%
@@ -29,9 +30,11 @@ bb_renv_datapkg <- function(path) {
         if (possibly_packageVersion(datapackage_stem) == "0.0.0.0000") {
           message(str_glue("Installing {datapackage_stem} for the first time."))
           if (str_sub(path,-1) == "/") {
-            renv::install(paste0(path, latest_version))
+            # renv::install(paste0(path, latest_version))
+            blaseRtemplates::easy_install(package = paste0(path, latest_version), how = "tarball")
           } else {
-            renv::install(paste0(path, "/", latest_version))
+            # renv::install(paste0(path, "/", latest_version))
+            blaseRtemplates::easy_install(package = paste0(path, "/", latest_version), how = "tarball")
           }
         } else {
           if (packageVersion(datapackage_stem) < latest_version_number) {
@@ -41,9 +44,11 @@ bb_renv_datapkg <- function(path) {
               )
             )
             if (str_sub(path,-1) == "/") {
-              renv::install(paste0(path, latest_version))
+              # renv::install(paste0(path, latest_version))
+              blaseRtemplates::easy_install(package = paste0(path, latest_version), how = "tarball")
             } else {
-              renv::install(paste0(path, "/", latest_version))
+              # renv::install(paste0(path, "/", latest_version))
+              blaseRtemplates::easy_install(package = paste0(path, "/", latest_version), how = "tarball")
             }
 
           } else {
@@ -58,14 +63,14 @@ bb_renv_datapkg <- function(path) {
     },
     error = function(cond) {
       message(
-        "The most common reason for this function to err is you are disconnected from the OSUMC network drive."
+        "The most common reason for this function to err is you are disconnected from the OSUMC network drive.\n"
       )
-      message("Here's the original error message:")
+      message("Here's the original error message:\n")
       message(cond)
       message(
-        "Try reconnecting to the network by going to the Terminal tab and entering cccnetmount at the prompt."
+        "Try reconnecting to the network by going to the Terminal tab and entering cccnetmount at the prompt.\n"
       )
-      message("You will have to enter your network password.  Then try running the function again.")
+      message("You will have to enter your network password.  Then try running the function again.\n")
     }
   )
 }

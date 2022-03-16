@@ -17,7 +17,7 @@ blaseRtemplates::git_easy_branch(branch = "brad_working")
 
 # save, add and commit your work but don't push
 gert::git_add("*")
-gert::git_commit("edited description")
+gert::git_commit("")
 
 # frequently update your working branch from main or master branch
 # this will first update main or master from remote
