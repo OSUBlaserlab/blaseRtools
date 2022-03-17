@@ -11,8 +11,7 @@ bb_renv_datapkg <- function(path) {
     expr = {
       if (str_detect(string = path, pattern = ".tar.gz")) {
         message(str_glue("Installing {path}.  There may be newer versions available."))
-        # renv::install(path)
-        blaseRtemplates::easy_install(package = path, how = "tarball")
+        renv::install(path)
       } else {
         latest_version <- file.info(list.files(path, full.names = T)) %>%
           as_tibble(rownames = "file") %>%
@@ -30,11 +29,9 @@ bb_renv_datapkg <- function(path) {
         if (possibly_packageVersion(datapackage_stem) == "0.0.0.0000") {
           message(str_glue("Installing {datapackage_stem} for the first time."))
           if (str_sub(path,-1) == "/") {
-            # renv::install(paste0(path, latest_version))
-            blaseRtemplates::easy_install(package = paste0(path, latest_version), how = "tarball")
+            renv::install(paste0(path, latest_version))
           } else {
-            # renv::install(paste0(path, "/", latest_version))
-            blaseRtemplates::easy_install(package = paste0(path, "/", latest_version), how = "tarball")
+            renv::install(paste0(path, "/", latest_version))
           }
         } else {
           if (packageVersion(datapackage_stem) < latest_version_number) {
@@ -44,11 +41,9 @@ bb_renv_datapkg <- function(path) {
               )
             )
             if (str_sub(path,-1) == "/") {
-              # renv::install(paste0(path, latest_version))
-              blaseRtemplates::easy_install(package = paste0(path, latest_version), how = "tarball")
+              renv::install(paste0(path, latest_version))
             } else {
-              # renv::install(paste0(path, "/", latest_version))
-              blaseRtemplates::easy_install(package = paste0(path, "/", latest_version), how = "tarball")
+              renv::install(paste0(path, "/", latest_version))
             }
 
           } else {
@@ -68,7 +63,7 @@ bb_renv_datapkg <- function(path) {
       message("Here's the original error message:\n")
       message(cond)
       message(
-        "Try reconnecting to the network by going to the Terminal tab and entering cccnetmount at the prompt.\n"
+        "\nTry reconnecting to the network by going to the Terminal tab and entering cccnetmount at the prompt.\n"
       )
       message("You will have to enter your network password.  Then try running the function again.\n")
     }
