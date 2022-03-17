@@ -50,7 +50,7 @@ Imports:
     stats,
     dplyr,
     ggplot2,
-    renv,
+    renv (>= 0.15.3),
     stringr,
     Signac,
     methods,
@@ -71,11 +71,12 @@ Imports:
     limma,
     leidenbase,
     DoubletFinder,
-    ComplexHeatmap
+    ComplexHeatmap,
+    blaseRtemplates (>= 0.0.0.9038)
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
-Remotes:  
+Remotes: 
     bioc::DESeq2,
     github::blaserlab/blaseRdata,
     github::cole-trapnell-lab/monocle3,
@@ -89,4 +90,5 @@ Remotes:
     bioc::Rsamtools,
     bioc::GenomicAlignments,
     github::chris-mcginnis-ucsf/DoubletFinder,
-    bioc::ComplexHeatmap
+    bioc::ComplexHeatmap,
+    github::blaserlab/blaseRtemplates

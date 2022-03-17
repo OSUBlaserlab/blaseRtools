@@ -60,6 +60,8 @@
 # devtools::load_all()
 # devtools::check(cran = FALSE)
 # blaseRtemplates::easy_install("blaserlab/blaseRtemplates", "new_or_update")
+# usethis::use_package("blaseRtemplates", min_version = "0.0.0.9038")
+# usethis::use_package("renv", min_version = "0.15.3")
 
 devtools::document()
 
