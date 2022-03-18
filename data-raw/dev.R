@@ -53,7 +53,7 @@
 # use_vignette(name = "scRNAseq")
 # use_vignette(name = "Ape")
 # use_vignette(name = "R_Intro_1")
-
+# usethis::use_package("prompt")
 # renv::init()
 # renv::deactivate()
 
@@ -65,6 +65,7 @@
 
 devtools::document()
 
+
 # make the documents for the website
 purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = FALSE),
      .f = function(x) {
@@ -75,7 +76,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
 
 # commit and push
 gert::git_add("*")
-gert::git_commit("dev version 0.0.0.9063")
+gert::git_commit("removed renv")
 gert::git_push()
 
 # install

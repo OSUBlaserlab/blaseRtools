@@ -72,7 +72,8 @@ Imports:
     leidenbase,
     DoubletFinder,
     ComplexHeatmap,
-    blaseRtemplates (>= 0.0.0.9038)
+    blaseRtemplates (>= 0.0.0.9038),
+    prompt
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
