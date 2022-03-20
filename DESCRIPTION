@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9063
+Version: 0.0.0.9064
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -30,7 +30,6 @@ Imports:
     readxl,
     cowplot,
     monocle3,
-    tidyverse,
     MASS,
     Matrix,
     Matrix.utils,
@@ -75,6 +74,7 @@ Imports:
     blaseRtemplates (>= 0.0.0.9038),
     prompt
 Depends: 
+    tidyverse,
     R (>= 2.10)
 VignetteBuilder: knitr
 Remotes: 
@@ -83,8 +83,8 @@ Remotes:
     github::cole-trapnell-lab/monocle3,
     bioc::batchelor,
     bioc::limma,
-    cole-trapnell-lab/leidenbase,
-    mojaveazure/seurat-disk,
+    bioc::leidenbase,
+    github::mojaveazure/seurat-disk,
     bioc::rrvgo,
     bioc::topGO,
     bioc::scater,

@@ -158,3 +158,7 @@
 # blaseRtools 0.0.0.9059 - 61
 
 * edited DESCRIPTION to include ComplexHeatmap 
+
+# blaseRtools 0.0.0.9064
+
+* edited dependencies to include tidyverse as depends 

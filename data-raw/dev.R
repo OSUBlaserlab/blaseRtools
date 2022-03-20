@@ -62,6 +62,7 @@
 # blaseRtemplates::easy_install("blaserlab/blaseRtemplates", "new_or_update")
 # usethis::use_package("blaseRtemplates", min_version = "0.0.0.9038")
 # usethis::use_package("renv", min_version = "0.15.3")
+# usethis::use_package("tidyverse", type = "depends")
 
 devtools::document()
 
@@ -76,7 +77,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
 
 # commit and push
 gert::git_add("*")
-gert::git_commit("removed renv")
+gert::git_commit("version 0.0.0.9064")
 gert::git_push()
 
 # install

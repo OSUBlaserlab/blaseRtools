@@ -54,7 +54,7 @@ bb_cluster_representation <- function(cds,
         rstatix::fisher_test() %>%
         mutate(!!cluster_var_int := x) %>%
         relocate(!!sym(cluster_var_int)) %>%
-        rename(fisher_exact_p = p)
+        dplyr::rename(fisher_exact_p = p)
       return(fish)
     }
   )
