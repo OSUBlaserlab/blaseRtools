@@ -13,7 +13,9 @@ bb_pseudobulk_mf <- function(cds,
                              pseudosample_table,
                              design_formula,
                              count_filter = 10,
-                             result_recipe = "default") {
+                             result_recipe = "default",
+                             test = "Wald",
+                             reduced = NULL) {
   # sanitize the result_recipe argument
   result_recipe <- str_replace_all(result_recipe, "[^[:alnum:]]", "_")
 
@@ -42,11 +44,11 @@ bb_pseudobulk_mf <- function(cds,
     select(ps_id)
   # get the aggregate counts
   aggregate_counts <-
-    aggregate.Matrix(t(as.matrix(exprs(cds))), groupings = groups, fun = "sum")
+    Matrix.utils::aggregate.Matrix(t(monocle3::exprs(cds)), groupings = groups, fun = "sum")
   counts_matrix <- as.matrix(t(as.matrix(aggregate_counts)))
 
   # filter the count matrix
-  counts_matrix <- counts_matrix[rowSums(counts_matrix) >= 10, ]
+  counts_matrix <- counts_matrix[rowSums(counts_matrix) >= count_filter, ]
 
   # check that rownames == colnames
   stopifnot("Rownames and colnames are mismatched." = all(rownames(pseudosample_df) == colnames(counts_matrix)))
@@ -59,8 +61,13 @@ bb_pseudobulk_mf <- function(cds,
   )
 
   # do the thing
-  dds <- DESeq2::DESeq(dds)
-  if (result_recipe == "default") {
+  if (!is.null(reduced)) {
+    dds <- DESeq2::DESeq(dds, test = test, reduced = reduced)
+  } else {
+    dds <- DESeq2::DESeq(dds, test = test)
+  }
+
+  if (all(result_recipe == "default")) {
     res <- DESeq2::results(dds)
   } else {
     res <- DESeq2::results(dds, contrast = result_recipe)

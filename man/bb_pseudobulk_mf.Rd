@@ -9,7 +9,9 @@ bb_pseudobulk_mf(
   pseudosample_table,
   design_formula,
   count_filter = 10,
-  result_recipe = "default"
+  result_recipe = "default",
+  test = "Wald",
+  reduced = NULL
 )
 }
 \arguments{

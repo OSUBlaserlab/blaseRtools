@@ -174,3 +174,7 @@
 # blaseRtools 0.0.0.9067
 
 * fixed bug in citeseq functions where object got converted to wrong class
+
+# blaseRtools 0.0.0.9068
+
+* fixed spot in pseudobulk where it converted sparse to dense unnecessarily
