@@ -170,3 +170,7 @@
 # blaseRtools 0.0.0.9066
 
 * increased default brightness of bb_gene_umap color scale
+
+# blaseRtools 0.0.0.9067
+
+* fixed bug in citeseq functions where object got converted to wrong class

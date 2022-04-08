@@ -120,7 +120,10 @@ bb_split_citeseq <- function(cds) {
   SummarizedExperiment::assay(cds, "CLR_counts") <- CLR_counts
 
   # swap experiments back
-   cds <- SingleCellExperiment::swapAltExp(cds, name = "Gene Expression")
+  cds <- SingleCellExperiment::swapAltExp(cds, name = "Gene Expression")
+
+  # convert from SingleCellExperiment class back to cell_data_set
+  cds <- as(object = cds, Class = "cell_data_set")
 
   return(cds)
 
