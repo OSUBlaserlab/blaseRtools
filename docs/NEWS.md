@@ -162,3 +162,7 @@
 # blaseRtools 0.0.0.9064
 
 * edited dependencies to include tidyverse as depends 
+
+# blaseRtools 0.0.0.9065
+
+* added citeseq functions
