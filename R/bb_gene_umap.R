@@ -1,13 +1,13 @@
-#' Make a plot of gene expression in UMAP form 
-#' 
-#' @param cds A cell data set object 
-#' @param gene_or_genes A character vector of genes to plot 
+#' Make a plot of gene expression in UMAP form
+#'
+#' @param cds A cell data set object
+#' @param gene_or_genes A character vector of genes to plot
 #' @param cell_size Size of cells to plot
 #' @param alpha Alpha value for overlaid points
 #' @param ncol Number of columns in facetted plot
 #' @param plot_title Main title of the plot
 #' @param color_legend_title Title for the color legend
-#' @return A ggplot 
+#' @return A ggplot
 #' @export
 #' @import tidyverse monocle3
 bb_gene_umap <-
@@ -19,7 +19,7 @@ bb_gene_umap <-
             plot_title = NULL,
             color_legend_title = NULL
             ) {
-    
+
     data <- plot_cells(cds = cds, genes = gene_or_genes)[["data"]]
     # data$feature_label <-
     #   factor(data$feature_label, levels = gene_or_genes)
@@ -45,7 +45,7 @@ bb_gene_umap <-
         size = cell_size,
         alpha = alpha
       ) +
-      scale_color_viridis_c(end = 0.8) +
+      scale_color_viridis_c() +
       labs(
         x = "UMAP 1",
         y = "UMAP 2",
