@@ -23,7 +23,7 @@
 #' @importFrom monocle3 normalized_counts
 #' @importFrom dplyr left_join pull
 #' @importFrom tibble tibble
-#' @importFrom CellChat createCellChat CellChatDB.human CellChatDB.mouse CellChatDB.zebrafish subsetData identifyOverExpressedGenes identifyOverExpressedInteractions projectData computeCommunProb filterCommunication computeCommunProbPathway aggregateNet
+#' @import CellChat
 #' @importFrom SingleCellExperiment colData
 #' @importFrom future plan
 bb_cellchat <-
