@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9068
+Version: 0.0.0.9069
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -72,12 +72,13 @@ Imports:
     DoubletFinder,
     ComplexHeatmap,
     blaseRtemplates (>= 0.0.0.9038),
-    prompt
+    prompt,
+    CellChat (>= 1.1.3)
 Depends: 
     tidyverse,
     R (>= 2.10)
 VignetteBuilder: knitr
-Remotes: 
+Remotes:  
     bioc::DESeq2,
     github::blaserlab/blaseRdata,
     github::cole-trapnell-lab/monocle3,
@@ -92,4 +93,5 @@ Remotes:
     bioc::GenomicAlignments,
     github::chris-mcginnis-ucsf/DoubletFinder,
     bioc::ComplexHeatmap,
-    github::blaserlab/blaseRtemplates
+    github::blaserlab/blaseRtemplates,
+    sqjin/CellChat

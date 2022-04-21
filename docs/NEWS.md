@@ -178,3 +178,7 @@
 # blaseRtools 0.0.0.9068
 
 * fixed spot in pseudobulk where it converted sparse to dense unnecessarily
+
+# blaseRtools 0.0.0.9069
+
+* added cellchat functions
