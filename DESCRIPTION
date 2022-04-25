@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9069
+Version: 0.0.0.9070
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -79,19 +79,9 @@ Depends:
     R (>= 2.10)
 VignetteBuilder: knitr
 Remotes:  
-    bioc::DESeq2,
     github::blaserlab/blaseRdata,
     github::cole-trapnell-lab/monocle3,
-    bioc::batchelor,
-    bioc::limma,
-    bioc::leidenbase,
     github::mojaveazure/seurat-disk,
-    bioc::rrvgo,
-    bioc::topGO,
-    bioc::scater,
-    bioc::Rsamtools,
-    bioc::GenomicAlignments,
     github::chris-mcginnis-ucsf/DoubletFinder,
-    bioc::ComplexHeatmap,
     github::blaserlab/blaseRtemplates,
-    sqjin/CellChat
+    github::sqjin/CellChat
