@@ -12,7 +12,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
 
 # commit and push
 gert::git_add("*")
-gert::git_commit("version 0.0.0.9070")
+gert::git_commit("version 0.0.0.9071")
 gert::git_push()
 
 renv::install("blaserlab/blaseRtools")
