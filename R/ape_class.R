@@ -278,7 +278,7 @@ setValidity("Ape", function(object) {
   if (is.na(object@LOCUS))
     return("LOCUS slot must be defined")
   # object@FEATURES <- granges_to_features(object@granges)
-  if (object@FEATURES != "" & any(object@FEATURES != granges_to_features(object@granges)))
+  if (any(object@FEATURES != "") & any(object@FEATURES != granges_to_features(object@granges)))
     return("The granges slot must resolve to FEATURES slot using granges_to_features")
   TRUE
 

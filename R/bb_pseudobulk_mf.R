@@ -8,7 +8,7 @@
 #' @param result_recipe See above for the default recipe.  Alternatively, supply a 3-element vector in the form of c("variable", "experimental_level","reference_or_control_level")
 #' @return A list of results from pseudobulk analysis
 #' @export
-#' @import tidyverse pheatmap Matrix.utils monocle3
+#' @import tidyverse pheatmap Matrix.utils monocle3 DESeq2
 bb_pseudobulk_mf <- function(cds,
                              pseudosample_table,
                              design_formula,
@@ -17,31 +17,31 @@ bb_pseudobulk_mf <- function(cds,
                              test = "Wald",
                              reduced = NULL) {
   # sanitize the result_recipe argument
-  result_recipe <- str_replace_all(result_recipe, "[^[:alnum:]]", "_")
+  result_recipe <- stringr::str_replace_all(result_recipe, "[^[:alnum:]]", "_")
 
   # sanitize the pseudosample table to remove unusable characters and create a dummy variable called pseudosample
   pseudosample_table <-
-    pseudosample_table %>%
-    ungroup() %>%
-    mutate(across(.cols = everything(), ~ str_replace_all(., "[^[:alnum:]]", "_"))) %>%
-    mutate(across(.cols = everything(), as.factor)) %>%
-    mutate(ps_id = factor(row_number(), labels = "pseudosample_")) %>%
-    relocate(ps_id)
+    pseudosample_table |>
+    dplyr::ungroup() |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), ~ stringr::str_replace_all(., "[^[:alnum:]]", "_"))) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.factor)) |>
+    dplyr::mutate(ps_id = factor(dplyr::row_number(), labels = "pseudosample_")) |>
+    dplyr::relocate(ps_id)
 
   # convert to data frame
-  pseudosample_df <- pseudosample_table %>%
-    column_to_rownames(var = "ps_id")
+  pseudosample_df <- pseudosample_table |>
+    tibble::column_to_rownames(var = "ps_id")
 
   # clean the cell metadata
-  cellmeta <- bb_cellmeta(cds) %>%
-    select(matches(colnames(pseudosample_df))) %>%
-    mutate(across(.cols = everything(), ~ str_replace_all(., "[^[:alnum:]]", "_"))) %>%
-    mutate(across(.cols = everything(), as.factor))
+  cellmeta <- bb_cellmeta(cds) |>
+    dplyr::select(dplyr::matches(colnames(pseudosample_df))) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), ~ stringr::str_replace_all(., "[^[:alnum:]]", "_"))) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.factor))
   # join the pseudosample id onto the cell metadata to generate groupings
 
   groups <-
-    left_join(cellmeta, pseudosample_table) %>%
-    select(ps_id)
+    dplyr::left_join(cellmeta, pseudosample_table) |>
+    dplyr::select(ps_id)
   # get the aggregate counts
   aggregate_counts <-
     Matrix.utils::aggregate.Matrix(t(monocle3::exprs(cds)), groupings = groups, fun = "sum")
@@ -78,43 +78,51 @@ bb_pseudobulk_mf <- function(cds,
   shrnk <- DESeq2::lfcShrink(dds = dds, res = res, type = "ashr")
   res_tbl <-
     as.data.frame(res)  %>%
-    rownames_to_column(var = "id") %>%
-    as_tibble() %>%
-    left_join(., as_tibble(rowData(cds)[, c("id", "gene_short_name")])) %>%
-    relocate(gene_short_name, .after = id)
+    tibble::rownames_to_column(var = "id") %>%
+    tibble::as_tibble() %>%
+    dplyr::left_join(., tibble::as_tibble(rowData(cds)[, c("id", "gene_short_name")])) %>%
+    dplyr::relocate(gene_short_name, .after = id)
 
   shrnk_tbl <-
     as.data.frame(shrnk)  %>%
-    rownames_to_column(var = "id") %>%
-    as_tibble() %>%
-    left_join(., as_tibble(rowData(cds)[, c("id", "gene_short_name")])) %>%
-    relocate(gene_short_name, .after = id)
+    tibble::rownames_to_column(var = "id") %>%
+    tibble::as_tibble() %>%
+    dplyr::left_join(., as_tibble(rowData(cds)[, c("id", "gene_short_name")])) %>%
+    dplyr::relocate(gene_short_name, .after = id)
 
   #qc
-  rld <- DESeq2::rlog(dds, blind = T)
+
+  if (nrow(pseudosample_table) < 50 ) {
+    transform_fun <- DESeq2::rlog
+  } else {
+    transform_fun <- DESeq2::varianceStabilizingTransformation
+  }
+
+  transformed <- transform_fun(dds, blind = T, fitType = "parametric")
   intgroups <- colnames(colData(dds))
   intgroups <- intgroups[intgroups != "sizeFactor"]
-  pcas <- map(
+  pcas <- purrr::map(
     .x = intgroups,
-    .f = function(x, data = rld) {
+    .f = function(x, data = transformed) {
       pca_plot <- DESeq2::plotPCA(object = data, intgroup = x)
       return(pca_plot)
     }
   )
+
   # Extract the rlog matrix from the object and compute pairwise correlation values
-  rld_mat <- assay(rld)
-  rld_cor <- cor(rld_mat)
+  transformed_mat <- SummarizedExperiment::assay(transformed)
+  transformed_cor <- cor(transformed_mat)
 
   # Plot heatmap
   heatmap <-
-    pheatmap::pheatmap(rld_cor,
+    pheatmap::pheatmap(transformed_cor,
                        annotation_row = pseudosample_df,
                        annotation_col = pseudosample_df)
 
   # plot dispersion
-  plot.new()
+  graphics::plot.new()
   DESeq2::plotDispEsts(dds)
-  dispersion <- recordPlot()
+  dispersion <- grDevices::recordPlot()
   dev.off()
 
   return_list <-
@@ -128,3 +136,4 @@ bb_pseudobulk_mf <- function(cds,
     )
   return(return_list)
 }
+

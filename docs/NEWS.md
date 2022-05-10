@@ -182,3 +182,10 @@
 # blaseRtools 0.0.0.9069
 
 * added cellchat functions
+
+# blaseRtools 0.0.0.9075
+
+* edited pseudobulk mf to choose vst with large number of samples
+* added back cellchat
+* silenced warnings on bb_gene_umap and bb_var_umap
+

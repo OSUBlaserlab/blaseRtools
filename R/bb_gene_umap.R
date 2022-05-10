@@ -20,7 +20,7 @@ bb_gene_umap <-
             color_legend_title = NULL
             ) {
 
-    data <- plot_cells(cds = cds, genes = gene_or_genes)[["data"]]
+    data <- suppressWarnings(suppressMessages(plot_cells(cds = cds, genes = gene_or_genes)))[["data"]]
     # data$feature_label <-
     #   factor(data$feature_label, levels = gene_or_genes)
     background_data <- data %>% filter(is.na(value))

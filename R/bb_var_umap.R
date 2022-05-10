@@ -45,7 +45,7 @@ bb_var_umap <- function(cds,
                         sample_equally = FALSE,
                         ...,
                         man_text_df = NULL) {
-  plot_data <- plot_cells(cds)[["data"]]
+  plot_data <- suppressWarnings(suppressMessages(plot_cells(cds)))[["data"]]
 
   if (sample_equally) {
     if (is.null(facet_by)) {
@@ -199,7 +199,7 @@ bb_var_umap <- function(cds,
         option = "inferno",
         begin = 0.1,
         end = 0.9,
-        guide = F
+        guide = "none" 
       )
   } else if (var %in% c("local_n", "log_local_n")) {
     if (!is.null(facet_by)) {
@@ -268,7 +268,7 @@ bb_var_umap <- function(cds,
         option = "inferno",
         begin = 0.1,
         end = 0.9,
-        guide = F
+        guide = "none"
       )
   } else {
     plot <- plot +
@@ -288,21 +288,21 @@ bb_var_umap <- function(cds,
     if (class(data_long$value) == "numeric") {
       plot <- plot +
         scale_fill_viridis_c(guide = "colorbar", na.value = "transparent") +
-        scale_color_viridis_c(guide = F, na.value = "grey80")
+        scale_color_viridis_c(guide = "none", na.value = "grey80")
     } else if (length(palette) == 1 && palette == "viridis") {
       plot <- plot +
         scale_fill_viridis_d(begin = 0.1, end = 0.9) +
         scale_color_viridis_d(begin = 0.1,
                               end = 0.9,
-                              guide = F)
+                              guide = "none")
     } else if (length(palette) == 1 && palette == "rcolorbrewer") {
-      plot <- plot + scale_color_brewer(palette = "Paired", guide = F) +
+      plot <- plot + scale_color_brewer(palette = "Paired", guide = "none") +
         scale_fill_brewer(palette = "Paired")
     } else if (!is.null(palette)) {
-      plot <- plot + scale_color_manual(values = palette, guide = F) +
+      plot <- plot + scale_color_manual(values = palette, guide = "none") +
         scale_fill_manual(values = palette)
     } else {
-      plot <- plot + scale_color_discrete(guide = F) +
+      plot <- plot + scale_color_discrete(guide = "none") +
         scale_fill_discrete()
     }
     if (class(data_long$value) != "numeric") {

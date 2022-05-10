@@ -1,5 +1,4 @@
 
-
 devtools::document()
 
 # make the documents for the website
@@ -12,7 +11,7 @@ purrr::walk(.x = list.files(path = "vignettes", pattern = "*.Rmd", full.names = 
 
 # commit and push
 gert::git_add("*")
-gert::git_commit("version 0.0.0.9074")
+gert::git_commit("version 0.0.0.9075")
 gert::git_push()
 
-renv::install("blaserlab/blaseRtools")
+blaseRtemplates::easy_install("blaserlab/blaseRtools", new_or_update)
