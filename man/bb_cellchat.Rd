@@ -13,7 +13,8 @@ bb_cellchat(
   prob_type = c("triMean", "truncatedMean", "median"),
   prob_trim = NULL,
   project = TRUE,
-  pop_size_arg = TRUE
+  pop_size_arg = TRUE,
+  ask = TRUE
 )
 }
 \arguments{

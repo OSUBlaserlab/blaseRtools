@@ -35,10 +35,15 @@ bb_cellchat <-
            prob_type = c("triMean", "truncatedMean", "median"),
            prob_trim = NULL,
            project = TRUE,
-           pop_size_arg = TRUE) {
+           pop_size_arg = TRUE,
+           ask = TRUE) {
     # print a warning and ask whether to continue
-    message("This function takes a long time to run and may exceed the memory available on your computer.\nYou should save your work and your workspace.")
-    if (askYesNo(msg = "Do you wish to continue?")) {
+    continue <- TRUE
+    if (ask) {
+      message("This function takes a long time to run and may exceed the memory available on your computer.\nYou should save your work and your workspace.")
+      continue <- askYesNo(msg = "Do you wish to continue?")
+    }
+    if (continue) {
       species <- match.arg(species)
       prob_type <- match.arg(prob_type)
 
