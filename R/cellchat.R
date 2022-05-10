@@ -46,7 +46,7 @@ bb_cellchat <-
       cellchat_data <- monocle3::normalized_counts(cds)
       row.names(cellchat_data) <-
         dplyr::left_join(tibble::tibble(feature_id = row.names(cellchat_data)),
-                         bb_rowmeta(cds_main)) |>
+                         bb_rowmeta(cds)) |>
         dplyr::pull(gene_short_name)
 
       # set up the cellchat object
