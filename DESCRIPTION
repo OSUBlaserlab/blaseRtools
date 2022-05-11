@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9077
+Version: 0.0.0.9078
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -74,7 +74,8 @@ Imports:
     blaseRtemplates (>= 0.0.0.9038),
     prompt,
     SeuratObject,
-    SummarizedExperiment
+    SummarizedExperiment,
+    CellChat (>= 1.4.0)
 Depends: 
     tidyverse,
     R (>= 2.10)
@@ -84,4 +85,5 @@ Remotes:
     github::cole-trapnell-lab/monocle3,
     github::mojaveazure/seurat-disk,
     github::chris-mcginnis-ucsf/DoubletFinder,
-    github::blaserlab/blaseRtemplates
+    github::blaserlab/blaseRtemplates,
+    github::sqjin/CellChat
