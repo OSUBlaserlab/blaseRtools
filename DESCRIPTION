@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9078
+Version: 0.0.0.9079
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -16,6 +16,7 @@ RoxygenNote: 7.1.2
 URL: https://github.com/blaserlab/blaseRtools
 BugReports: https://github.com/blaserlab/blaseRtools/issues
 Suggests: 
+    CellChat (>= 1.4.0),
     knitr,
     org.Dr.eg.db,
     org.Hs.eg.db,
@@ -74,13 +75,12 @@ Imports:
     blaseRtemplates (>= 0.0.0.9038),
     prompt,
     SeuratObject,
-    SummarizedExperiment,
-    CellChat (>= 1.4.0)
+    SummarizedExperiment
 Depends: 
     tidyverse,
     R (>= 2.10)
 VignetteBuilder: knitr
-Remotes:  
+Remotes: 
     github::blaserlab/blaseRdata,
     github::cole-trapnell-lab/monocle3,
     github::mojaveazure/seurat-disk,

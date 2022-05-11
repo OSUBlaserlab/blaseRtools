@@ -183,7 +183,7 @@
 
 * added cellchat functions
 
-# blaseRtools 0.0.0.9075-8
+# blaseRtools 0.0.0.9075-9
 
 * edited pseudobulk mf to choose vst with large number of samples
 * added back cellchat
