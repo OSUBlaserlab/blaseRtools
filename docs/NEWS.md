@@ -189,3 +189,6 @@
 * added back cellchat
 * silenced warnings on bb_gene_umap and bb_var_umap
 
+# blaseRtools 0.0.0.9080
+
+* edited dependencies
