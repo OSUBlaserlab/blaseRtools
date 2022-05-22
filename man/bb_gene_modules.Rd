@@ -2,18 +2,29 @@
 % Please edit documentation in R/bb_gene_modules.R
 \name{bb_gene_modules}
 \alias{bb_gene_modules}
-\title{A function to generate gene modules and add them to the CDS rowData}
+\title{A function to generate gene modules and add them to the Gene Metadata}
 \usage{
-bb_gene_modules(cds, n_cores = 8)
+bb_gene_modules(obj, n_cores = 8, cds = NULL)
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A single cell object of type Seurat or cell_data_set.}
 
-\item{n_cores}{Number of processor cores to use for the analysis}
+\item{n_cores}{Number of processor cores to use for the analysis, Default: 8}
+
+\item{cds}{Provided for backward compatibility.  If a value is supplied, it will return a warning and transfer to the obj argument., Default: NULL}
 }
 \value{
-A modified cell data set object with a new rowData column holding gene module data.
+An object of the same type:  Seurat or cell_data_set
 }
 \description{
-Based on Monocle3's gene module functions.  Implemented with default values.
+Based on Monocle3's gene module functions.  Implemented with default values.  Will convert a Seurat object to a cell data set using SeuratWrappers and then calculate modules.  The function returns an object of the same type.
+}
+\details{
+see https://cole-trapnell-lab.github.io/monocle3/docs/differential/#gene-modules
+}
+\seealso{
+\code{\link[SeuratWrappers]{as.cell_data_set}}
+\code{\link[monocle3]{graph_test}}, \code{\link[monocle3]{find_gene_modules}}
+\code{\link[dplyr]{rename}}, \code{\link[dplyr]{mutate-joins}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+\code{\link[forcats]{fct_shift}}
 }

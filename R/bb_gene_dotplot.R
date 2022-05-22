@@ -3,8 +3,8 @@
 #' @param cds A cell data set object
 #' @param markers A character vector of genes to plot
 #' @param group_cells_by A cds colData column.  Use "multifactorial" to pick 2 categorical variables to put on X axis and to facet by.  See ordering below.
-#' @param norm_method How to normalize gene expression. Size_factor and log normalized or only log normalized. 
-#' @param scale_expression_by_gene Whether to scale expression values according to gene.  Defaults to FALSE.	 
+#' @param norm_method How to normalize gene expression. Size_factor and log normalized or only log normalized.
+#' @param scale_expression_by_gene Whether to scale expression values according to gene.  Defaults to FALSE.
 #' @param lower_threshold Lower cutoff for gene expression
 #' @param max.size The maximum size of the dotplot
 #' @param group_ordering Defaults to "biclustering" method from pheatmap.  Optionally will take a vector of group values to set the axis order explicitly.  If using group_cells_by = "multifactorial" you will need a df to define facet and axis levels.  See example.
@@ -36,30 +36,34 @@ bb_gene_dotplot <- function(cds,
                             sizescale_name = NULL,
                             ...)
 {
+  cli::cli_alert_warning("This function has been superseded by bb_genebubbles.")
   norm_method = match.arg(norm_method)
-  gene_ids = as.data.frame(fData(cds)) %>%
+  gene_ids = as.data.frame(monocle3::fData(cds)) %>%
     tibble::rownames_to_column() %>%
-    dplyr::filter(rowname %in% markers | gene_short_name %in% markers) %>%
+    dplyr::filter(rowname %in% markers |
+                    gene_short_name %in% markers) %>%
     dplyr::pull(rowname)
   major_axis <- 2
   minor_axis <- 1
 
   if (norm_method == "log_only") {
-    exprs_mat <- as_tibble(t(as.matrix(exprs(cds)[gene_ids,])), rownames = "Cell")
+    exprs_mat <-
+      tibble::as_tibble(t(as.matrix(monocle3::exprs(cds)[gene_ids, ])), rownames = "Cell")
   } else {
-    exprs_mat <- as_tibble(t(as.matrix(normalized_counts(cds)[gene_ids,])), rownames = "Cell")
+    exprs_mat <-
+      tibble::as_tibble(t(as.matrix(monocle3::normalized_counts(cds)[gene_ids, ])), rownames = "Cell")
   }
 
 
   # exprs_mat <- reshape2::melt(exprs_mat)
-  exprs_mat <- pivot_longer(exprs_mat, where(is.numeric))
+  exprs_mat <- tidyr::pivot_longer(exprs_mat, where(is.numeric))
 
 
   if (length(markers) == 1) {
     exprs_mat <- exprs_mat %>%
-      select(Cell = name, Expression = value) %>%
-      mutate(Gene = gene_ids) %>%
-      relocate(Gene, .after = Cell)
+      dplyr::select(Cell = name, Expression = value) %>%
+      dplyr::mutate(Gene = gene_ids) %>%
+      dplyr::relocate(Gene, .after = Cell)
   } else {
     colnames(exprs_mat) <- c("Cell", "Gene", "Expression")
   }
@@ -68,12 +72,16 @@ bb_gene_dotplot <- function(cds,
 
   # set up the cell groupings
   if (group_cells_by == "multifactorial") {
-    multivar <- paste0(unique(group_ordering$variable)[1],"_AND_",unique(group_ordering$variable)[2])
+    multivar <-
+      paste0(unique(group_ordering$variable)[1],
+             "_AND_",
+             unique(group_ordering$variable)[2])
     multivar_val <- paste0(unique(group_ordering$value))
-    colData(cds)[,multivar] <- paste0(colData(cds)[,unique(group_ordering$variable)[1]],"_AND_",colData(cds)[,unique(group_ordering$variable)[2]])
-    cell_group <- colData(cds)[,multivar]
+    SummarizedExperiment::colData(cds)[, multivar] <-
+      paste0(SummarizedExperiment::colData(cds)[, unique(group_ordering$variable)[1]], "_AND_", SummarizedExperiment::colData(cds)[, unique(group_ordering$variable)[2]])
+    cell_group <- SummarizedExperiment::colData(cds)[, multivar]
   } else {
-    cell_group <- colData(cds)[, group_cells_by]
+    cell_group <- SummarizedExperiment::colData(cds)[, group_cells_by]
   }
   names(cell_group) = colnames(cds)
   exprs_mat$Group <- cell_group[exprs_mat$Cell]
@@ -82,17 +90,17 @@ bb_gene_dotplot <- function(cds,
   # calculate the expression values
   # log transform the expression values
   exprs_mat <- exprs_mat %>%
-    mutate(newExpression = log(Expression + pseudocount))
+    dplyr::mutate(newExpression = log(Expression + pseudocount))
 
   # optionally scale by gene
   my_scale <- function(x) {
-    (x - mean(x, na.rm=TRUE)) / sd(x, na.rm=TRUE)
+    (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
   }
 
   if (scale_expression_by_gene) {
     exprs_mat <- exprs_mat %>%
-      group_by(Gene) %>%
-      mutate(newExpression = my_scale(newExpression))
+      dplyr::group_by(Gene) %>%
+      dplyr::mutate(newExpression = my_scale(newExpression))
   }
 
   ExpVal <- exprs_mat %>%
@@ -140,7 +148,8 @@ bb_gene_dotplot <- function(cds,
 
   }
 
-  if (group_ordering != "bicluster" && group_cells_by != "multifactorial") {
+  if (group_ordering != "bicluster" &&
+      group_cells_by != "multifactorial") {
     ExpVal$Group <-
       factor(ExpVal$Group, levels = group_ordering)
   }
@@ -151,15 +160,16 @@ bb_gene_dotplot <- function(cds,
 
   if (group_cells_by != "multifactorial") {
     g <-
-      ggplot(ExpVal, aes(y = Gene, x = Group)) +
-      geom_point(aes(colour = mean,
+      ggplot2::ggplot(ExpVal, aes(y = Gene, x = Group)) +
+      ggplot2::geom_point(aes(colour = mean,
                      size = percentage)) +
       viridis::scale_color_viridis(name = ifelse(is.null(colorscale_name),
                                                  "Expression",
                                                  colorscale_name)) +
       scale_size(
         name = ifelse(is.null(sizescale_name), "Proportion", sizescale_name),
-        range = c(0, max.size))
+        range = c(0, max.size)
+      )
     return(g)
   }
 

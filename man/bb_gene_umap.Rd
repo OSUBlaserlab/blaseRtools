@@ -2,36 +2,57 @@
 % Please edit documentation in R/bb_gene_umap.R
 \name{bb_gene_umap}
 \alias{bb_gene_umap}
-\title{Make a plot of gene expression in UMAP form}
+\title{Make a Plot of Gene Expression in UMAP Form}
 \usage{
 bb_gene_umap(
-  cds,
+  obj,
   gene_or_genes,
+  assay = "RNA",
+  order = TRUE,
   cell_size = 1,
   alpha = 1,
   ncol = NULL,
   plot_title = NULL,
-  color_legend_title = NULL
+  color_legend_title = "Expression",
+  cds = NULL
 )
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A Seurat or cell_data_set object.}
 
-\item{gene_or_genes}{A character vector of genes to plot}
+\item{gene_or_genes}{Individual gene or genes or aggregated genes to plot.  Supply a character string for a single gene, a vector for multiple genes or a dataframe for aggregated genes.  See description.}
 
-\item{cell_size}{Size of cells to plot}
+\item{assay}{For Seurat objects only:  the gene expression assay to get expression data from, Default: 'RNA'}
 
-\item{alpha}{Alpha value for overlaid points}
+\item{order}{Whether or not to order cells by gene expression.  When ordered, non-expressing cells are plotted first, i.e. on the bottom.  Caution:  when many cells are overplotted it may lead to a misleading presentation.  Generally bb_genebubbles is a better way to present, Default: TRUE}
 
-\item{ncol}{Number of columns in facetted plot}
+\item{cell_size}{Size of the points, Default: 1}
 
-\item{plot_title}{Main title of the plot}
+\item{alpha}{Transparency of the points, Default: 1}
 
-\item{color_legend_title}{Title for the color legend}
+\item{ncol}{Specify the number of columns if faceting, Default: NULL}
+
+\item{plot_title}{Optional title for the plot, Default: NULL}
+
+\item{color_legend_title}{Option to change the color scale title, Default: 'Expression'}
+
+\item{cds}{Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL}
 }
 \value{
 A ggplot
+
+A ggplot
 }
 \description{
+Takes in a Seurat or cell_dat_set object, extracts UMAP dimensions and gene expression values.  For Seurat, default assay is "RNA"; can be changed to if necessary.  For cell_data_set, the assay parameter does nothing; the function extracts log and size-factor normalized counts which are similar but not identical to the Seurat "RNA" assay.  If a vector of genes is supplied to gene_or_genes, a faceted plot will be generated.  If a dataframe is supplied, an aggregated plot will be generated with a facet for each gene group.  The dataframe must be of 2 colums: the first containing feature ids and the second containing grouping information.  This is best generated using bb_rowmeta.
+}
+\details{
 Make a plot of gene expression in UMAP form
+}
+\seealso{
+\code{\link[monocle3]{normalized_counts}}
+\code{\link[tibble]{as_tibble}}
+\code{\link[tidyr]{pivot_longer}}
+\code{\link[dplyr]{mutate-joins}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}, \code{\link[dplyr]{arrange}}
+\code{\link[ggplot2]{ggplot}}, \code{\link[ggplot2]{aes}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ggplot2]{scale_colour_viridis_d}}, \code{\link[ggplot2]{labs}}, \code{\link[ggplot2]{facet_wrap}}, \code{\link[ggplot2]{vars}}, \code{\link[ggplot2]{theme}}, \code{\link[ggplot2]{margin}}
 }

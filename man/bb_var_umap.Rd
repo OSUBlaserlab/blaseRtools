@@ -5,8 +5,9 @@
 \title{A function to generate a UMAP with colors mapped to colData variables}
 \usage{
 bb_var_umap(
-  cds,
+  obj,
   var,
+  assay = "RNA",
   value_to_highlight = NULL,
   foreground_alpha = 1,
   legend_pos = "right",
@@ -24,14 +25,17 @@ bb_var_umap(
   nbin = 100,
   facet_by = NULL,
   sample_equally = FALSE,
+  cds = NULL,
   ...,
   man_text_df = NULL
 )
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A Seurat or cell data set object}
 
 \item{var}{The variable to map colors to.  Special exceptions are "density", "local_n" and "log_local_n" which calculate the 2 d kernel density estimate or binned cell counts and maps to color scale.}
+
+\item{assay}{The gene expression assay to draw reduced dimensions from.  Default is "RNA".  Does not do anything with cell_data_set objects.}
 
 \item{value_to_highlight}{Option to highlight a single value}
 
@@ -67,12 +71,14 @@ bb_var_umap(
 
 \item{sample_equally}{Whether or not you should downsample to the same number of cells in each plot.  Default is FALSE or no.}
 
+\item{cds}{Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL}
+
 \item{...}{Additional params for facetting.}
 
 \item{man_text_df}{A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.}
 }
 \value{
-A ggplot
+a ggplot
 }
 \description{
 A function to generate a UMAP with colors mapped to colData variables

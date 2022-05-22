@@ -2,20 +2,30 @@
 % Please edit documentation in R/bb_tbl_to_rowdata.R
 \name{bb_tbl_to_rowdata}
 \alias{bb_tbl_to_rowdata}
-\title{A Function To Add Tibble Columns To CDS RowData}
+\title{A Function To Add Tibble Columns To Feature Metadata}
 \usage{
-bb_tbl_to_rowdata(cds, min_tbl, join_col = "feature_id")
+bb_tbl_to_rowdata(
+  obj,
+  assay = "RNA",
+  min_tbl,
+  join_col = "feature_id",
+  cds = NULL
+)
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A Seurat or cell data set object}
 
-\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.}
+\item{assay}{The assay to which to add the metadata column, Default = RNA}
+
+\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.  Features cannot be duplicated but missing features are ok and will be replaced by NA.}
 
 \item{join_col}{The column in min_tbl containing the join information for the cds rowData. Defaults to "feature_id".}
+
+\item{cds}{Retained for backwards compatibility.  If supplied, will generate a warning and pass argument to obj.  Default = NULL}
 }
 \value{
-A celldataset
+An object of the same class
 }
 \description{
-A Function To Add Tibble Columns To CDS RowData
+A Function To Add Tibble Columns To Feature Metadata
 }

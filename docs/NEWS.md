@@ -192,3 +192,7 @@
 # blaseRtools 0.0.0.9080
 
 * edited dependencies
+
+# blaseRtools 0.0.0.9090
+
+* ported many essential functions to take in Seurat and cds objects.

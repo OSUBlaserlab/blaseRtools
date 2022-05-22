@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9080
+Version: 0.0.0.9090
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -71,10 +71,12 @@ Imports:
     leidenbase,
     DoubletFinder,
     ComplexHeatmap,
-    blaseRtemplates (>= 0.0.0.9038),
+    blaseRtemplates,
     prompt,
     SeuratObject,
-    SummarizedExperiment
+    SummarizedExperiment,
+    cli,
+    future
 Depends: 
     tidyverse,
     R (>= 2.10)
@@ -86,3 +88,4 @@ Remotes:
     github::chris-mcginnis-ucsf/DoubletFinder,
     github::blaserlab/blaseRtemplates,
     github::sqjin/CellChat
+    github::satijalab/seurat-wrappers

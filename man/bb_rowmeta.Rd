@@ -2,18 +2,25 @@
 % Please edit documentation in R/bb_meta.R
 \name{bb_rowmeta}
 \alias{bb_rowmeta}
-\title{A Function to Return CDS Row Metadata in Tibble Form}
+\title{Get Feature/Gene Metadata}
 \usage{
-bb_rowmeta(cds, row_name = "feature_id")
+bb_rowmeta(obj, row_name = "feature_id", assay = "RNA", cds = NULL)
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A cell_data_set or Seurat object}
 
-\item{row_name}{Optional name to provide for cell unique identifier.  Defaults to "feature_id"}
+\item{row_name}{Optional name to provide for feature unique identifier, Default: 'feature_id'}
+
+\item{assay}{For a Seurat object, th feature assay to return.  CDS objects with alternative experiments are not supported, Default: 'RNA'}
+
+\item{cds}{Provided for compatibility with prior versions, Default: NULL}
 }
 \value{
-A tibble
+At tibble.
 }
 \description{
-A Function to Return CDS Row Metadata in Tibble Form
+Take a cell_data_set or Seurat object and return the gene/feature metadata in the form of a tibble.  RNA is used as the default assay.
+}
+\details{
+If a value is supplied for cds, a warning will be issued and the function will pass the value of cds to obj.
 }

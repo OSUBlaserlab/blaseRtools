@@ -2,20 +2,22 @@
 % Please edit documentation in R/bb_tbl_to_coldata.R
 \name{bb_tbl_to_coldata}
 \alias{bb_tbl_to_coldata}
-\title{A Function To Add Cell-Level Metadata To CDS ColData}
+\title{A Function To Add Tibble Columns To Cell Metadata}
 \usage{
-bb_tbl_to_coldata(cds, min_tbl, join_col = "cell_id")
+bb_tbl_to_coldata(obj, min_tbl, join_col = "cell_id", cds = NULL)
 }
 \arguments{
-\item{cds}{A cell data set object}
+\item{obj}{A Seurat or cell data set object}
 
-\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.  Must be cell-level metadata.  For sample level metadata add during loading with bb_load....}
+\item{min_tbl}{A tibble containing only the columns you want to add plus one column for joining.  Cell IDs may not be duplicated but missing cells are ok; values will be replaced by NA.}
 
-\item{join_col}{The column in min_tbl containing the join information for the cds colData. Defaults to "cell_id".}
+\item{join_col}{The column in min_tbl containing the join information for the cds rowData. Defaults to "cell_id".}
+
+\item{cds}{Retained for backwards compatibility.  If supplied, will generate a warning and pass argument to obj.  Default = NULL}
 }
 \value{
-A celldataset
+An object of the same class
 }
 \description{
-A Function To Add Cell-Level Metadata To CDS ColData
+A Function To Add Tibble Columns To Cell Metadata
 }

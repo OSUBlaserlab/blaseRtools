@@ -4,20 +4,28 @@
 \alias{bb_triplecluster}
 \title{A function to generate clusters from scRNA-seq data}
 \usage{
-bb_triplecluster(cds, n_top_markers = 50, outfile, n_cores = 8)
+bb_triplecluster(
+  obj,
+  n_top_markers = 50,
+  outfile = NULL,
+  n_cores = 8,
+  cds = NULL
+)
 }
 \arguments{
-\item{n_top_markers}{Number of top markers to identify per cell group}
+\item{obj}{A Seurat or cell_data_set object}
 
-\item{outfile}{Name of a csv file to hold the top marker results.}
+\item{n_top_markers}{Number of top markers to identify per cell group, Default: 50}
 
-\item{n_cores}{Number of processor cores to use}
+\item{outfile}{Name of a csv file to hold the top marker results.  If null, will place "top_markers.csv" in the working directory, Default: NULL}
 
-\item{cds_string}{A cell data set object}
+\item{n_cores}{Number of processor cores to use, Default: 8}
+
+\item{cds}{Provided for backwards compatibility for existing code.  If a value is supplied it will be transferred to obj and a warning message will be emitted, Default: NULL}
 }
 \value{
-A modified cell data set object with leiden, louvain, and partition metadata columns.  Outputs csv files with top markers into specified directory, or current working directory if NULL.
+A modified Seurat or cell_data_set object
 }
 \description{
-Based on Monocle3's Partitions, Leiden, and Louvain clustering methods.  Implemented mostly with default values.
+Based on Monocle3's Partitions, Leiden, and Louvain clustering methods.  Implemented mostly with default values.  Seurat objects will be converted to cell_data_set objects for the clustering.  The function produces a list of top markers for each cluster type and returns these assignments to the original object as new cell metadata columnts.
 }
