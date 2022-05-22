@@ -87,5 +87,5 @@ Remotes:
     github::mojaveazure/seurat-disk,
     github::chris-mcginnis-ucsf/DoubletFinder,
     github::blaserlab/blaseRtemplates,
-    github::sqjin/CellChat
+    github::sqjin/CellChat,
     github::satijalab/seurat-wrappers
