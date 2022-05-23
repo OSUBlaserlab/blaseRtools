@@ -111,7 +111,7 @@
     },
     "BiocManager": {
       "Package": "BiocManager",
-      "Version": "1.30.17",
+      "Version": "1.30.18",
       "Source": "CRAN",
       "Repository": "CRAN",
       "RemoteType": "standard",
@@ -119,8 +119,8 @@
       "RemoteRef": "BiocManager",
       "RemoteRepos": "https://cloud.r-project.org",
       "RemotePkgPlatform": "source",
-      "RemoteSha": "1.30.17",
-      "Hash": "0ab5f6e14502755ca875f938781909af",
+      "RemoteSha": "1.30.18",
+      "Hash": "b1a93bed5debda5775636086fdca017b",
       "Requirements": []
     },
     "BiocNeighbors": {
