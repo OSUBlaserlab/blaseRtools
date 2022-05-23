@@ -77,7 +77,9 @@ Imports:
     SeuratObject,
     SummarizedExperiment,
     cli,
-    future
+    future,
+    SeuratWrappers,
+    R.utils
 Depends: 
     tidyverse,
     R (>= 2.10)
