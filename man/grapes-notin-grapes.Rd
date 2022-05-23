@@ -4,7 +4,7 @@
 \alias{\%notin\%}
 \title{Operators}
 \usage{
-x \%notin\% table
+... \%notin\% NA
 }
 \description{
 Operators

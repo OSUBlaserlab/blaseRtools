@@ -360,12 +360,14 @@
     "DoubletFinder": {
       "Package": "DoubletFinder",
       "Version": "2.0.3",
-      "Source": "Repository",
-      "Repository": "https://blaserlab.r-universe.dev",
-      "RemoteUrl": "https://github.com/chris-mcginnis-ucsf/DoubletFinder",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "DoubletFinder",
+      "RemoteUsername": "chris-mcginnis-ucsf",
       "RemoteRef": "HEAD",
       "RemoteSha": "67fb8b5808eb16167ead5f9b439677cc24837554",
-      "Hash": "cd71fa72016258533e88d1a1b0f1e31a",
+      "Hash": "0d22faabb6f0f0dbc321b871478ee4f8",
       "Requirements": [
         "KernSmooth",
         "ROCR",
@@ -661,6 +663,53 @@
         "stringr"
       ]
     },
+    "R.methodsS3": {
+      "Package": "R.methodsS3",
+      "Version": "1.8.1",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "R.methodsS3",
+      "RemoteRef": "R.methodsS3",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.8.1",
+      "Hash": "4bf6453323755202d5909697b6f7c109",
+      "Requirements": []
+    },
+    "R.oo": {
+      "Package": "R.oo",
+      "Version": "1.24.0",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "R.oo",
+      "RemoteRef": "R.oo",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.24.0",
+      "Hash": "5709328352717e2f0a9c012be8a97554",
+      "Requirements": [
+        "R.methodsS3"
+      ]
+    },
+    "R.utils": {
+      "Package": "R.utils",
+      "Version": "2.11.0",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "R.utils",
+      "RemoteRef": "R.utils",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "2.11.0",
+      "Hash": "a7ecb8e60815c7a18648e84cd121b23a",
+      "Requirements": [
+        "R.methodsS3",
+        "R.oo"
+      ]
+    },
     "R6": {
       "Package": "R6",
       "Version": "2.5.1",
@@ -789,16 +838,10 @@
     },
     "RcppArmadillo": {
       "Package": "RcppArmadillo",
-      "Version": "0.11.0.0.0",
-      "Source": "CRAN",
+      "Version": "0.11.1.1.0",
+      "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "RcppArmadillo",
-      "RemoteRef": "RcppArmadillo",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "source",
-      "RemoteSha": "0.11.0.0.0",
-      "Hash": "704ac7bb6a49df5a9a2b014793fcc6cb",
+      "Hash": "631929e53829901562986c504f86104b",
       "Requirements": [
         "Rcpp"
       ]
@@ -1072,17 +1115,15 @@
     "SeuratDisk": {
       "Package": "SeuratDisk",
       "Version": "0.0.0.9020",
-      "Source": "CRAN",
-      "Repository": "https://blaserlab.r-universe.dev",
+      "Source": "GitHub",
       "Remotes": "satijalab/seurat-data",
-      "RemoteUrl": "https://github.com/mojaveazure/seurat-disk",
-      "RemoteRef": "SeuratDisk",
-      "RemoteSha": "0.0.0.9020",
-      "RemoteType": "standard",
-      "RemotePkgRef": "SeuratDisk",
-      "RemoteRepos": "https://blaserlab.r-universe.dev",
-      "RemotePkgPlatform": "source",
-      "Hash": "7846d036588f61547f52a296b71017a0",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "seurat-disk",
+      "RemoteUsername": "mojaveazure",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "9b89970eac2a3bd770e744f63c7763419486b14c",
+      "Hash": "18d5d212bad69ae88d2e531c4edb496a",
       "Requirements": [
         "Matrix",
         "R6",
@@ -1118,6 +1159,30 @@
         "rgeos",
         "rlang",
         "sp"
+      ]
+    },
+    "SeuratWrappers": {
+      "Package": "SeuratWrappers",
+      "Version": "0.3.0",
+      "Source": "GitHub",
+      "Remotes": "welch-lab/liger, hms-dbmi/conos, immunogenomics/harmony,\n        immunogenomics/presto, satijalab/seurat-data,\n        velocyto-team/velocyto.R, SaskiaFreytag/schex@031320d,\n        cole-trapnell-lab/monocle3, mojaveazure/seurat-disk,\n        powellgenomicslab/Nebulosa, atakanekiz/CIPR-Package",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "seurat-wrappers",
+      "RemoteUsername": "satijalab",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "8510069e76ae8f39c91250d67784e4b8ab4a9386",
+      "Hash": "97b6013e77b5339e524eedc88dd12f45",
+      "Requirements": [
+        "BiocManager",
+        "Matrix",
+        "Seurat",
+        "cowplot",
+        "ggplot2",
+        "igraph",
+        "remotes",
+        "rlang",
+        "rsvd"
       ]
     },
     "Signac": {
@@ -1466,12 +1531,14 @@
     "blaseRdata": {
       "Package": "blaseRdata",
       "Version": "0.0.0.9009",
-      "Source": "Repository",
-      "Repository": "https://blaserlab.r-universe.dev",
-      "RemoteUrl": "https://github.com/blaserlab/blaseRdata",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "blaseRdata",
+      "RemoteUsername": "blaserlab",
       "RemoteRef": "HEAD",
       "RemoteSha": "c700901190567a2339b892f73c4c6e6937708bbb",
-      "Hash": "fcc4bad1854abf20c8465c46682ecd31",
+      "Hash": "65d931d250e870420b82d31a1414a1e3",
       "Requirements": []
     },
     "blaseRtemplates": {
@@ -1692,10 +1759,10 @@
     },
     "circlize": {
       "Package": "circlize",
-      "Version": "0.4.14",
+      "Version": "0.4.15",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1e344a0215afadb8623028c162fa4485",
+      "Hash": "2bb47a2fe6ab009b1dcc5566d8c3a988",
       "Requirements": [
         "GlobalOptions",
         "colorspace",
@@ -2817,10 +2884,10 @@
     },
     "globals": {
       "Package": "globals",
-      "Version": "0.14.0",
+      "Version": "0.15.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "eca8023ed5ca6372479ebb9b3207f5ae",
+      "Hash": "ace993e2dad5e64ed46391302b79e94f",
       "Requirements": [
         "codetools"
       ]
@@ -3390,10 +3457,10 @@
     },
     "leiden": {
       "Package": "leiden",
-      "Version": "0.3.10",
+      "Version": "0.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f0b75ad9505081a5a91b1c2947d70cdb",
+      "Hash": "3f7527c44b7e5cb63e916c6cfb986410",
       "Requirements": [
         "Matrix",
         "igraph",
@@ -3402,10 +3469,15 @@
     },
     "leidenbase": {
       "Package": "leidenbase",
-      "Version": "0.1.11",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "bd72de3ef45531ade16d35db3385b652",
+      "Version": "0.1.9",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "leidenbase",
+      "RemoteUsername": "cole-trapnell-lab",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "a11b8455fa3307d9e3ac4e3a5accddf3c83b9a96",
+      "Hash": "fc12a236679c94de11676ffc923ddbb9",
       "Requirements": [
         "igraph"
       ]
@@ -3498,10 +3570,10 @@
     },
     "lsa": {
       "Package": "lsa",
-      "Version": "0.73.2",
+      "Version": "0.73.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6ce0ffe288e17b053c4604f3daa306cd",
+      "Hash": "f228e7dc89060fa4a7f3271ff744c099",
       "Requirements": [
         "SnowballC"
       ]
@@ -3690,13 +3762,15 @@
     "monocle3": {
       "Package": "monocle3",
       "Version": "1.0.0",
-      "Source": "Repository",
-      "Repository": "https://blaserlab.r-universe.dev",
+      "Source": "GitHub",
       "Remotes": "VPetukhov/ggrastr, cole-trapnell-lab/leidenbase",
-      "RemoteUrl": "https://github.com/cole-trapnell-lab/monocle3",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "monocle3",
+      "RemoteUsername": "cole-trapnell-lab",
       "RemoteRef": "HEAD",
       "RemoteSha": "004c096f3a3bdaf1e6709a65fb36f40ba775f1ab",
-      "Hash": "25a4e34f133135061e4661899623fd53",
+      "Hash": "f8fe0176956c2e19e1eabf266792b463",
       "Requirements": [
         "Biobase",
         "BiocGenerics",
@@ -3763,16 +3837,10 @@
     },
     "network": {
       "Package": "network",
-      "Version": "1.17.1",
-      "Source": "CRAN",
+      "Version": "1.17.2",
+      "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "network",
-      "RemoteRef": "network",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "source",
-      "RemoteSha": "1.17.1",
-      "Hash": "a3a94709afe998d2745847ce69c6c5d9",
+      "Hash": "4fbe774d3585cae91fe87a942268612a",
       "Requirements": [
         "magrittr",
         "statnet.common",
@@ -3829,16 +3897,10 @@
     },
     "openssl": {
       "Package": "openssl",
-      "Version": "2.0.0",
-      "Source": "CRAN",
+      "Version": "2.0.1",
+      "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "openssl",
-      "RemoteRef": "openssl",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "source",
-      "RemoteSha": "2.0.0",
-      "Hash": "cf4329aac12c2c44089974559c18e446",
+      "Hash": "edde731e84cf3d42aa9b7f04b8de5941",
       "Requirements": [
         "askpass"
       ]
@@ -4607,10 +4669,10 @@
     },
     "reticulate": {
       "Package": "reticulate",
-      "Version": "1.24",
+      "Version": "1.25",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ffdf27627a3c1537478073c43b6e7980",
+      "Hash": "786b311743eb8cd347491f8f0a571941",
       "Requirements": [
         "Matrix",
         "Rcpp",
@@ -4703,13 +4765,14 @@
     },
     "roxygen2": {
       "Package": "roxygen2",
-      "Version": "7.1.2",
+      "Version": "7.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "eb9849556c4250305106e82edae35b72",
+      "Hash": "b390c1d54fcd977cda48588e6172daba",
       "Requirements": [
         "R6",
         "brew",
+        "cli",
         "commonmark",
         "cpp11",
         "desc",
@@ -4720,6 +4783,7 @@
         "rlang",
         "stringi",
         "stringr",
+        "withr",
         "xml2"
       ]
     },
@@ -5299,16 +5363,10 @@
     },
     "spatstat.core": {
       "Package": "spatstat.core",
-      "Version": "2.4-2",
-      "Source": "CRAN",
+      "Version": "2.4-4",
+      "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemotePkgRef": "spatstat.core",
-      "RemoteRef": "spatstat.core",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgPlatform": "source",
-      "RemoteSha": "2.4-2",
-      "Hash": "1f996e01b9890a001823bd97818e75e9",
+      "Hash": "545286d6a69ff647be18aab77306fa54",
       "Requirements": [
         "Matrix",
         "abind",
@@ -5705,10 +5763,10 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.38",
+      "Version": "0.39",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "759d047596ac173433985deddf313450",
+      "Hash": "29f67ab15405b390b90e56ff22198ead",
       "Requirements": [
         "xfun"
       ]
@@ -6086,10 +6144,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.30",
+      "Version": "0.31",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e83f48136b041845e50a6658feffb197",
+      "Hash": "a318c6f752b8dcfe9fb74d897418ab2b",
       "Requirements": []
     },
     "xml2": {

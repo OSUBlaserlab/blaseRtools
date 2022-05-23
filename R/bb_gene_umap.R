@@ -159,7 +159,7 @@ bb_gene_umap <-
 #'  \code{\link[Matrix]{character(0)}}
 #' @export
 #' @importFrom cli cli_div cli_alert_info
-#' @importFrom monocle3 normalized_counts my.aggregate.Matrix
+#' @import monocle3
 #' @importFrom Matrix t
 bb_aggregate <-
   function (obj,
