@@ -14,6 +14,5 @@ gert::git_add("*")
 gert::git_commit("version 0.0.0.9090")
 gert::git_push()
 
-devtools::build()
-devtools::install_github("satijalab/seurat-wrappers")
-devtools::install_github("blaserlab/blaseRtools")
+# devtools::build()
+# devtools::install_github("blaserlab/blaseRtools")

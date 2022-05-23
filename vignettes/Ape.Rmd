@@ -1,0 +1,176 @@
+---
+title: "Reading, Editing and Writing DNA Sequences with Ape"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Ape}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+
+```{r setup, results = "hide"}
+# Attach the packages you will need for the analysis.
+library(blaseRtools)
+library(blaseRdata)
+library(GenomicRanges)
+library(tidyverse)
+```
+
+This is a brief tutorial to show you how to programmatically read and write DNA sequences in a user-friendly format.
+
+This set of functions are designed to work with genbank-formatted DNA sequence files.  Genbank is a long-standing, text-based DNA sequence format.  There are many programs to view and edit genbank-format files.  My recommendation is that you use [ApE](https://jorgensen.biology.utah.edu/wayned/ape/).  This program is very easy to use.  
+
+## Ape Class
+
+We designed a data structure which we refer to as "Ape", in reference to the gui-based program mentioned above, which is designed to hold genbank-formatted DNA sequence data within an R programming environment.
+
+The motivation behind this is as follows:  Let's say you wanted to clone a gene enhancer from genomic DNA, or edit a specific exon with CRISPR, or map putative transcription factor binding sites.  One way to do this is to go to ensembl, download the sequence, manually annotate the sequence files as desired, and then work on your experiment.  This is 100% interactive and 0% programmatic.  You can also use pure R/bioconductor tools to get sequence and feature information.  This is more programmatic, but the problem is that you will have to learn how to access genomic sequence data via R and use GenomicRanges and Biostrings to define your features.  Some of this could be done programmatically but it will require a lot of hard coding to get it done.  This is not how I would want to accomplish this task.
+
+The Ape class and few associated functions automate most of these tasks for you.  You can read and write genebank/Ape format files for interactive and programmatic editing.  Ape class objects store sequence internally as a [Biostring](https://bioconductor.org/packages/release/bioc/html/Biostrings.html) and features as a [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) object so you can use those interfaces for your data as desired.
+
+In the companion blaseRdata package we have precompiled hg38 and danRer11 genome references and gene models for human and zebrafish so this is one-stop shopping for sequence data.  Mouse data will be added in a future version.
+
+## Reading, Creating, or Writing Genbank/Ape Files
+
+Lets say you have a collection of genbank/Ape files that you would like to read into R so that you can extract the sequence and/or feature information for programmatic analysis.
+
+```{r}
+# Read in the data
+
+vignette_CXCL8_ape <- bb_parseape(system.file("extdata/hg38_CXCL8.ape", package = "blaseRdata"))
+
+```
+
+
+You can show the sequence information in your R console by typing the name of the Ape object like so:
+
+
+```{r}
+# Show the Ape Data 
+
+vignette_CXCL8_ape
+
+```
+
+Printing this data out to the console may not be the most useful thing to do, but it shows you that everything has been parsed correctly. It should look like a genbank/Ape file.
+
+You can also create an Ape object based on hg38 or danRer11 reference data like so:
+
+```{r}
+
+vignette_CXCL1_ape <- bb_hg38_ape("CXCL1")
+
+vignette_CXCL1_ape
+
+```
+
+For zebrafish you would use the function ```bb_grcz11_ape()``` which works the same.
+
+You can select certain feature types to include by specifying the ```include_type``` argument.
+
+You may also add flanking sequences or specify genomic regions by coordinate rather than gene name.
+
+```{r}
+# Get genomic sequence and extend 100 bp left and right.
+vignette_CXCL1_ape <- bb_hg38_ape("CXCL1", extend_left = 100, extend_right = 100)
+
+vignette_CXCL1_ape
+
+```
+
+Note that the extension arguments are strictly relative to the top or + strand, so the sense of upstream or downstream may be different relative to your gene of interest if that gene is on the top or bottom strand.
+
+You will notice that all feature coordinates have been recalculated and are relative to the sequence present in the object.  Let's say you had a feature that you knew about in terms of genomic coordinates that you wanted include when making the object.  Here is how you do that:
+
+```{r}
+# Get genomic sequence and extend 100 bp left and right.
+# Now add a new custom feature based on original coordinates:  chr4 73869293-73871408
+vignette_CXCL1_ape <- bb_hg38_ape("CXCL1", 
+                                  extend_left = 100, 
+                                  extend_right = 100, 
+                                  additional_granges = GenomicRanges::makeGRangesFromDataFrame(data.frame(
+                                    seqname = "chr4", 
+                                    start = 73869293,
+                                    end = 73871408,
+                                    strand = "+",
+                                    gene_name = "CXCL1",
+                                    type = "custom_feature",
+                                    label = "custom_feature_1",
+                                    fwdcolor = "red",
+                                    revcolor = "blue"
+                                  ), keep.extra.columns = T))
+
+vignette_CXCL1_ape
+
+```
+
+This turns out to be a useful feature but it does force you into using some GenomicRanges code which is verbose and less familiar.  The help page for this function will remind you how to create the GRanges object.  Note that you can supply any number of GRanges in the object to generate features.
+
+Methods are provided for saving Ape objects as either genbank/Ape files or fasta files:
+
+```{r eval = FALSE}
+# Save as a genbank/Ape file
+Ape.save(vignette_CXCL1_ape, out = "/path/to/file/filename.ape")
+
+# Save as fasta
+Ape.fasta(vignette_CXCL1_ape, out = "/path/to/file/filename.fa")
+
+```
+
+## Getting and Setting Ape Object Slots 
+
+You may want to programmatically change the features of an Ape object, or extract sequences or features to use elsewhere.  Here you will need to know a bit more about GRanges and Biostrings.
+
+To get the sequence or features from an Ape Object:
+
+```{r}
+# get the sequence
+Ape.DNA(vignette_CXCL1_ape)
+
+# get the features
+Ape.granges(vignette_CXCL1_ape)
+
+```
+
+You can set the features of an Ape object like so:
+
+```{r}
+# define the new feature set
+old_features <- Ape.granges(vignette_CXCL1_ape)
+new_features <- old_features[mcols(old_features)$type == "gene"]
+
+new_vignette_CXCL1_ape <- Ape.setFeatures(vignette_CXCL1_ape, gr = new_features)
+new_vignette_CXCL1_ape
+```
+
+That shows you how to subset a granges object.  If you want to combine two granges objects, run ```c(object_1, object_2)``` etc.
+
+### Annotating Putative Transcription Factor Binding Sites 
+
+This is a pretty common function and there are several other tools you can use to do this, but here we use [FIMO](https://meme-suite.org/meme/doc/fimo.html) from the MEME suite to do the annotation.
+
+The prerequisite here is that you have to install FIMO on your system.  Instructions are available at the link provided.  To find TFBS in your Ape file you will use the ```Ape.fimo()``` function.
+
+```{r eval=FALSE}
+Ape.fimo(vignette_CXCL1_ape, fimo_feature = "CXCL1_gene")
+```
+
+For this to run properly you have to identify the feature name within the Ape object that you want to evaluate.  This is the name of the Ape object GRanges element or the locus_tag from the genbank/Ape file.  
+
+If your installation of FIMO can't be found it will provide instructions for you.
+
+The function returns a GRanges object with the results.  Optionally (recommended) you can specify an output directory for detailed output data. 
+
+## Conclusion
+
+Good luck working with your DNA sequences!
+
