@@ -433,4 +433,4 @@ get_seurat_umap_dims <- function(obj, assay) {
   return(res)
 }
 
-`%notin%` <- negate(`%in%`)
+`%notin%` <- Negate(`%in%`)
