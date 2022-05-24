@@ -16,11 +16,12 @@
 #' @importFrom monocle3 graph_test find_gene_modules
 #' @importFrom dplyr rename left_join mutate select
 #' @importFrom forcats fct_shift
+#' @importFrom stringr str_sort
 bb_gene_modules <- function(obj,
                             n_cores = 8,
                             cds = NULL) {
-  cds_warn(cds)
-  obj_stop(obj)
+  blaseRtools:::cds_warn(cds)
+  blaseRtools:::obj_stop(obj)
 
   if ("Seurat" %in% class(obj)) {
     cds <- SeuratWrappers::as.cell_data_set(obj)
@@ -44,7 +45,7 @@ bb_gene_modules <- function(obj,
   gene_module_df <-
     dplyr::left_join(bb_rowmeta(obj), gene_module_df, by = "feature_id") |>
     dplyr::mutate(module_labeled = ifelse(is.na(module), "No Module", paste0("Module ", module))) |>
-    dplyr::mutate(module_labeled = factor(module_labeled, levels = str_sort(unique(module_labeled), numeric = TRUE))) |>
+    dplyr::mutate(module_labeled = factor(module_labeled, levels = stringr::str_sort(unique(module_labeled), numeric = TRUE))) |>
     dplyr::mutate(supermodule_labeled = ifelse(
       is.na(module),
       "No Supermodule",

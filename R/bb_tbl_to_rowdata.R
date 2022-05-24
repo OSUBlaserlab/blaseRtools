@@ -18,8 +18,8 @@ bb_tbl_to_rowdata <-
             min_tbl,
             join_col = "feature_id",
             cds = NULL) {
-    cds_warn(cds)
-    obj_stop(obj)
+    blaseRtools:::cds_warn(cds)
+    blaseRtools:::obj_stop(obj)
     row_ids <- bb_rowmeta(obj) |>
       dplyr::select(feature_id)
     min_tbl <-
@@ -37,8 +37,8 @@ bb_tbl_to_rowdata <-
 
     if ("cell_data_set" %in% class(obj)) {
       for (i in 1:ncol(cols_to_add)) {
-        SingleCellExperiment::rowData(obj)$new <- cols_to_add |> pull(i)
-        names(SingleCellExperiment::rowData(obj))[names(SingleCellExperiment::rowData(obj)) == "new"] <-
+        SummarizedExperiment::rowData(obj)$new <- cols_to_add |> pull(i)
+        names(SummarizedExperiment::rowData(obj))[names(SummarizedExperiment::rowData(obj)) == "new"] <-
           colnames(cols_to_add)[i]
 
       }
