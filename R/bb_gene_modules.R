@@ -20,8 +20,8 @@
 bb_gene_modules <- function(obj,
                             n_cores = 8,
                             cds = NULL) {
-  blaseRtools:::cds_warn(cds)
-  blaseRtools:::obj_stop(obj)
+  cds_warn(cds)
+  obj_stop(obj)
 
   if ("Seurat" %in% class(obj)) {
     cds <- SeuratWrappers::as.cell_data_set(obj)

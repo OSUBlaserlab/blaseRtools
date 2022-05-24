@@ -18,8 +18,8 @@ bb_tbl_to_rowdata <-
             min_tbl,
             join_col = "feature_id",
             cds = NULL) {
-    blaseRtools:::cds_warn(cds)
-    blaseRtools:::obj_stop(obj)
+    cds_warn(cds)
+    obj_stop(obj)
     row_ids <- bb_rowmeta(obj) |>
       dplyr::select(feature_id)
     min_tbl <-
