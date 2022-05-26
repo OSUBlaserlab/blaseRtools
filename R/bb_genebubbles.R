@@ -25,14 +25,14 @@ bb_genebubbles <- function(obj,
                            gene_ordering = c("bicluster", "as_supplied"),
                            group_ordering = c("bicluster", "as_supplied"),
                            return_value = c("plot", "data")) {
-  obj_stop(obj)
+  blaseRtools:::obj_stop(obj)
   gene_ordering <- match.arg(gene_ordering)
   group_ordering <- match.arg(group_ordering)
   return_value <- match.arg(return_value)
 
   if (length(dim(genes)) > 1)
     stop("This visualization cannot be used for aggregated genes.")
-  ids <- get_gene_ids(obj, genes)
+  ids <- blaseRtools:::get_gene_ids(obj, genes)
 
   # if this cell grouping is not present in the obj, then create it
   cg <- cell_grouping
@@ -99,7 +99,8 @@ bb_genebubbles <- function(obj,
     gene_order <-
       tibble::tibble(feature_id = levels(bicluster_bubbles(mat)$genes)) |>
       dplyr::left_join(bb_rowmeta(obj), by = "feature_id") |>
-      dplyr::pull(gene_short_name)
+      dplyr::pull(gene_short_name) |>
+      unique()
     plot_data <-
       dplyr::mutate(plot_data,
                     gene_short_name = factor(gene_short_name, levels = gene_order))
