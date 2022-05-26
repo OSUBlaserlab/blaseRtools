@@ -15,13 +15,21 @@ bb_cluster_representation <- function(cds,
                                       class_var,
                                       experimental_class,
                                       control_class,
+                                      pseudocount = 1,
                                       return_value = c("table", "plot")) {
   stopifnot("You must select a table or a plot to return." = return_value %in% c("table", "plot"))
   stopifnot("You can only return a table OR a plot." = length(return_value) == 1)
   res <- bb_cellmeta(cds) %>%
     group_by(!!sym(cluster_var), !!sym(class_var)) %>%
-    summarise(n = n()) %>%
-    left_join(.,
+    summarise(n = n())
+  all <- res |>
+    ungroup() |>
+    tidyr::expand(!!sym(cluster_var), !!sym(class_var))
+  res <- right_join(res, all) |>
+    mutate(n = replace_na(n, 0)) |>
+    mutate(n = n + pseudocount)
+  res <-
+    left_join(res,
               bb_cellmeta(cds) %>%
                 group_by(!!sym(class_var)) %>%
                 summarise(class_total = n())) %>%
@@ -37,20 +45,23 @@ bb_cluster_representation <- function(cds,
       experimental_class,
       control_class
     ))
+  # return(res)
   fisher <- map_dfr(
     .x = bb_cellmeta(cds) %>% pull(!!sym(cluster_var)) %>% unique() %>% as.character(),
     .f = function(x,
                   cds_int = cds,
                   cluster_var_int = cluster_var,
-                  class_var_int = class_var) {
+                  class_var_int = class_var,
+                  pscount = pseudocount) {
       fish <- bb_cellmeta(cds_int) %>%
         mutate(cluster_of_interest = ifelse(!!as.name(cluster_var_int) %notin% x,
                                             paste0("not ", x),
                                             x)) %>%
         count(!!sym(class_var_int), cluster_of_interest) %>%
+        mutate(n = n + pscount) |>
         pivot_wider(names_from = !!sym(class_var_int),
-                    values_from = n) %>%
-        bb_tbl_to_matrix() %>%
+                    values_from = n, values_fill = pseudocount) %>%
+        bb_tbl_to_matrix() |>
         rstatix::fisher_test() %>%
         mutate(!!cluster_var_int := x) %>%
         relocate(!!sym(cluster_var_int)) %>%
