@@ -35,6 +35,7 @@ bb_genebubbles <- function(obj,
   ids <- get_gene_ids(obj, genes)
 
   # if this cell grouping is not present in the obj, then create it
+  cg <- cell_grouping
   min_tbl <- bb_cellmeta(obj) |>
     tidyr::unite(col = "cell_grouping",
                  tidyselect::matches(paste("^", cell_grouping, "$", sep = "")),
@@ -108,7 +109,12 @@ bb_genebubbles <- function(obj,
     plot_data <-
       dplyr::mutate(plot_data, group = factor(group, levels = levels(bicluster_bubbles(mat)$groups)))
   }
-
+  # now join the cell metadata back on in case you want it later
+  # return(list(plot_data, bb_cellmeta(obj)))
+  group_meta <- bb_cellmeta(obj) |>
+    select(matches(paste0("^", c(cg, "cell_grouping"), "$"))) |>
+    distinct()
+  plot_data <- left_join(plot_data, group_meta, by = c("group" = "cell_grouping"))
 
 
   plot <-

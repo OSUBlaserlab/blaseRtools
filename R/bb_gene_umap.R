@@ -110,6 +110,9 @@ bb_gene_umap <-
     # join the expression data back onto the plot data
     plot_data <- dplyr::left_join(plot_data, dat, by = "cell_id")
 
+    # join the cell metadata back on in case you want to facet or something else
+    plot_data <- dplyr::left_join(plot_data, bb_cellmeta(obj), by = "cell_id")
+
     if (order)
       plot_data <- dplyr::arrange(plot_data, !is.na(value), value)
 
