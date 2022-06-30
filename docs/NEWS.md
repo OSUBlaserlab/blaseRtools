@@ -193,6 +193,10 @@
 
 * edited dependencies
 
-# blaseRtools 0.0.0.9090
+# blaseRtools 0.0.0.9090 - 94
 
 * ported many essential functions to take in Seurat and cds objects.
+
+# blaseRtools 0.0.0.9095
+
+* added max expression value parameter to bb_gene_umap

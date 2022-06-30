@@ -21,6 +21,7 @@
 #' @param ncol Specify the number of columns if faceting, Default: NULL
 #' @param plot_title Optional title for the plot, Default: NULL
 #' @param color_legend_title Option to change the color scale title, Default: 'Expression'
+#' @param max_expr_val Maximum expression value to cap the color scale, Default: NULL
 #' @param cds Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL
 #' @return A ggplot
 #' @seealso
@@ -46,6 +47,7 @@ bb_gene_umap <-
             ncol = NULL,
             plot_title = NULL,
             color_legend_title = "Expression",
+            max_expr_val = NULL,
             cds = NULL) {
     cds_warn(cds)
     obj_stop(obj)
@@ -113,8 +115,16 @@ bb_gene_umap <-
     # join the cell metadata back on in case you want to facet or something else
     plot_data <- dplyr::left_join(plot_data, bb_cellmeta(obj), by = "cell_id")
 
+    # optionally order the cells to un-bury rare expressing cells
     if (order)
       plot_data <- dplyr::arrange(plot_data, !is.na(value), value)
+
+    # optionally cap the color scale
+
+    if (!is.null(max_expr_val)) {
+      plot_data <- plot_data |>
+        mutate(value = ifelse(value > max_expr_val, max_expr_val, value))
+    }
 
     p <- ggplot2::ggplot(plot_data,
                 mapping = ggplot2::aes(

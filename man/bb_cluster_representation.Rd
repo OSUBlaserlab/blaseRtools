@@ -10,6 +10,7 @@ bb_cluster_representation(
   class_var,
   experimental_class,
   control_class,
+  pseudocount = 1,
   return_value = c("table", "plot")
 )
 }

@@ -14,6 +14,7 @@ bb_gene_umap(
   ncol = NULL,
   plot_title = NULL,
   color_legend_title = "Expression",
+  max_expr_val = NULL,
   cds = NULL
 )
 }
@@ -35,6 +36,8 @@ bb_gene_umap(
 \item{plot_title}{Optional title for the plot, Default: NULL}
 
 \item{color_legend_title}{Option to change the color scale title, Default: 'Expression'}
+
+\item{max_expr_val}{Maximum expression value to cap the color scale, Default: NULL}
 
 \item{cds}{Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL}
 }
