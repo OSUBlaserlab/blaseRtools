@@ -1549,7 +1549,7 @@
     },
     "blaseRtemplates": {
       "Package": "blaseRtemplates",
-      "Version": "0.0.0.9115",
+      "Version": "0.0.0.9120",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
@@ -1557,8 +1557,8 @@
       "RemoteUsername": "blaserlab",
       "RemotePkgRef": "blaserlab/blaseRtemplates",
       "RemoteRef": "HEAD",
-      "RemoteSha": "591536fa5dfb09969633fe71a10c14c0d1ba552a",
-      "Hash": "95464713db1042ca0306ef27cc538ea0",
+      "RemoteSha": "9dff6982ae5e0de615fe9d0dc3a8dc0bd03f0b6a",
+      "Hash": "84d9a7907c88fcf4742dd3a2eef54238",
       "Requirements": [
         "cli",
         "devtools",
@@ -2483,8 +2483,14 @@
     "fs": {
       "Package": "fs",
       "Version": "1.5.2",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "fs",
+      "RemoteRef": "fs",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.5.2",
       "Hash": "7c89603d81793f0d5486d91ab1fc6f1d",
       "Requirements": []
     },
@@ -2883,8 +2889,14 @@
     "gitcreds": {
       "Package": "gitcreds",
       "Version": "0.1.1",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "gitcreds",
+      "RemoteRef": "gitcreds",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "0.1.1",
       "Hash": "f3aefccc1cc50de6338146b62f115de8",
       "Requirements": []
     },
@@ -4375,8 +4387,14 @@
     "prompt": {
       "Package": "prompt",
       "Version": "1.0.1",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "prompt",
+      "RemoteRef": "prompt",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.0.1",
       "Hash": "f848531dd8aef16dcf52702aa1af5b1c",
       "Requirements": [
         "cli"
@@ -4644,8 +4662,14 @@
     "reshape2": {
       "Package": "reshape2",
       "Version": "1.4.4",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "reshape2",
+      "RemoteRef": "reshape2",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.4.4",
       "Hash": "bb5996d0bd962d214a11140d77589917",
       "Requirements": [
         "Rcpp",
@@ -5219,6 +5243,28 @@
         "xtable"
       ]
     },
+    "sinew": {
+      "Package": "sinew",
+      "Version": "0.4.0",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "sinew",
+      "RemoteRef": "sinew",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "0.4.0",
+      "Hash": "9a7d102e0d254aeae96052c637f3efee",
+      "Requirements": [
+        "cli",
+        "crayon",
+        "rematch2",
+        "rstudioapi",
+        "sos",
+        "stringi",
+        "yaml"
+      ]
+    },
     "sitmo": {
       "Package": "sitmo",
       "Version": "2.0.2",
@@ -5281,6 +5327,22 @@
       "RemoteSha": "0.4-4",
       "Hash": "40b74690debd20c57d93d8c246b305d4",
       "Requirements": []
+    },
+    "sos": {
+      "Package": "sos",
+      "Version": "2.1-4",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "sos",
+      "RemoteRef": "sos",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "2.1-4",
+      "Hash": "696a25c20d2c70e1cb46ef81529d4c86",
+      "Requirements": [
+        "brew"
+      ]
     },
     "sourcetools": {
       "Package": "sourcetools",

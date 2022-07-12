@@ -200,3 +200,7 @@
 # blaseRtools 0.0.0.9095
 
 * added max expression value parameter to bb_gene_umap
+
+# blaseRtools 0.0.0.9096
+
+* added geom split violin
