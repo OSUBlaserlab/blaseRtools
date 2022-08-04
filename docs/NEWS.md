@@ -204,3 +204,8 @@
 # blaseRtools 0.0.0.9096
 
 * added geom split violin
+
+# blaseRtools 0.0.0.9097
+
+* reversed order of link plotting in trace_funcs.R
+* now highest scoring link is plotted on top

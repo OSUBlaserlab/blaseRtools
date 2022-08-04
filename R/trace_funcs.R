@@ -468,7 +468,7 @@ bb_plot_trace_links <- function(trace, cutoff = 0) {
     dplyr::mutate(mid = width/2 + start) %>%
     dplyr::filter(score > cutoff) %>%
     distinct() %>%
-    mutate(group = rank(-score))
+    mutate(group = rank(score))
 
   bezier_data <-
     tibble(x = c(gr_tbl$start,
