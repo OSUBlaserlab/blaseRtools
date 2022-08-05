@@ -150,5 +150,8 @@ bb_gene_violinplot <-
     if (show_x_label == F) {
       p1 <- p1 + theme(axis.text.x = element_blank())
     }
+    # optionally rasterize the point layers
+    if (rasterize) p1 <- ggrastr::rasterise(p1,
+                                           dpi = raster_dpi)
     return(p1)
   }

@@ -386,8 +386,9 @@ bb_var_umap <- function(obj,
   }
 
   # optionally rasterize the point layers
-  if (rasterize) plot <- plot +
-    ggrastr::rasterise(geom_point(), dpi = raster_dpi)
+  if (rasterize) plot <- ggrastr::rasterise(plot,
+                                            layers = "Point",
+                                            dpi = raster_dpi)
 
   return(plot)
 }

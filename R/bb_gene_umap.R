@@ -154,8 +154,9 @@ bb_gene_umap <-
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 
     # optionally rasterize the point layers
-    if (rasterize) p <- p +
-      ggrastr::rasterise(geom_point(), dpi = raster_dpi)
+    if (rasterize) p <- ggrastr::rasterise(p,
+                                           layers = "Point",
+                                           dpi = raster_dpi)
     return(p)
   }
 
