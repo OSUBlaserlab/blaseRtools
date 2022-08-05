@@ -20,6 +20,8 @@
 #' @param nbin Number of bins if using var %in% c("density". "local_n", "log_local_n")
 #' @param facet_by Variable or variables to facet by.
 #' @param sample_equally Whether or not you should downsample to the same number of cells in each plot.  Default is FALSE or no.
+#' @param rasterize Whether to render the graphical layer as a raster image.  Default is FALSE.
+#' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
 #' @param ... Additional params for facetting.
 #' @param man_text_df A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.
 #' @param cds Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL
@@ -51,6 +53,8 @@ bb_var_umap <- function(obj,
                         nbin = 100,
                         facet_by = NULL,
                         sample_equally = FALSE,
+                        rasterize = FALSE,
+                        raster_dpi = 300,
                         cds = NULL,
                         ...,
                         man_text_df = NULL) {
@@ -58,6 +62,7 @@ bb_var_umap <- function(obj,
 
   cds_warn(cds)
   obj_stop(obj)
+
   if ("cell_data_set" %in% class(obj)) {
     dims <- get_cds_umap_dims(obj)
   } else if ("Seurat" %in% class(obj)) {
@@ -378,6 +383,10 @@ bb_var_umap <- function(obj,
       return("Too many dimensions to facet by.")
     }
   }
+
+  # optionally rasterize the point layers
+  if (rasterize) plot <- plot +
+    ggrastr::rasterise(geom_point(), dpi = raster_dpi)
 
   return(plot)
 }

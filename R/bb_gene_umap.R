@@ -22,6 +22,8 @@
 #' @param plot_title Optional title for the plot, Default: NULL
 #' @param color_legend_title Option to change the color scale title, Default: 'Expression'
 #' @param max_expr_val Maximum expression value to cap the color scale, Default: NULL
+#' @param rasterize Whether to render the graphical layer as a raster image.  Default is FALSE.
+#' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
 #' @param cds Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL
 #' @return A ggplot
 #' @seealso
@@ -48,6 +50,8 @@ bb_gene_umap <-
             plot_title = NULL,
             color_legend_title = "Expression",
             max_expr_val = NULL,
+            rasterize = FALSE,
+            raster_dpi = 300,
             cds = NULL) {
     cds_warn(cds)
     obj_stop(obj)
@@ -147,6 +151,10 @@ bb_gene_umap <-
       ggplot2::facet_wrap(facets = ggplot2::vars(name), ncol = ncol) +
       ggplot2::theme(strip.background = ggplot2::element_blank()) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+
+    # optionally rasterize the point layers
+    if (rasterize) p <- p +
+      ggrastr::rasterise(geom_point(), dpi = raster_dpi)
     return(p)
   }
 

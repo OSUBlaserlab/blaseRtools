@@ -15,6 +15,8 @@ bb_gene_umap(
   plot_title = NULL,
   color_legend_title = "Expression",
   max_expr_val = NULL,
+  rasterize = FALSE,
+  raster_dpi = 300,
   cds = NULL
 )
 }
@@ -38,6 +40,10 @@ bb_gene_umap(
 \item{color_legend_title}{Option to change the color scale title, Default: 'Expression'}
 
 \item{max_expr_val}{Maximum expression value to cap the color scale, Default: NULL}
+
+\item{rasterize}{Whether to render the graphical layer as a raster image.  Default is FALSE.}
+
+\item{raster_dpi}{If rasterize then this is the DPI used.  Default = 300.}
 
 \item{cds}{Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL}
 }

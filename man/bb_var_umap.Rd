@@ -25,6 +25,8 @@ bb_var_umap(
   nbin = 100,
   facet_by = NULL,
   sample_equally = FALSE,
+  rasterize = FALSE,
+  raster_dpi = 300,
   cds = NULL,
   ...,
   man_text_df = NULL
@@ -70,6 +72,10 @@ bb_var_umap(
 \item{facet_by}{Variable or variables to facet by.}
 
 \item{sample_equally}{Whether or not you should downsample to the same number of cells in each plot.  Default is FALSE or no.}
+
+\item{rasterize}{Whether to render the graphical layer as a raster image.  Default is FALSE.}
+
+\item{raster_dpi}{If rasterize then this is the DPI used.  Default = 300.}
 
 \item{cds}{Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL}
 

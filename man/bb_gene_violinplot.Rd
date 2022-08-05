@@ -24,7 +24,9 @@ bb_gene_violinplot(
   jitter_size = 0.5,
   facet_scales = "fixed",
   order_genes = TRUE,
-  jitter_match = F
+  jitter_match = FALSE,
+  rasterize = FALSE,
+  raster_dpi = 300
 )
 }
 \arguments{
@@ -67,6 +69,10 @@ bb_gene_violinplot(
 \item{order_genes}{If true, put genes in the same order as variable parameter}
 
 \item{jitter_match}{If true, match jitter color to violin fill.}
+
+\item{rasterize}{Whether to render the graphical layer as a raster image.  Default is FALSE.}
+
+\item{raster_dpi}{If rasterize then this is the DPI used.  Default = 300.}
 }
 \value{
 A ggplot

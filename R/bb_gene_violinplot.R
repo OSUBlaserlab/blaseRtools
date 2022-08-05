@@ -1,8 +1,8 @@
-#' Make a plot of gene expression in UMAP form 
-#' 
-#' @param cds A cell data set object 
+#' Make a plot of gene expression in UMAP form
+#'
+#' @param cds A cell data set object
 #' @param variable Stratification variable for x-axis
-#' @param genes_to_plot Either a character vector of gene short names or a tbl/df where the first column is gene short name and the second is the gene grouping.  
+#' @param genes_to_plot Either a character vector of gene short names or a tbl/df where the first column is gene short name and the second is the gene grouping.
 #' @param pseudocount Value to add to zero-cells
 #' @param include_jitter Include jitter points
 #' @param ytitle Title for y axis
@@ -18,9 +18,11 @@
 #' @param jitter_fill Fill for the jitter plot
 #' @param jitter_size Size of the jitter points
 #' @param facet_scales Scale option for facetting.  "Fixed" is default
-#' @param order_genes If true, put genes in the same order as variable parameter 
-#' @param jitter_match If true, match jitter color to violin fill. 
-#' @return A ggplot 
+#' @param order_genes If true, put genes in the same order as variable parameter
+#' @param jitter_match If true, match jitter color to violin fill.
+#' @param rasterize Whether to render the graphical layer as a raster image.  Default is FALSE.
+#' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
+#' @return A ggplot
 #' @export
 #' @import tidyverse monocle3 ggpubr
 bb_gene_violinplot <-
@@ -43,7 +45,10 @@ bb_gene_violinplot <-
            jitter_size = 0.5,
            facet_scales = "fixed",
            order_genes = TRUE,
-           jitter_match = F) {
+           jitter_match = FALSE,
+           rasterize = FALSE,
+           raster_dpi = 300
+           ) {
     my_comparisons <-
       comparison_list#(list(c(comparator1,comparator2),c(comparator1,comparator3)...))
     if (length(dim(genes_to_plot)) > 1) {
@@ -61,7 +66,7 @@ bb_gene_violinplot <-
     } else {
       data_to_plot <-
         monocle3::plot_genes_violin(cds_subset = cds[rowData(cds)$gene_short_name %in% genes_to_plot,], group_cells_by = variable)[["data"]]
-      
+
       if (order_genes) {
         data_to_plot <-
           data_to_plot %>% mutate(gene_short_name = factor(gene_short_name, levels = genes_to_plot))
@@ -79,10 +84,10 @@ bb_gene_violinplot <-
          size = jitter_size,
          width = 0.2,
          alpha = jitter_alpha,
-	 fill = jitter_fill, 
+	 fill = jitter_fill,
          aes(color = !!as.name(variable)),
          show.legend = F
-       ) 
+       )
       } else {
       p1 <-
         p1 + geom_jitter(
@@ -102,7 +107,7 @@ bb_gene_violinplot <-
                              end = 0.9)
     } else {
       p1 <- p1 +
-        scale_color_manual(aesthetics = "color", values = alpha(palette, jitter_alpha), drop = TRUE) 
+        scale_color_manual(aesthetics = "color", values = alpha(palette, jitter_alpha), drop = TRUE)
     }
     p1 <- p1 +
       geom_violin(
@@ -129,7 +134,7 @@ bb_gene_violinplot <-
                              end = 0.9)
     } else {
       p1 <- p1 +
-        scale_fill_manual(values = alpha(palette, violin_alpha), drop = TRUE) 
+        scale_fill_manual(values = alpha(palette, violin_alpha), drop = TRUE)
     }
     p1 <- p1 + theme(plot.title = element_text(hjust = 0.5))
     if (length(dim(genes_to_plot)) > 1) {
