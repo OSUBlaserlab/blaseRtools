@@ -33,6 +33,7 @@
 #' @importFrom ggplot2 ggplot geom_point aes aes_string scale_color_viridis_c scale_fill_viridis_c scale_fill_viridis_d scale_color_viridis_d scale_color_brewer scale_fill_brewer scale_color_manual scale_fill_manual scale_color_discrete scale_fill_discrete guides guide_legend theme element_text geom_text facet_wrap element_blank facet_grid
 #' @importFrom purrr map_dfr
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom ggrastr rasterise
 bb_var_umap <- function(obj,
                         var,
                         assay = "RNA",

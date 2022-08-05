@@ -25,6 +25,7 @@
 #' @return A ggplot
 #' @export
 #' @import tidyverse monocle3 ggpubr
+#' @importFrom ggrastr rasterise
 bb_gene_violinplot <-
   function(cds,
            variable,

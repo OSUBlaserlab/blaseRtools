@@ -210,6 +210,6 @@
 * reversed order of link plotting in trace_funcs.R
 * now highest scoring link is plotted on top
 
-# blaseRtools 0.0.0.9098
+# blaseRtools 0.0.0.9098-9
 
 * added rasterize option to umap and violin plot functions 

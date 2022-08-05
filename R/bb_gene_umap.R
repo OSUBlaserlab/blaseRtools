@@ -39,6 +39,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr left_join mutate select arrange
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_viridis_c scale_fill_viridis_c labs facet_wrap vars theme element_blank element_text
+#' @importFrom ggrastr rasterise
 bb_gene_umap <-
   function (obj,
             gene_or_genes,
