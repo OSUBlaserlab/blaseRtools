@@ -22,6 +22,8 @@
 #' @param plot_title Optional title for the plot, Default: NULL
 #' @param color_legend_title Option to change the color scale title, Default: 'Expression'
 #' @param max_expr_val Maximum expression value to cap the color scale, Default: NULL
+#' @param alt_dim_x Alternate/reference dimensions to plot by.
+#' @param alt_dim_y Alternate/reference dimensions to plot by.
 #' @param rasterize Whether to render the graphical layer as a raster image.  Default is FALSE.
 #' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
 #' @param cds Provided for backward compatibility.  If a value is supplied a warning will be emitted., Default: NULL
@@ -51,12 +53,19 @@ bb_gene_umap <-
             plot_title = NULL,
             color_legend_title = "Expression",
             max_expr_val = NULL,
+            alt_dim_x = NULL,
+            alt_dim_y = NULL,
             rasterize = FALSE,
             raster_dpi = 300,
             cds = NULL) {
     cds_warn(cds)
     obj_stop(obj)
-    # first check to see if you are dealing with single or aggregated genes
+
+    # use alternate dimensions if desired, otherwise use UMAP
+    dim_x <- ifelse(is.null(alt_dim_x), "UMAP_1", alt_dim_x)
+    dim_y <- ifelse(is.null(alt_dim_y), "UMAP_2", alt_dim_y)
+
+    # check to see if you are dealing with single or aggregated genes
     aggregated <-
       ifelse(length(dim(gene_or_genes)) == 2, TRUE, FALSE)
 
@@ -133,8 +142,8 @@ bb_gene_umap <-
 
     p <- ggplot2::ggplot(plot_data,
                 mapping = ggplot2::aes(
-                  x = UMAP_1,
-                  y = UMAP_2,
+                  x = !!sym(dim_x),
+                  y = !!sym(dim_y),
                   color = value,
                   fill = value
                 )) +
@@ -144,8 +153,8 @@ bb_gene_umap <-
       ggplot2::scale_color_viridis_c(na.value = "grey80") +
       ggplot2::scale_fill_viridis_c(na.value = "transparent", guide = "none") +
       ggplot2::labs(
-        x = "UMAP 1",
-        y = "UMAP 2",
+        x = dim_x,
+        y = dim_y,
         color = color_legend_title,
         title = plot_title
       ) +

@@ -213,3 +213,7 @@
 # blaseRtools 0.0.0.9098-100
 
 * added rasterize option to umap and violin plot functions 
+
+# blaseRtools 0.0.0.9101
+
+* added alt dims to bb_gene_umap
