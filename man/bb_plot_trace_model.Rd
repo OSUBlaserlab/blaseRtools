@@ -4,10 +4,12 @@
 \alias{bb_plot_trace_model}
 \title{Plot The Gene Model From A Trace Object}
 \usage{
-bb_plot_trace_model(trace, select_transcript = NULL)
+bb_plot_trace_model(trace, font_face = "italic", select_transcript = NULL)
 }
 \arguments{
 \item{trace}{A Trace object.}
+
+\item{font_face}{Font face option to use.  Default = "italic".}
 
 \item{select_transcript}{Optional selected transcript(s) to plot.}
 }

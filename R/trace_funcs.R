@@ -520,11 +520,13 @@ select_the_transcripts <- function(gr) {
 #' @description A function to generate a plot of the underlying gene model.  The genes to be plotted are automatically selected according to the genome build and the plot range. The function automatically picks the longest principle transcript to show.  Optionally, alternative transcripts can be shown by specifying the select_transcript argument.  This must be an ensembl transcript identifier lying within the plot range.
 #'
 #' @param trace A Trace object.
+#' @param font_face Font face option to use.  Default = "italic".
 #' @param select_transcript Optional selected transcript(s) to plot.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @export
 bb_plot_trace_model <- function(trace,
+                                font_face = "italic",
                                 select_transcript = NULL) {
   data_gr <- Trace.gene_model(trace)
   data_tbl <-
@@ -634,7 +636,8 @@ bb_plot_trace_model <- function(trace,
         y = paste0(parent_transcript, "_gene"),
         label = gene_name
       ),
-      size = 3
+      size = 3,
+      fontface = font_face
     )
 
 

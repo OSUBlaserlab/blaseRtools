@@ -217,3 +217,7 @@
 # blaseRtools 0.0.0.9101
 
 * added alt dims to bb_gene_umap
+
+# blaseRtools 0.0.0.9102
+
+* added font face option to plot trace model function
