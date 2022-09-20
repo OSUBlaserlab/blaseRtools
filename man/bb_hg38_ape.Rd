@@ -8,11 +8,10 @@ bb_hg38_ape(
   query,
   extend_left = 0,
   extend_right = 0,
-  include_type = c("ncRNA_gene", "rRNA", "exon", "pseudogene",
-    "pseudogenic_transcript", "ncRNA", "gene", "CDS", "lnc_RNA", "mRNA",
-    "three_prime_UTR", "five_prime_UTR", "unconfirmed_transcript", "scRNA",
-    "C_gene_segment", "D_gene_segment", "J_gene_segment", "V_gene_segment", "miRNA",
-    "tRNA", "snRNA", "snoRNA"),
+  include_type = c("ncRNA_gene", "rRNA", "exon", "pseudogene", "pseudogenic_transcript",
+    "ncRNA", "gene", "CDS", "lnc_RNA", "mRNA", "three_prime_UTR", "five_prime_UTR",
+    "unconfirmed_transcript", "scRNA", "C_gene_segment", "D_gene_segment",
+    "J_gene_segment", "V_gene_segment", "miRNA", "tRNA", "snRNA", "snoRNA"),
   additional_granges = NULL
 )
 }

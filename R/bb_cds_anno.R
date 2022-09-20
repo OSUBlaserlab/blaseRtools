@@ -8,87 +8,73 @@
 #' @rdname bb_singlecell_anno
 #' @import Seurat monocle3 tidyverse
 #' @export
-bb_cds_anno <- function(query_cds,
-                               ref,
-                               transfer_col,
-                               unique_id = NULL) {
-  if (!is.null(unique_id)) {
-    unique_id <- paste0(unique_id, "_")
-  }
-
-  if (paste0("predicted.", unique_id, transfer_col) %in% colnames(bb_cellmeta(query_cds))) {
-    return(
-      "This function will overwrite existing data in your cds. Provide a new value for unique_id.  Aborting."
+#' @export
+#' @importFrom monocle3 exprs
+bb_cds_anno <- function (query_cds, ref, transfer_col, unique_id = NULL) {
+    if (!is.null(unique_id)) {
+      unique_id <- paste0(unique_id, "_")
+    }
+    if (paste0("predicted.", unique_id, transfer_col) %in% colnames(bb_cellmeta(query_cds))) {
+      return(
+        "This function will overwrite existing data in your cds. Provide a new value for unique_id.  Aborting."
+      )
+    }
+    if ("cell_data_set" %in% class(ref)) {
+      ref_seurat <- CreateSeuratObject(counts = monocle3::exprs(ref))
+      ref_seurat <-
+        AddMetaData(ref_seurat, colData(ref)[[transfer_col]],
+                    col.name = transfer_col)
+      ref_seurat <-
+        NormalizeData(ref_seurat) %>% FindVariableFeatures() %>%
+        ScaleData() %>% RunPCA()
+    }
+    else if ("Seurat" %in% class(ref)) {
+      ref_seurat <- ref
+    }
+    else {
+      return("The reference must be either a cell data set or Seurat object.")
+    }
+    Idents(ref_seurat) <- transfer_col
+    ref_seurat <- RunUMAP(ref_seurat, dims = 1:30)
+    if ("cell_data_set" %in% class(query_cds)) {
+      query_seurat <- CreateSeuratObject(counts = monocle3::exprs(query_cds))
+      query_seurat <-
+        NormalizeData(query_seurat) %>% FindVariableFeatures() %>%
+        ScaleData() %>% RunPCA()
+    }
+    else {
+      return("The query must be a cell data set object.")
+    }
+    transfer_anchors <- FindTransferAnchors(
+      reference = ref_seurat,
+      query = query_seurat,
+      features = VariableFeatures(object = ref_seurat),
+      reference.reduction = "pca"
     )
+    query_ref <-
+      MapQuery(
+        anchorset = transfer_anchors,
+        query = query_seurat,
+        reference = ref_seurat,
+        refdata = list(transfer_col = transfer_col)
+      )
+    cols_to_add <- set_names(
+      select(
+        left_join(
+          bb_cellmeta(query_cds),
+          as_tibble(query_ref@meta.data, rownames = "cell_id")
+        ),
+        cell_id,
+        predicted.transfer_col,
+        predicted.transfer_col.score
+      ),
+      c(
+        "cell_id",
+        paste0("predicted.", unique_id, transfer_col),
+        paste0("predicted.", unique_id, transfer_col, ".score")
+      )
+    )
+    result <-
+      bb_tbl_to_coldata(obj = query_cds, min_tbl = cols_to_add)
+    return(result)
   }
-
-  # if necessary convert the reference cds to a seurat object
-  if ("cell_data_set" %in% class(ref)) {
-    ref_seurat <- CreateSeuratObject(counts = exprs(ref))
-    ref_seurat <- AddMetaData(ref_seurat,
-                              colData(ref)[[transfer_col]],
-                              col.name = transfer_col)
-    ref_seurat <-
-      NormalizeData(ref_seurat) %>%
-      FindVariableFeatures() %>%
-      ScaleData() %>%
-      RunPCA()
-
-  } else if ("Seurat" %in% class(ref)) {
-    ref_seurat <- ref
-  } else {
-    return("The reference must be either a cell data set or Seurat object.")
-  }
-
-
-  Idents(ref_seurat) <- transfer_col
-
-  ref_seurat <- RunUMAP(ref_seurat, dims = 1:30)
-
-  # check to be sure the query is a CDS
-  if ("cell_data_set" %in% class(query_cds)) {
-    query_seurat <- CreateSeuratObject(counts = exprs(query_cds))
-    query_seurat <-
-      NormalizeData(query_seurat) %>%
-      FindVariableFeatures() %>%
-      ScaleData() %>%
-      RunPCA()
-  } else {
-    return("The query must be a cell data set object.")
-  }
-
-  # Identify anchors
-  transfer_anchors <- FindTransferAnchors(
-    reference = ref_seurat,
-    query = query_seurat,
-    features = VariableFeatures(object = ref_seurat),
-    reference.reduction = "pca"
-  )
-
-  # transfer labels
-  query_ref <- MapQuery(
-    anchorset = transfer_anchors,
-    query = query_seurat,
-    reference = ref_seurat,
-    refdata = list(transfer_col = transfer_col)
-  )
-
-  # add the columns on
-
-  cols_to_add <- left_join(bb_cellmeta(query_cds),
-                           as_tibble(query_ref@meta.data, rownames = "cell_id")) |>
-    select(cell_id,
-           predicted.transfer_col,
-           predicted.transfer_col.score) |>
-    set_names(c(
-      "cell_id",
-      paste0("predicted.", unique_id, transfer_col),
-      paste0("predicted.", unique_id, transfer_col, ".score")
-    ))
-
-  result <- bb_tbl_to_coldata(cds = query_cds,
-                              min_tbl = cols_to_add)
-
-  return(result)
-
-}
