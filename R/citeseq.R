@@ -117,7 +117,7 @@ bb_split_citeseq <- function(cds) {
   CLR_counts <- get_seurat_clr(cds)
 
   # set this as a new assay
-  SummarizedExperiment::assay(cds, "CLR_counts") <- CLR_counts
+  SummarizedExperiment::assay(cds, "CLR_counts", withDimnames = FALSE) <- CLR_counts
 
   # swap experiments back
   cds <- SingleCellExperiment::swapAltExp(cds, name = "Gene Expression")

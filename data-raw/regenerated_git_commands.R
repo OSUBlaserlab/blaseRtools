@@ -76,6 +76,8 @@ gert::git_branch_delete(branch = "brad_working")                        #
                                                                         #
 # remember to push your changes to github so we can all get them:       #
 blaseRtemplates::git_push_all()                                         #
+
+blaseRtemplates::install_one_package("blaserlab/blaseRtools", "new_or_update")
 #                                                                         #
 ###########################################################################
 

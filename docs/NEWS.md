@@ -226,3 +226,7 @@
 
 * added split atac function
 * new parameter in bb_qc to set alternate cutoffs
+
+# blaseRtools 0.0.0.9104
+
+* edited split citeseq withDimnames param
