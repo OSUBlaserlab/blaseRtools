@@ -5,9 +5,7 @@
 .DS_Store
 *.rda
 R/local_configs.R
-R/git_commands.R
-R/regenerated_git_commands.R
-inst/data-raw/git_commands.R
-inst/data-raw/regenerated_git_commands.R
 *.png
 *.pdf
+*/git_commands.R
+*/regenerated_get_commands.R
