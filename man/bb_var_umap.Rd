@@ -29,7 +29,8 @@ bb_var_umap(
   raster_dpi = 300,
   cds = NULL,
   ...,
-  man_text_df = NULL
+  man_text_df = NULL,
+  text_geom = "text"
 )
 }
 \arguments{

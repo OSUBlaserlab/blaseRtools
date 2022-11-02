@@ -230,3 +230,7 @@
 # blaseRtools 0.0.0.9104
 
 * edited split citeseq withDimnames param
+
+# blaseRtools 0.0.0.9105
+
+* added label option to bb_var_umap
