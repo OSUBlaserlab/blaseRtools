@@ -30,9 +30,9 @@
 #' @export
 #' @importFrom dplyr left_join group_by summarise slice_sample ungroup n mutate filter pull
 #' @importFrom tidyr pivot_longer
-#' @importFrom ggplot2 ggplot geom_point aes aes_string scale_color_viridis_c scale_fill_viridis_c scale_fill_viridis_d scale_color_viridis_d scale_color_brewer scale_fill_brewer scale_color_manual scale_fill_manual scale_color_discrete scale_fill_discrete guides guide_legend theme element_text geom_text facet_wrap element_blank facet_grid
+#' @importFrom ggplot2 ggplot geom_point aes aes_string scale_color_viridis_c scale_fill_viridis_c scale_fill_viridis_d scale_color_viridis_d scale_color_brewer scale_fill_brewer scale_color_manual scale_fill_manual scale_color_discrete scale_fill_discrete guides guide_legend theme element_text geom_text facet_wrap element_blank facet_grid geom_label
 #' @importFrom purrr map_dfr
-#' @importFrom ggrepel geom_text_repel
+#' @importFrom ggrepel geom_text_repel geom_label_repel
 #' @importFrom ggrastr rasterise
 bb_var_umap <- function(obj,
                         var,
@@ -58,11 +58,20 @@ bb_var_umap <- function(obj,
                         raster_dpi = 300,
                         cds = NULL,
                         ...,
-                        man_text_df = NULL) {
+                        man_text_df = NULL,
+                        text_geom = "text") {
 
 
   cds_warn(cds)
   obj_stop(obj)
+
+  if (text_geom == "label") {
+    text_geom <- geom_label
+    text_geom_repel <- geom_label_repel
+  } else {
+    text_geom <- geom_text
+    text_geom_repel <- geom_text_repel
+  }
 
   if ("cell_data_set" %in% class(obj)) {
     dims <- get_cds_umap_dims(obj)
@@ -356,7 +365,7 @@ bb_var_umap <- function(obj,
   if (overwrite_labels == T && is.null(man_text_df)) {
     plot <- plot +
       ggplot2::theme(legend.position = "none") +
-      ggrepel::geom_text_repel(
+      text_geom_repel(
         data = text_df,
         mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
         size = group_label_size,
@@ -365,7 +374,7 @@ bb_var_umap <- function(obj,
   } else if (!is.null(man_text_df)) {
     plot <- plot +
       ggplot2::theme(legend.position = "none") +
-      ggplot2::geom_text(
+      text_geom(
         data = text_df,
         mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
         size = group_label_size
