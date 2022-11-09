@@ -234,3 +234,9 @@
 # blaseRtools 0.0.0.9105
 
 * added label option to bb_var_umap
+
+# blaseRtools 0.0.0.9106
+
+* added option to show alt experiment in bb_rowmeta
+* debugged bb_cite_umap
+* changed x, y labels in bb_gene_umap

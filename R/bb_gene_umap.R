@@ -153,11 +153,12 @@ bb_gene_umap <-
       ggplot2::scale_color_viridis_c(na.value = "grey80") +
       ggplot2::scale_fill_viridis_c(na.value = "transparent", guide = "none") +
       ggplot2::labs(
-        x = dim_x,
-        y = dim_y,
+        x = ifelse(is.null(alt_dim_x), "UMAP 1", alt_dim_x),
+        y = ifelse(is.null(alt_dim_y), "UMAP 2", alt_dim_y),
         color = color_legend_title,
         title = plot_title
       ) +
+
       ggplot2::facet_wrap(facets = ggplot2::vars(name), ncol = ncol) +
       ggplot2::theme(strip.background = ggplot2::element_blank()) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))

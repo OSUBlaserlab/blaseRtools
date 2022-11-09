@@ -4,12 +4,20 @@
 \alias{bb_rowmeta}
 \title{Get Feature/Gene Metadata}
 \usage{
-bb_rowmeta(obj, row_name = "feature_id", assay = "RNA", cds = NULL)
+bb_rowmeta(
+  obj,
+  row_name = "feature_id",
+  experiment_type = "Gene Expression",
+  assay = "RNA",
+  cds = NULL
+)
 }
 \arguments{
 \item{obj}{A cell_data_set or Seurat object}
 
 \item{row_name}{Optional name to provide for feature unique identifier, Default: 'feature_id'}
+
+\item{experiment_type}{The experiment type to display.  Applies only to cds objects.  Commonly will be either "Gene Expression" or "Antibody Capture", Default: 'Gene Expression'}
 
 \item{assay}{For a Seurat object, th feature assay to return.  CDS objects with alternative experiments are not supported, Default: 'RNA'}
 

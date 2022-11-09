@@ -15,6 +15,7 @@
 #' @export
 #' @importFrom SingleCellExperiment swapAltExp reducedDims
 #' @importFrom SummarizedExperiment assays
+#' @importFrom cli cli_abort
 bb_cite_umap <-
   function(cds,
            antibody,
@@ -24,33 +25,37 @@ bb_cite_umap <-
            color_legend_title = NULL,
            rescale = NULL,
            ncol = NULL) {
-    cds <- SingleCellExperiment::swapAltExp(cds, name = "Antibody Capture")
-    data <- SummarizedExperiment::assays(cds)$CLR_counts
+    cds_alt <- as(SingleCellExperiment::swapAltExp(cds, name = "Antibody Capture"), Class = "cell_data_set")
+    data <- SummarizedExperiment::assays(cds_alt)$CLR_counts
     data <- t(data)
     data_tbl <- as_tibble(data) |>
       mutate(cell_id = rownames(data))
 
     # find the column we want to plot and rename it
-    antibody_id <- bb_rowmeta(cds) |>
+    antibody_id <- bb_rowmeta(cds_alt) |>
       filter(gene_short_name %in% antibody) |>
       pull(id)
+    if (length(antibody_id) == 0)
+      cli::cli_abort("The requested antibody is not available in the data object.")
     data_tbl <- data_tbl |>
       select(cell_id, matches(antibody_id)) |>
       pivot_longer(cols = -cell_id) |>
       rename(antibody_id = name, binding = value) |>
       left_join(
-        bb_rowmeta(cds) |>
+        bb_rowmeta(cds_alt) |>
           filter(gene_short_name %in% antibody) |>
-          select(antibody_id = feature_id, gene_short_name)
+          select(antibody_id = feature_id, gene_short_name),
+        by = "antibody_id"
       ) |>
       select(cell_id, antibody = gene_short_name, binding)
+      return(data_tbl)
 
     dims <- SingleCellExperiment::reducedDims(cds)$UMAP
     colnames(dims) <- c("data_dim_1", "data_dim_2")
 
     dims_tbl <- as_tibble(dims) |>
       mutate(cell_id = rownames(dims))
-    plot_tbl <- full_join(dims_tbl, data_tbl)
+    plot_tbl <- full_join(dims_tbl, data_tbl, by = "cell_id")
 
     # make the plot
     # plot <- ggplot(plot_tbl, mapping = aes(x = data_dim_1, y = data_dim_2, ))
@@ -84,8 +89,8 @@ bb_cite_umap <-
     }
     p <- p +
       labs(
-        x = "UMAP 1",
-        y = "UMAP 2",
+        x = ifelse(is.null(alt_dim_x), "UMAP 1", alt_dim_x),
+        y = ifelse(is.null(alt_dim_y), "UMAP 2", alt_dim_y),
         color = color_legend_title,
         title = plot_title
       ) +
