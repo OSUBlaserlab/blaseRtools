@@ -30,6 +30,7 @@ bb_gene_violinplot <-
   function(cds,
            variable,
            genes_to_plot,
+           experiment_type = "Gene Expression",
            pseudocount = 1,
            include_jitter = FALSE,
            ytitle = "Expression",
@@ -52,6 +53,20 @@ bb_gene_violinplot <-
            ) {
     my_comparisons <-
       comparison_list#(list(c(comparator1,comparator2),c(comparator1,comparator3)...))
+    # check to be sure experiment_type is available
+    all_exps <- c(
+      SingleCellExperiment::mainExpName(cds),
+      SingleCellExperiment::altExpNames(cds)
+    )
+    if (experiment_type %notin% all_exps)
+      cli::cli_abort("The requested experiment name is not available.")
+    if (experiment_type != "Gene Expression")
+      cli::cli_abort("Currently only Gene Expression is Supported.")
+      # cds <-
+      #   as(SingleCellExperiment::swapAltExp(cds, name = experiment_type),
+      #      Class = "cell_data_set")
+
+
     if (length(dim(genes_to_plot)) > 1) {
       data_to_plot <-
         aggregate_gene_expression(cds = cds, gene_group_df = genes_to_plot) %>% as_tibble(rownames = "gene_group") %>% pivot_longer(

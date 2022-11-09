@@ -8,6 +8,7 @@ bb_gene_violinplot(
   cds,
   variable,
   genes_to_plot,
+  experiment_type = "Gene Expression",
   pseudocount = 1,
   include_jitter = FALSE,
   ytitle = "Expression",

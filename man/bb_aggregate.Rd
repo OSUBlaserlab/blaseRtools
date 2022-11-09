@@ -7,6 +7,7 @@
 bb_aggregate(
   obj,
   assay = "RNA",
+  experiment_type = "Gene Expression",
   gene_group_df = NULL,
   cell_group_df = NULL,
   norm_method = c("log", "binary", "size_only"),

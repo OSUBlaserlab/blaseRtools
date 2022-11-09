@@ -102,7 +102,8 @@ bb_gene_umap <-
       dat <-
         bb_aggregate(obj,
                      gene_group_df = gene_or_genes,
-                     scale_agg_values = F)
+                     scale_agg_values = F,
+                     experiment_type = experiment_type)
       dat <- t(as.matrix(dat))
     }
     dat <- tibble::as_tibble(dat, rownames = "cell_id") |>
@@ -197,6 +198,7 @@ bb_gene_umap <-
 bb_aggregate <-
   function (obj,
             assay = "RNA",
+            experiment_type = "Gene Expression",
             gene_group_df = NULL,
             cell_group_df = NULL,
             norm_method = c("log",
@@ -209,6 +211,22 @@ bb_aggregate <-
             exclude.na = TRUE) {
     norm_method <- match.arg(norm_method)
     obj_stop(obj)
+    if ("cell_data_set" %in% class(obj)) {
+      # check to be sure experiment_type is available
+      all_exps <- c(
+        SingleCellExperiment::mainExpName(obj),
+        SingleCellExperiment::altExpNames(obj)
+      )
+      if (experiment_type %notin% all_exps)
+        cli::cli_abort("The requested experiment name is not available.")
+      if (experiment_type != "Gene Expression") {
+        cli::cli_alert_info("Changing experiment type to {.emph {experiment_type}}")
+        obj <-
+          as(SingleCellExperiment::swapAltExp(obj, name = experiment_type),
+             Class = "cell_data_set")
+      }
+
+    }
     # set the cli alert aesthetics
     cli::cli_div(theme = list(span.emph = list(color = "orange")))
 
@@ -218,10 +236,16 @@ bb_aggregate <-
 
     # get the normalized coutns from the object using method appropriate to object class
     if ("cell_data_set" %in% class(obj)) {
-      cli::cli_alert_info("Getting normalized counts from the {.emph monocle} cell_data_set.")
-      agg_mat <- monocle3::normalized_counts(obj,
+      if (experiment_type == "Gene Expression") {
+        cli::cli_alert_info("Getting normalized {.emph gene expression} counts from the monocle cell_data_set.")
+        agg_mat <- monocle3::normalized_counts(obj,
                                              norm_method = norm_method,
                                              pseudocount = pseudocount)
+      } else if (experiment_type == "Antibody Capture") {
+        cli::cli_alert_info("Getting CLR-normalized {.emph antibody capture} counts from the monocle cell_data_set.")
+        agg_mat <- SummarizedExperiment::assay(obj, i = "CLR_counts")
+      } else
+        cli::cli_abort("The requested experiment assay is not available.")
     } else if ("Seurat" %in% class(obj)) {
       cli::cli_alert_info("Getting normalized counts from the {.emph Seurat} {.emph {assay}} assay")
       agg_mat <- obj[[assay]]@data
@@ -275,8 +299,8 @@ bb_aggregate <-
 
 
 #' @importFrom dplyr mutate case_when filter
-get_gene_ids <- function(obj, gen) {
-  bb_rowmeta(obj) |>
+get_gene_ids <- function(obj, gen, et = "Gene Expression") {
+  bb_rowmeta(obj, experiment_type = et) |>
     dplyr::mutate(
       ids =
         dplyr::case_when(

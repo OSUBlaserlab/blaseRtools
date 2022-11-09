@@ -5,6 +5,7 @@
 #' @param obj A Seurat or cell_data_set object.
 #' @param genes Gene or genes to plot.
 #' @param cell_grouping Cell metadata column to group cells by.  Supply more than one in a vector to generate a composite variable.
+#' @param experiment_type Experiment data to plot.  Usually will be either "Gene Expression" or "Antibody Capture", Default: 'Gene Expression'
 #' @param scale_expr Whether to scale expression by gene, Default: TRUE
 #' @param gene_ordering By default, genes will be ordered by a clustering algorithm.  Supply "as_supplied" to plot the genes in the order supplied to the "genes" argument , Default: c("bicluster", "as_supplied")
 #' @param group_ordering By default, cell groups will be ordered by a clustering algorithm.  Supply "as_supplied" to plot the cell groups in the order supplied to "cell_grouping", Default: c("bicluster", "as_supplied")
@@ -21,6 +22,7 @@
 bb_genebubbles <- function(obj,
                            genes,
                            cell_grouping,
+                           experiment_type = "Gene Expression",
                            scale_expr = TRUE,
                            gene_ordering = c("bicluster", "as_supplied"),
                            group_ordering = c("bicluster", "as_supplied"),
@@ -29,10 +31,11 @@ bb_genebubbles <- function(obj,
   gene_ordering <- match.arg(gene_ordering)
   group_ordering <- match.arg(group_ordering)
   return_value <- match.arg(return_value)
+  e_t <- experiment_type
 
   if (length(dim(genes)) > 1)
     stop("This visualization cannot be used for aggregated genes.")
-  ids <- blaseRtools:::get_gene_ids(obj, genes)
+  ids <- blaseRtools:::get_gene_ids(obj, genes, et = e_t)
 
   # if this cell grouping is not present in the obj, then create it
   cg <- cell_grouping
@@ -45,9 +48,9 @@ bb_genebubbles <- function(obj,
 
   mat <- bb_aggregate(
     obj,
-    assay = "RNA",
     cell_group_df = bb_cellmeta(obj) |>
-      dplyr::select(cell_id, cell_grouping)
+      dplyr::select(cell_id, cell_grouping),
+    experiment_type = e_t
   )
   mat <- mat[rownames(mat) %in% ids,]
   if (class(mat) == "numeric") {
@@ -60,10 +63,10 @@ bb_genebubbles <- function(obj,
     mat <- scale(mat)
   bin_mat <- bb_aggregate(
     obj,
-    assay = "RNA",
     norm_method = "binary",
     cell_group_df = bb_cellmeta(obj) |>
-      dplyr::select(cell_id, cell_grouping)
+      dplyr::select(cell_id, cell_grouping),
+    experiment_type = e_t
   )
   bin_mat <- bin_mat[rownames(bin_mat) %in% ids,]
   if (class(bin_mat) == "numeric") {
@@ -82,10 +85,10 @@ bb_genebubbles <- function(obj,
     dplyr::left_join(dat, bin_dat, by = c("group", "feature_id"))
 
   # add on the gene short names
-
+  rm <- bb_rowmeta(obj, experiment_type = e_t)
   plot_data <-
     dplyr::left_join(plot_data,
-                     bb_rowmeta(obj) |> dplyr::select(feature_id, gene_short_name),
+                     rm,
                      by = "feature_id")
 
   # reorder the genes and groups
@@ -98,7 +101,7 @@ bb_genebubbles <- function(obj,
   } else {
     gene_order <-
       tibble::tibble(feature_id = levels(bicluster_bubbles(mat)$genes)) |>
-      dplyr::left_join(bb_rowmeta(obj), by = "feature_id") |>
+      dplyr::left_join(bb_rowmeta(obj, experiment_type = e_t), by = "feature_id") |>
       dplyr::pull(gene_short_name) |>
       unique()
     plot_data <-
@@ -117,7 +120,6 @@ bb_genebubbles <- function(obj,
     distinct()
   plot_data <- left_join(plot_data, group_meta, by = c("group" = "cell_grouping"))
 
-
   plot <-
     ggplot2::ggplot(
       plot_data,
@@ -130,11 +132,11 @@ bb_genebubbles <- function(obj,
     ) +
     ggplot2::geom_point(pch = 16) +
     ggplot2::scale_size_area() +
-    ggplot2::scale_color_viridis_c() +
+    ggplot2::scale_color_viridis_c(option = ifelse(experiment_type == "Antibody Capture", "A", "D")) +
     ggplot2::labs(
       x = NULL,
       y = NULL,
-      color = "Expression",
+      color = ifelse(experiment_type == "Antibody Capture", "Binding", "Expression"),
       size = "Proportion"
     )
 

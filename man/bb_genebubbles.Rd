@@ -8,6 +8,7 @@ bb_genebubbles(
   obj,
   genes,
   cell_grouping,
+  experiment_type = "Gene Expression",
   scale_expr = TRUE,
   gene_ordering = c("bicluster", "as_supplied"),
   group_ordering = c("bicluster", "as_supplied"),
@@ -20,6 +21,8 @@ bb_genebubbles(
 \item{genes}{Gene or genes to plot.}
 
 \item{cell_grouping}{Cell metadata column to group cells by.  Supply more than one in a vector to generate a composite variable.}
+
+\item{experiment_type}{Experiment data to plot.  Usually will be either "Gene Expression" or "Antibody Capture", Default: 'Gene Expression'}
 
 \item{scale_expr}{Whether to scale expression by gene, Default: TRUE}
 
