@@ -241,7 +241,7 @@
 * debugged bb_cite_umap
 * changed x, y labels in bb_gene_umap
 
-# blaseRtools 0.0.0.9107
+# blaseRtools 0.0.0.9107-108
 
 * added option to plot antibody capture in gene bubbles
 * made changes in bb_aggregate to support this

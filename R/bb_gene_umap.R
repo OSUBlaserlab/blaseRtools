@@ -249,9 +249,9 @@ bb_aggregate <-
     } else if ("Seurat" %in% class(obj)) {
       cli::cli_alert_info("Getting normalized counts from the {.emph Seurat} {.emph {assay}} assay")
       agg_mat <- obj[[assay]]@data
-      if (norm_method == "binary")
-        agg_mat <- agg_mat > 0
     }
+    if (norm_method == "binary")
+      agg_mat <- agg_mat > 0
 
     if (!is.null(gene_group_df)) {
       gene_aggregator <- colnames(gene_group_df)[2]

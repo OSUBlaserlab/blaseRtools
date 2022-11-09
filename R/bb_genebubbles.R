@@ -75,7 +75,6 @@ bb_genebubbles <- function(obj,
   } else {
     bin_mat <- t(as.matrix(bin_mat))
   }
-
   # put in dataframe
   dat <- tibble::as_tibble(mat, rownames = "group") |>
     tidyr::pivot_longer(-group, names_to = "feature_id", values_to = "expression")
