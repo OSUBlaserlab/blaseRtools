@@ -183,6 +183,7 @@ bb_gene_umap <-
 #' @param scale_agg_values Whether to scale the aggregated values, Default: TRUE
 #' @param max_agg_value If scaling, make this the maximum aggregated value, Default: 3
 #' @param min_agg_value If scaling, make this the minimum aggregated value, Default: -3
+#' @param binary_min Minimum value below which a cell is considered not to express a feature, Default: 0
 #' @param exclude.na Exclude NA?, Default: TRUE
 #' @return A dense or sparse matrix.
 #' @details The best way to group genes or cells is by using bb_*meta and then select cell_id or feature_id plus one metadata column with your group labels.
@@ -208,6 +209,7 @@ bb_aggregate <-
             scale_agg_values = TRUE,
             max_agg_value = 3,
             min_agg_value = -3,
+            binary_min = 0,
             exclude.na = TRUE) {
     norm_method <- match.arg(norm_method)
     obj_stop(obj)
@@ -251,7 +253,7 @@ bb_aggregate <-
       agg_mat <- obj[[assay]]@data
     }
     if (norm_method == "binary")
-      agg_mat <- agg_mat > 0
+      agg_mat <- agg_mat > binary_min
 
     if (!is.null(gene_group_df)) {
       gene_aggregator <- colnames(gene_group_df)[2]

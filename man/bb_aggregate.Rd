@@ -15,6 +15,7 @@ bb_aggregate(
   scale_agg_values = TRUE,
   max_agg_value = 3,
   min_agg_value = -3,
+  binary_min = 0,
   exclude.na = TRUE
 )
 }
@@ -36,6 +37,8 @@ bb_aggregate(
 \item{max_agg_value}{If scaling, make this the maximum aggregated value, Default: 3}
 
 \item{min_agg_value}{If scaling, make this the minimum aggregated value, Default: -3}
+
+\item{binary_min}{Minimum value below which a cell is considered not to express a feature, Default: 0}
 
 \item{exclude.na}{Exclude NA?, Default: TRUE}
 }

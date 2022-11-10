@@ -245,3 +245,7 @@
 
 * added option to plot antibody capture in gene bubbles
 * made changes in bb_aggregate to support this
+
+# blaseRtools 0.0.0.9109
+
+* added expression_threshold to genebubbles

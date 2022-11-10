@@ -10,6 +10,7 @@ bb_genebubbles(
   cell_grouping,
   experiment_type = "Gene Expression",
   scale_expr = TRUE,
+  expression_threshold = 0,
   gene_ordering = c("bicluster", "as_supplied"),
   group_ordering = c("bicluster", "as_supplied"),
   return_value = c("plot", "data")
@@ -26,6 +27,8 @@ bb_genebubbles(
 
 \item{scale_expr}{Whether to scale expression by gene, Default: TRUE}
 
+\item{expression_threshold}{Pre-scaling expression value below which a cell is considered not to express a marker.  This value is fed to the binary_min parameter of bb_aggregate, Default = 0}
+
 \item{gene_ordering}{By default, genes will be ordered by a clustering algorithm.  Supply "as_supplied" to plot the genes in the order supplied to the "genes" argument , Default: c("bicluster", "as_supplied")}
 
 \item{group_ordering}{By default, cell groups will be ordered by a clustering algorithm.  Supply "as_supplied" to plot the cell groups in the order supplied to "cell_grouping", Default: c("bicluster", "as_supplied")}
@@ -39,4 +42,6 @@ A ggplot or a tibble
 This is a very data-dense plot and is the recommended way for showing expression of single markers/genes by cell group.  By default, this function will return an unfaceted ggplot with cell groups on the X axis and genes on the Y axis with dot size representing proportion of cells in the cell group expressing a gene and color scale representing per-cell expression.
 
 But it also may be of interest to add aesthetic variables such as facets or additional color scales.  There are two ways this function will facilitate that.  First, you can supply a vector of cell groups to the cell_grouping argument and a the cells will be grouped by the composite value of these factors.  Usually if you are doing this, you also will want to have access to the components of this composite variable to facet by.  So you can supply "data" to the return_value argument to get a tibble.  From there you can modify as necessary and generate a ggplot assigning aesthetics and scales as desired and using geom_point.
+
+This function also supports visualizing citeseq data.  These data should be allocated to an alternative experiment in the cds object.  To show these data, set experiment_type to "Antibody Capture" or the name of the alternate experiment with citeseq data.  The genes parameter should be the name assigned to the antibody derived tag.  Expression threshold is particularly useful in this case because of the background binding observed with antibodies.   The default is 0 and so by default any cell with more than 0 counts will be considered an expressor of that marker.  This threshold is applied before scaling across markers.  The best way to set this threshold is to visualize your markers of interest and isotypes with expression_threshold = 0 and scale_expr = FALSE.  Then pick a threshold value based on the color scale and rerun with scale_expr either TRUE or FALSE.
 }
