@@ -4,6 +4,8 @@
 #' @param antibody The name of the antibody to plot. Equivalent to gene_short_name.  Accepts a character vector.
 #' @param cell_size Size of points to plot, Default: 1
 #' @param alpha Alpha for the plotted points, Default: 1
+#' @param alt_dim_x Alternate/reference dimensions to plot by.
+#' @param alt_dim_y Alternate/reference dimensions to plot by.
 #' @param plot_title Optional title for the plot, Default: NULL
 #' @param color_legend_title Optional title for the color scale., Default: NULL
 #' @param rescale Optional redefinition of the color scale, Default: NULL
@@ -21,6 +23,8 @@ bb_cite_umap <-
            antibody,
            cell_size = 1,
            alpha = 1,
+           alt_dim_x = NULL,
+           alt_dim_y = NULL,
            plot_title = NULL,
            color_legend_title = NULL,
            rescale = NULL,
@@ -48,7 +52,6 @@ bb_cite_umap <-
         by = "antibody_id"
       ) |>
       select(cell_id, antibody = gene_short_name, binding)
-      return(data_tbl)
 
     dims <- SingleCellExperiment::reducedDims(cds)$UMAP
     colnames(dims) <- c("data_dim_1", "data_dim_2")

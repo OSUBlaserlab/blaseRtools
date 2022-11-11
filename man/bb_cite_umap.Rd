@@ -9,6 +9,8 @@ bb_cite_umap(
   antibody,
   cell_size = 1,
   alpha = 1,
+  alt_dim_x = NULL,
+  alt_dim_y = NULL,
   plot_title = NULL,
   color_legend_title = NULL,
   rescale = NULL,
@@ -23,6 +25,10 @@ bb_cite_umap(
 \item{cell_size}{Size of points to plot, Default: 1}
 
 \item{alpha}{Alpha for the plotted points, Default: 1}
+
+\item{alt_dim_x}{Alternate/reference dimensions to plot by.}
+
+\item{alt_dim_y}{Alternate/reference dimensions to plot by.}
 
 \item{plot_title}{Optional title for the plot, Default: NULL}
 

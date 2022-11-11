@@ -249,3 +249,7 @@
 # blaseRtools 0.0.0.9109
 
 * added expression_threshold to genebubbles
+
+# blaseRtools 0.0.0.9110
+
+* debugged cite umap
