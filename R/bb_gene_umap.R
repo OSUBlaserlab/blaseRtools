@@ -102,8 +102,8 @@ bb_gene_umap <-
       dat <-
         bb_aggregate(obj,
                      gene_group_df = gene_or_genes,
-                     scale_agg_values = F,
-                     experiment_type = experiment_type)
+                     scale_agg_values = F
+                     )
       dat <- t(as.matrix(dat))
     }
     dat <- tibble::as_tibble(dat, rownames = "cell_id") |>

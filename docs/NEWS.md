@@ -253,3 +253,7 @@
 # blaseRtools 0.0.0.9110
 
 * debugged cite umap
+
+# blaseRtools 0.0.0.9111
+
+* debugged gene umap plotting aggregate genes
