@@ -258,6 +258,6 @@
 
 * debugged gene umap plotting aggregate genes
 
-# blaseRtools 0.0.0.9112
+# blaseRtools 0.0.0.9112-3
 
-* debugged bb_rowmeta experiment names parameter
+* debugged bb_rowmeta and bb_aggregate experiment names parameter

@@ -219,14 +219,16 @@ bb_aggregate <-
         SingleCellExperiment::mainExpName(obj),
         SingleCellExperiment::altExpNames(obj)
       )
+    if (!is.null(SingleCellExperiment::mainExpName(obj))) {
       if (experiment_type %notin% all_exps)
         cli::cli_abort("The requested experiment name is not available.")
       if (experiment_type != "Gene Expression") {
-        cli::cli_alert_info("Changing experiment type to {.emph {experiment_type}}")
         obj <-
           as(SingleCellExperiment::swapAltExp(obj, name = experiment_type),
              Class = "cell_data_set")
       }
+
+    }
 
     }
     # set the cli alert aesthetics
