@@ -47,12 +47,17 @@ bb_rowmeta <- function(obj,
       SingleCellExperiment::mainExpName(obj),
       SingleCellExperiment::altExpNames(obj)
     )
-    if (experiment_type %notin% all_exps)
-      cli::cli_abort("The requested experiment name is not available.")
-    if (experiment_type != "Gene Expression")
-      obj <-
-        as(SingleCellExperiment::swapAltExp(obj, name = experiment_type),
-           Class = "cell_data_set")
+    if (!is.null(SingleCellExperiment::mainExpName(obj))) {
+      if (experiment_type %notin% all_exps)
+        cli::cli_abort("The requested experiment name is not available.")
+      if (experiment_type != "Gene Expression") {
+        obj <-
+          as(SingleCellExperiment::swapAltExp(obj, name = experiment_type),
+             Class = "cell_data_set")
+      }
+
+    }
+
 
 
     res <-
