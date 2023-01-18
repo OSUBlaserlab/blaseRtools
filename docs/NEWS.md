@@ -261,3 +261,8 @@
 # blaseRtools 0.0.0.9112-3
 
 * debugged bb_rowmeta and bb_aggregate experiment names parameter
+
+# blaseRtools 0.0.0.9114
+
+* added normalize_batch() 
+
