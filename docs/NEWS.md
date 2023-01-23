@@ -266,3 +266,7 @@
 
 * added normalize_batch() 
 
+# blaseRtools 0.0.0.9115
+
+* edited bb_citeseq to optionally order cells to plot
+

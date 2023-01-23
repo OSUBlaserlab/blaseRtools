@@ -13,6 +13,7 @@ bb_cite_umap(
   alt_dim_y = NULL,
   plot_title = NULL,
   color_legend_title = NULL,
+  order = TRUE,
   rescale = NULL,
   ncol = NULL
 )
@@ -33,6 +34,8 @@ bb_cite_umap(
 \item{plot_title}{Optional title for the plot, Default: NULL}
 
 \item{color_legend_title}{Optional title for the color scale., Default: NULL}
+
+\item{order}{Whether or not to order cells by gene expression.  When ordered, non-expressing cells are plotted first, i.e. on the bottom. Default: TRUE}
 
 \item{rescale}{Optional redefinition of the color scale, Default: NULL}
 

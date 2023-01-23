@@ -8,6 +8,7 @@
 #' @param alt_dim_y Alternate/reference dimensions to plot by.
 #' @param plot_title Optional title for the plot, Default: NULL
 #' @param color_legend_title Optional title for the color scale., Default: NULL
+#' @param order Whether or not to order cells by gene expression.  When ordered, non-expressing cells are plotted first, i.e. on the bottom. Default: TRUE
 #' @param rescale Optional redefinition of the color scale, Default: NULL
 #' @param ncol If specified, the number of columns for facet_wrap, Default: NULL
 #' @return a ggplot
@@ -27,6 +28,7 @@ bb_cite_umap <-
            alt_dim_y = NULL,
            plot_title = NULL,
            color_legend_title = NULL,
+           order = TRUE,
            rescale = NULL,
            ncol = NULL) {
     cds_alt <- as(SingleCellExperiment::swapAltExp(cds, name = "Antibody Capture"), Class = "cell_data_set")
@@ -64,6 +66,11 @@ bb_cite_umap <-
     # plot <- ggplot(plot_tbl, mapping = aes(x = data_dim_1, y = data_dim_2, ))
     background_data <- plot_tbl |> filter(is.na(binding))
     foreground_data <- plot_tbl |> filter(!is.na(binding))
+
+    # optionally order the cells to un-bury rare expressing cells
+    if (order)
+      foreground_data <- dplyr::arrange(foreground_data, !is.na(binding), binding)
+
     p <- ggplot() +
       geom_point(
         data = background_data,
