@@ -270,3 +270,7 @@
 
 * edited bb_citeseq to optionally order cells to plot
 
+# blaseRtools 0.0.0.9116
+
+* removed matrix.utils dependency
+

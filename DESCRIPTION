@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9115
+Version: 0.0.0.9116
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -33,7 +33,6 @@ Imports:
     monocle3,
     MASS,
     Matrix,
-    Matrix.utils,
     Seurat,
     SeuratDisk,
     SingleCellExperiment,
@@ -92,3 +91,4 @@ Remotes:
     github::blaserlab/blaseRtemplates,
     github::sqjin/CellChat,
     github::satijalab/seurat-wrappers
+

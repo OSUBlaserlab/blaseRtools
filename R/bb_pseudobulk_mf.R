@@ -8,7 +8,7 @@
 #' @param result_recipe See above for the default recipe.  Alternatively, supply a 3-element vector in the form of c("variable", "experimental_level","reference_or_control_level")
 #' @return A list of results from pseudobulk analysis
 #' @export
-#' @import tidyverse pheatmap Matrix.utils monocle3 DESeq2
+#' @import tidyverse pheatmap monocle3 DESeq2
 bb_pseudobulk_mf <- function(cds,
                              pseudosample_table,
                              design_formula,
@@ -44,7 +44,7 @@ bb_pseudobulk_mf <- function(cds,
     dplyr::select(ps_id)
   # get the aggregate counts
   aggregate_counts <-
-    Matrix.utils::aggregate.Matrix(t(monocle3::exprs(cds)), groupings = groups, fun = "sum")
+    aggregate.Matrix(t(monocle3::exprs(cds)), groupings = groups, fun = "sum")
   counts_matrix <- as.matrix(t(as.matrix(aggregate_counts)))
 
   # filter the count matrix
