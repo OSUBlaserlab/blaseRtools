@@ -1,7 +1,6 @@
 # from satijalab/seurat-wrappers
 
 
-#' @include sw_internal.R
 #' @importFrom Seurat DefaultAssay Idents<-
 #' @importFrom methods as slot<- slot
 #'

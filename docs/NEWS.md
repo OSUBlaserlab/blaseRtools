@@ -274,7 +274,7 @@
 
 * removed matrix.utils dependency
 
-# blaseRtools 0.0.0.9117-8
+# blaseRtools 0.0.0.9117-9
 
 * removed seurat wrappers dependency
 
