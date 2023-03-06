@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9116
+Version: 0.0.0.9117
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 URL: https://github.com/blaserlab/blaseRtools
 BugReports: https://github.com/blaserlab/blaseRtools/issues
 Imports: 
@@ -77,7 +77,6 @@ Imports:
     SummarizedExperiment,
     cli,
     future,
-    SeuratWrappers,
     R.utils
 Depends: 
     tidyverse,
@@ -89,6 +88,58 @@ Remotes:
     github::mojaveazure/seurat-disk,
     github::chris-mcginnis-ucsf/DoubletFinder,
     github::blaserlab/blaseRtemplates,
-    github::sqjin/CellChat,
-    github::satijalab/seurat-wrappers
-
+    github::sqjin/CellChat
+Collate: 
+    'Matrix.utils.R'
+    'ape_class.R'
+    'atac.R'
+    'bb_align.R'
+    'bb_annotate_npc.R'
+    'bb_blind_images.R'
+    'bb_cds_anno.R'
+    'bb_cds_heatmap.R'
+    'bb_cluster_representation.R'
+    'bb_datahelpers.R'
+    'bb_doubletfinder.R'
+    'bb_extract_msig.R'
+    'bb_fix_file_path.R'
+    'bb_gene_dotplot.R'
+    'bb_gene_modules.R'
+    'bb_gene_pseudotime.R'
+    'bb_gene_umap.R'
+    'bb_gene_violinplot.R'
+    'bb_genebubbles.R'
+    'bb_goenrichment.R'
+    'bb_goscatter.R'
+    'bb_gosummary.R'
+    'bb_grcz11_ape.R'
+    'bb_hg38_ape.R'
+    'bb_load_tenx_targz.R'
+    'bb_meta.R'
+    'bb_monocle_regression.R'
+    'bb_operators.R'
+    'bb_parseape.R'
+    'bb_plot_rowData_col.R'
+    'bb_plotfootprint.R'
+    'bb_print_full_stats.R'
+    'bb_pseudobulk_mf.R'
+    'bb_qc.R'
+    'bb_rejoin.R'
+    'bb_remove_dupes.R'
+    'bb_seurat_anno.R'
+    'bb_tbl_to_coldata.R'
+    'bb_tbl_to_matrix.R'
+    'bb_tbl_to_rowdata.R'
+    'bb_triplecluster.R'
+    'bb_unblind.R'
+    'bb_var_umap.R'
+    'cellchat.R'
+    'citeseq.R'
+    'filter_cds.R'
+    'geoms.R'
+    'metafeature_funcs.R'
+    'normalize_batch.R'
+    'sw_internal.R'
+    'internal.R'
+    'sw_monocle3.R'
+    'trace_funcs.R'

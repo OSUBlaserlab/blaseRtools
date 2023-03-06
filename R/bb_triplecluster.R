@@ -8,7 +8,6 @@
 #' @return A modified Seurat or cell_data_set object
 #' @rdname bb_triplecluster
 #' @export
-#' @importFrom SeuratWrappers as.cell_data_set
 #' @importFrom monocle3 cluster_cells clusters partitions top_markers
 #' @importFrom SummarizedExperiment colData
 #' @importFrom dplyr mutate relocate bind_rows arrange select
@@ -22,7 +21,7 @@ bb_triplecluster <- function(obj,
   obj_stop(obj)
 
   if ("Seurat" %in% class(obj)) {
-    cds <- SeuratWrappers::as.cell_data_set(obj)
+    cds <- as.cell_data_set(obj)
   } else {
     cds <- obj
   }

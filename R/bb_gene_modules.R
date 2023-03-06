@@ -6,13 +6,11 @@
 #' @return An object of the same type:  Seurat or cell_data_set
 #' @details see https://cole-trapnell-lab.github.io/monocle3/docs/differential/#gene-modules
 #' @seealso
-#'  \code{\link[SeuratWrappers]{as.cell_data_set}}
 #'  \code{\link[monocle3]{graph_test}}, \code{\link[monocle3]{find_gene_modules}}
 #'  \code{\link[dplyr]{rename}}, \code{\link[dplyr]{mutate-joins}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
 #'  \code{\link[forcats]{fct_shift}}
 #' @rdname bb_gene_modules
 #' @export
-#' @importFrom SeuratWrappers as.cell_data_set
 #' @importFrom monocle3 graph_test find_gene_modules
 #' @importFrom dplyr rename left_join mutate select
 #' @importFrom forcats fct_shift
@@ -24,7 +22,7 @@ bb_gene_modules <- function(obj,
   obj_stop(obj)
 
   if ("Seurat" %in% class(obj)) {
-    cds <- SeuratWrappers::as.cell_data_set(obj)
+    cds <- as.cell_data_set(obj)
   } else {
     cds <- obj
   }
