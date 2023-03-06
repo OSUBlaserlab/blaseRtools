@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9117
+Version: 0.0.0.9118
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -140,6 +140,5 @@ Collate:
     'metafeature_funcs.R'
     'normalize_batch.R'
     'sw_internal.R'
-    'internal.R'
     'sw_monocle3.R'
     'trace_funcs.R'

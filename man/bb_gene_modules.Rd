@@ -23,7 +23,6 @@ Based on Monocle3's gene module functions.  Implemented with default values.  Wi
 see https://cole-trapnell-lab.github.io/monocle3/docs/differential/#gene-modules
 }
 \seealso{
-\code{\link[SeuratWrappers]{as.cell_data_set}}
 \code{\link[monocle3]{graph_test}}, \code{\link[monocle3]{find_gene_modules}}
 \code{\link[dplyr]{rename}}, \code{\link[dplyr]{mutate-joins}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
 \code{\link[forcats]{fct_shift}}
