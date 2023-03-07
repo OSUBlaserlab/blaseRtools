@@ -51,66 +51,6 @@ the values for each variable as additional columns.  This is useful for
 things such as one-hot encoding.  Using \code{:} will combine the columns as
 interactions.
 }
-\examples{
-#Classic air quality example
-melt<-function(data,idColumns)
-{
-  cols<-setdiff(colnames(data),idColumns)
-  results<-lapply(cols,function (x) cbind(data[,idColumns],variable=x,value=as.numeric(data[,x])))
-  results<-Reduce(rbind,results)
-}
-names(airquality) <- tolower(names(airquality))
-aqm <- melt(airquality, idColumns=c("month", "day"))
-dMcast(aqm, month:day ~variable,fun.aggregate = 'mean',value.var='value')
-dMcast(aqm, month ~ variable, fun.aggregate = 'mean',value.var='value') 
-
-#One hot encoding
-#Preserving numerics
-dMcast(warpbreaks,~.)
-#Pivoting numerics as well
-dMcast(warpbreaks,~.,as.factors=TRUE)
-
-\dontrun{
-orders<-data.frame(orderNum=as.factor(sample(1e6, 1e7, TRUE)), 
-   sku=as.factor(sample(1e3, 1e7, TRUE)), 
-   customer=as.factor(sample(1e4,1e7,TRUE)), 
-   state = sample(letters, 1e7, TRUE),
-   amount=runif(1e7)) 
-# For simple aggregations resulting in small tables, dcast.data.table (and
-   reshape2) will be faster
-system.time(a<-dcast.data.table(as.data.table(orders),sku~state,sum,
-   value.var = 'amount')) # .5 seconds 
-system.time(b<-reshape2::dcast(orders,sku~state,sum,
-   value.var = 'amount')) # 2.61 seconds 
-system.time(c<-dMcast(orders,sku~state,
-   value.var = 'amount')) # 8.66 seconds 
-   
-# However, this situation changes as the result set becomes larger 
-system.time(a<-dcast.data.table(as.data.table(orders),customer~sku,sum,
-   value.var = 'amount')) # 4.4 seconds 
-system.time(b<-reshape2::dcast(orders,customer~sku,sum,
-   value.var = 'amount')) # 34.7 seconds 
- system.time(c<-dMcast(orders,customer~sku,
-   value.var = 'amount')) # 14.55 seconds 
-   
-# More complicated: 
-system.time(a<-dcast.data.table(as.data.table(orders),customer~sku+state,sum,
-   value.var = 'amount')) # 16.96 seconds, object size = 2084 Mb 
-system.time(b<-reshape2::dcast(orders,customer~sku+state,sum,
-   value.var = 'amount')) # Does not return 
-system.time(c<-dMcast(orders,customer~sku:state,
-   value.var = 'amount')) # 21.53 seconds, object size = 116.1 Mb
-
-system.time(a<-dcast.data.table(as.data.table(orders),orderNum~sku,sum,
-   value.var = 'amount')) # Does not return 
-system.time(c<-dMcast(orders,orderNum~sku,
-   value.var = 'amount')) # 24.83 seconds, object size = 175Mb
-
-system.time(c<-dMcast(orders,sku:state~customer,
-   value.var = 'amount')) # 17.97 seconds, object size = 175Mb
-       
-}
-}
 \seealso{
 \code{\link[reshape]{cast}}
 

@@ -40,31 +40,6 @@ Warning: groupings will be made dense if it is sparse, though data will not.
 \code{aggregate.Matrix} uses its own implementations of functions and should
 be passed a string in the \code{fun} argument.
 }
-\examples{
-skus<-Matrix(as.matrix(data.frame(
-   orderNum=sample(1000,10000,TRUE),
-   sku=sample(1000,10000,TRUE),
-   amount=runif(10000))),sparse=TRUE)
-#Calculate sums for each sku
-a<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='sum')
-#Calculate counts for each sku
-b<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='count')
-#Calculate mean for each sku
-c<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='mean')
-
-m<-rsparsematrix(1000000,100,.001)
-labels<-as.factor(sample(1e4,1e6,TRUE))
-b<-aggregate.Matrix(m,labels)
-
-\dontrun{
-orders<-data.frame(orderNum=as.factor(sample(1e6, 1e7, TRUE)),
-   sku=as.factor(sample(1e3, 1e7, TRUE)),
-   customer=as.factor(sample(1e4,1e7,TRUE)),
-   state = sample(letters, 1e7, TRUE), amount=runif(1e7))
-system.time(d<-aggregate.Matrix(orders[,'amount',drop=FALSE],orders$orderNum))
-system.time(e<-aggregate.Matrix(orders[,'amount',drop=FALSE],orders[,c('customer','state')]))
-}
-}
 \seealso{
 \code{\link[dplyr]{summarise}}
 

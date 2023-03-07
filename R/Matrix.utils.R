@@ -34,65 +34,6 @@ NULL
 #' @return a sparse \code{Matrix}
 #' @seealso \code{\link[reshape]{cast}}
 #' @seealso \code{\link[reshape2]{dcast}}
-#' @examples
-#' #Classic air quality example
-#' melt<-function(data,idColumns)
-#' {
-#'   cols<-setdiff(colnames(data),idColumns)
-#'   results<-lapply(cols,function (x) cbind(data[,idColumns],variable=x,value=as.numeric(data[,x])))
-#'   results<-Reduce(rbind,results)
-#' }
-#' names(airquality) <- tolower(names(airquality))
-#' aqm <- melt(airquality, idColumns=c("month", "day"))
-#' dMcast(aqm, month:day ~variable,fun.aggregate = 'mean',value.var='value')
-#' dMcast(aqm, month ~ variable, fun.aggregate = 'mean',value.var='value') 
-#' 
-#' #One hot encoding
-#' #Preserving numerics
-#' dMcast(warpbreaks,~.)
-#' #Pivoting numerics as well
-#' dMcast(warpbreaks,~.,as.factors=TRUE)
-#' 
-#' \dontrun{
-#' orders<-data.frame(orderNum=as.factor(sample(1e6, 1e7, TRUE)), 
-#'    sku=as.factor(sample(1e3, 1e7, TRUE)), 
-#'    customer=as.factor(sample(1e4,1e7,TRUE)), 
-#'    state = sample(letters, 1e7, TRUE),
-#'    amount=runif(1e7)) 
-#' # For simple aggregations resulting in small tables, dcast.data.table (and
-#'    reshape2) will be faster
-#' system.time(a<-dcast.data.table(as.data.table(orders),sku~state,sum,
-#'    value.var = 'amount')) # .5 seconds 
-#' system.time(b<-reshape2::dcast(orders,sku~state,sum,
-#'    value.var = 'amount')) # 2.61 seconds 
-#' system.time(c<-dMcast(orders,sku~state,
-#'    value.var = 'amount')) # 8.66 seconds 
-#'    
-#' # However, this situation changes as the result set becomes larger 
-#' system.time(a<-dcast.data.table(as.data.table(orders),customer~sku,sum,
-#'    value.var = 'amount')) # 4.4 seconds 
-#' system.time(b<-reshape2::dcast(orders,customer~sku,sum,
-#'    value.var = 'amount')) # 34.7 seconds 
-#'  system.time(c<-dMcast(orders,customer~sku,
-#'    value.var = 'amount')) # 14.55 seconds 
-#'    
-#' # More complicated: 
-#' system.time(a<-dcast.data.table(as.data.table(orders),customer~sku+state,sum,
-#'    value.var = 'amount')) # 16.96 seconds, object size = 2084 Mb 
-#' system.time(b<-reshape2::dcast(orders,customer~sku+state,sum,
-#'    value.var = 'amount')) # Does not return 
-#' system.time(c<-dMcast(orders,customer~sku:state,
-#'    value.var = 'amount')) # 21.53 seconds, object size = 116.1 Mb
-#' 
-#' system.time(a<-dcast.data.table(as.data.table(orders),orderNum~sku,sum,
-#'    value.var = 'amount')) # Does not return 
-#' system.time(c<-dMcast(orders,orderNum~sku,
-#'    value.var = 'amount')) # 24.83 seconds, object size = 175Mb
-#' 
-#' system.time(c<-dMcast(orders,sku:state~customer,
-#'    value.var = 'amount')) # 17.97 seconds, object size = 175Mb
-#'        
-#' }
 dMcast<-function(data,formula,fun.aggregate='sum',value.var=NULL,as.factors=FALSE,factor.nas=TRUE,drop.unused.levels=TRUE)
 {
   values<-1
@@ -181,30 +122,6 @@ dMcast<-function(data,formula,fun.aggregate='sum',value.var=NULL,as.factors=FALS
 #' @seealso \code{\link[dplyr]{summarise}}
 #' @seealso \code{\link[plyr]{summarise}}
 #' @seealso \code{\link[stats]{aggregate}}
-#' @examples
-#' skus<-Matrix(as.matrix(data.frame(
-#'    orderNum=sample(1000,10000,TRUE),
-#'    sku=sample(1000,10000,TRUE),
-#'    amount=runif(10000))),sparse=TRUE)
-#'#Calculate sums for each sku
-#' a<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='sum')
-#'#Calculate counts for each sku
-#' b<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='count')
-#'#Calculate mean for each sku
-#' c<-aggregate.Matrix(skus[,'amount'],skus[,'sku',drop=FALSE],fun='mean')
-#' 
-#' m<-rsparsematrix(1000000,100,.001)
-#' labels<-as.factor(sample(1e4,1e6,TRUE))
-#' b<-aggregate.Matrix(m,labels)
-#' 
-#' \dontrun{
-#' orders<-data.frame(orderNum=as.factor(sample(1e6, 1e7, TRUE)),
-#'    sku=as.factor(sample(1e3, 1e7, TRUE)),
-#'    customer=as.factor(sample(1e4,1e7,TRUE)),
-#'    state = sample(letters, 1e7, TRUE), amount=runif(1e7))
-#' system.time(d<-aggregate.Matrix(orders[,'amount',drop=FALSE],orders$orderNum))
-#' system.time(e<-aggregate.Matrix(orders[,'amount',drop=FALSE],orders[,c('customer','state')]))
-#' }
 aggregate.Matrix<-function(x,groupings=NULL,form=NULL,fun='sum',...)
 {
   if(!is(x,'Matrix'))
@@ -281,61 +198,6 @@ aggregate2.Matrix<-function(x,groupings=NULL,form=NULL,fun=sum,...)
 #'  Defaults to 0/FALSE for sparse matrices in order to preserve sparsity, NA for
 #'  all other classes
 #'@param ... arguments to be passed to or from methods.  Currently ignored
-#'@export
-#'@export merge.Matrix
-#'@examples
-#' 
-#' orders<-Matrix(as.matrix(data.frame(orderNum=1:1000, 
-#'  customer=sample(100,1000,TRUE)))) 
-#'  cancelledOrders<-Matrix(as.matrix(data.frame(orderNum=sample(1000,100), 
-#'  cancelled=1))) 
-#' skus<-Matrix(as.matrix(data.frame(orderNum=sample(1000,10000,TRUE), 
-#' sku=sample(1000,10000,TRUE), amount=runif(10000)))) 
-#' a<-merge(orders,cancelledOrders,orders[,'orderNum'],cancelledOrders[,'orderNum'])
-#' b<-merge(orders,cancelledOrders,orders[,'orderNum'],cancelledOrders[,'orderNum'],all.x=FALSE)
-#' c<-merge(orders,skus,orders[,'orderNum'],skus[,'orderNum'])
-#' 
-#' #The above Matrices could be converted to matrices or data.frames and handled in other methods.  
-#' #However, this is not possible in the sparse case, which can be handled by this function:
-#' sm<-cbind2(1:200000,rsparsematrix(200000,10000,density=.0001))
-#' sm2<-cbind2(sample(1:200000,50000,TRUE),rsparsematrix(200000,10,density=.01))
-#' sm3<-merge.Matrix(sm,sm2,by.x=sm[,1],by.y=sm2[,1])
-#' 
-#'  \dontrun{
-#' #merge.Matrix can also handle many other data types, such as data frames, and is generally fast.
-#' orders<-data.frame(orderNum=as.character(sample(1e5, 1e6, TRUE)),
-#'    sku=sample(1e3, 1e6, TRUE),
-#'    customer=sample(1e4,1e6,TRUE),stringsAsFactors=FALSE)
-#' cancelledOrders<-data.frame(orderNum=as.character(sample(1e5,1e4)),
-#'    cancelled=1,stringsAsFactors=FALSE)
-#' system.time(a<-merge.Matrix(orders,cancelledOrders,orders[,'orderNum'],
-#'    cancelledOrders[,'orderNum']))
-#' system.time(b<-merge.data.frame(orders,cancelledOrders,all.x = TRUE,all.y=TRUE))
-#' system.time(c<-dplyr::full_join(orders,cancelledOrders))
-#'system.time({require(data.table);
-#'d<-merge(data.table(orders),data.table(cancelledOrders),
-#'    by='orderNum',all=TRUE,allow.cartesian=TRUE)})
-#'
-#'orders<-data.frame(orderNum=sample(1e5, 1e6, TRUE), sku=sample(1e3, 1e6,
-#'TRUE), customer=sample(1e4,1e6,TRUE),stringsAsFactors=FALSE) 
-#'cancelledOrders<-data.frame(orderNum=sample(1e5,1e4),cancelled=1,stringsAsFactors=FALSE)
-#'system.time(b<-merge.Matrix(orders,cancelledOrders,orders[,'orderNum'], 
-#'cancelledOrders[,'orderNum'])) 
-#'system.time(e<-dplyr::full_join(orders,cancelledOrders)) 
-#'system.time({require(data.table);
-#'  d<-merge(data.table(orders),data.table(cancelledOrders),
-#'  by='orderNum',all=TRUE,allow.cartesian=TRUE)})
-#'
-#'#In certain cases, merge.Matrix can be much faster than alternatives. 
-#'one<-as.character(1:1000000) 
-#'two<-as.character(sample(1:1000000,1e5,TRUE)) 
-#'system.time(b<-merge.Matrix(one,two,one,two)) 
-#'system.time(c<-dplyr::full_join(data.frame(key=one),data.frame(key=two))) 
-#'system.time({require(data.table);
-#'  d<-merge(data.table(data.frame(key=one)),data.table(data.frame(key=two)),
-#'  by='key',all=TRUE,allow.cartesian=TRUE)})
-#'}
-#'
 merge.Matrix<-function(x,y,by.x,by.y,all.x=TRUE,all.y=TRUE,out.class=class(x)[1],
                        fill.x=ifelse(is(x,'sparseMatrix'),FALSE,NA),fill.y=fill.x,...)
 {
@@ -384,23 +246,6 @@ join.Matrix<-merge.Matrix
 #'   \code{matrix} if the first object is one dimensional
 #' @seealso \code{\link[plyr]{rbind.fill}}
 #' @seealso \code{\link[plyr]{rbind.fill.matrix}}
-#' @examples
-#' df1 = data.frame(x = c(1,2,3), y = c(4,5,6))
-#' rownames(df1) = c("a", "b", "c")
-#' df2 = data.frame(x = c(7,8), z = c(9,10))
-#' rownames(df2) = c("a", "d")
-#' rBind.fill(df1,df2,fill=NA)
-#' rBind.fill(as(df1,'Matrix'),df2,fill=0)
-#' rBind.fill(as.matrix(df1),as(df2,'Matrix'),c(1,2),fill=0)
-#' rBind.fill(c(1,2,3),list(4,5,6,7))
-#' rBind.fill(df1,c(1,2,3,4))
-#' 
-#' m<-rsparsematrix(1000000,100,.001)
-#' m2<-m
-#' colnames(m)<-1:100
-#' colnames(m2)<-3:102
-#' system.time(b<-rBind.fill(m,m2))
-#' 
 rBind.fill<-function(x,...,fill=NULL,out.class=class(rbind(x,x))[1])
 {
   if (is.list(x) && !is.data.frame(x) && missing(...)) {
