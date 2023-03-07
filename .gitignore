@@ -5,7 +5,6 @@
 .DS_Store
 *.rda
 R/local_configs.R
-*.png
 *.pdf
 */git_commands.R
 */regenerated_git_commands.R
