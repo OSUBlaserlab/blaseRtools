@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9120
+Version: 0.0.0.9121
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -87,7 +87,8 @@ Imports:
     rlang,
     tibble,
     tidyr,
-    tidyselect
+    tidyselect,
+    BSgenome
 Depends: 
     tidyverse,
     R (>= 2.10)
