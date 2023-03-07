@@ -149,7 +149,7 @@ vig_qc_res <- pmap(.l = list(cds = cds_list,
 ```
 
 For example:
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, eval = FALSE, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
 vig_qc_res$chromium_controller[3]
 vig_qc_res$chromium_controller[4]
 ```

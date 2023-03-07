@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9118
+Version: 0.0.0.9120
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -76,7 +76,18 @@ Imports:
     SummarizedExperiment,
     cli,
     future,
-    R.utils
+    R.utils,
+    MatrixGenerics,
+    forcats,
+    ggrastr,
+    grr,
+    purrr,
+    readr,
+    remotes,
+    rlang,
+    tibble,
+    tidyr,
+    tidyselect
 Depends: 
     tidyverse,
     R (>= 2.10)
