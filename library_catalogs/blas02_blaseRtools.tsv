@@ -635,7 +635,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.2.0	rematch	1.0.1	2022-09-06T20:23:15Z	a86e74f83b77afe7823d4512bd32d13c	/workspace/rst/cache_R_4_2/library/rematch/1.0.1/a86e74f83b77afe7823d4512bd32d13c/rematch	available
 4.2.0	rematch2	2.1.2	2022-09-07T18:49:29Z	fb00ab3f3ed47a9488945b2ad116940c	/workspace/rst/cache_R_4_2/library/rematch2/2.1.2/fb00ab3f3ed47a9488945b2ad116940c/rematch2	available
 4.2.0	remotes	2.4.2	2022-09-07T18:49:29Z	9bcd882653785ba3780dd6e0622f44f8	/workspace/rst/cache_R_4_2/library/remotes/2.4.2/9bcd882653785ba3780dd6e0622f44f8/remotes	active
-4.2.0	renv	0.17.0	2023-03-06T13:37:43Z	e8be0d0600b32f3e77870bbda407b410	/workspace/rst/cache_R_4_2/library/renv/0.17.0/e8be0d0600b32f3e77870bbda407b410/renv	active
+4.2.0	renv	0.17.0	2023-03-06T13:37:43Z	e8be0d0600b32f3e77870bbda407b410	/workspace/rst/cache_R_4_2/library/renv/0.17.0/e8be0d0600b32f3e77870bbda407b410/renv	available
 4.2.0	repr	1.1.4	2022-09-07T00:29:22Z	9480354da8e016d2b4dca7caa6e5e590	/workspace/rst/cache_R_4_2/library/repr/1.1.4/9480354da8e016d2b4dca7caa6e5e590/repr	available
 4.2.0	reprex	2.0.2	2022-09-06T22:09:25Z	df37d8a9ac368f8f9a84f975ac5aa1c6	/workspace/rst/cache_R_4_2/library/reprex/2.0.2/df37d8a9ac368f8f9a84f975ac5aa1c6/reprex	available
 4.2.0	reshape	0.8.9	2022-09-06T21:48:49Z	a8b1f4172f9f2e5294a12c620a194ee7	/workspace/rst/cache_R_4_2/library/reshape/0.8.9/a8b1f4172f9f2e5294a12c620a194ee7/reshape	available
