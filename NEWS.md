@@ -281,3 +281,7 @@
 * edited git ignore
 * added vignettes to buildignore
 * removed examples
+
+# blaseRtools 0.0.0.9117-25
+
+* added assay option to cite umap

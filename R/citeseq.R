@@ -2,6 +2,7 @@
 #' @description Requires a cds with an alt experiment established.  Use bb_split_citeseq to generate this and to normalize binding data using the CLR method.  Returns a ggplot.
 #' @param cds The cds with an "Antibody Capture" alt experiment to plot.
 #' @param antibody The name of the antibody to plot. Equivalent to gene_short_name.  Accepts a character vector.
+#' @param assay The binding assay to use, Default: "CLR_counts"
 #' @param cell_size Size of points to plot, Default: 1
 #' @param alpha Alpha for the plotted points, Default: 1
 #' @param alt_dim_x Alternate/reference dimensions to plot by.
@@ -22,6 +23,7 @@
 bb_cite_umap <-
   function(cds,
            antibody,
+           assay = "CLR_counts",
            cell_size = 1,
            alpha = 1,
            alt_dim_x = NULL,
@@ -32,7 +34,9 @@ bb_cite_umap <-
            rescale = NULL,
            ncol = NULL) {
     cds_alt <- as(SingleCellExperiment::swapAltExp(cds, name = "Antibody Capture"), Class = "cell_data_set")
-    data <- SummarizedExperiment::assays(cds_alt)$CLR_counts
+    if (assay %notin% names(SummarizedExperiment::assays(cds_alt)))
+      cli::cli_abort("The requested assay is not available.")
+    data <- SummarizedExperiment::assays(cds_alt)[[assay]]
     data <- t(data)
     data_tbl <- as_tibble(data) |>
       mutate(cell_id = rownames(data))

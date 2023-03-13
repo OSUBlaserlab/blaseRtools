@@ -7,6 +7,7 @@
 bb_cite_umap(
   cds,
   antibody,
+  assay = "CLR_counts",
   cell_size = 1,
   alpha = 1,
   alt_dim_x = NULL,
@@ -22,6 +23,8 @@ bb_cite_umap(
 \item{cds}{The cds with an "Antibody Capture" alt experiment to plot.}
 
 \item{antibody}{The name of the antibody to plot. Equivalent to gene_short_name.  Accepts a character vector.}
+
+\item{assay}{The binding assay to use, Default: "CLR_counts"}
 
 \item{cell_size}{Size of points to plot, Default: 1}
 
