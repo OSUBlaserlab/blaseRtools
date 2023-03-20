@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9127
+Version: 0.0.0.9128
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -61,7 +61,6 @@ Imports:
     digest,
     fs,
     ggforce,
-    blaseRdata,
     GenomicAlignments,
     Rsamtools,
     rstatix,
@@ -94,6 +93,7 @@ Imports:
     TxDb.Drerio.UCSC.danRer11.ensGene
 Depends: 
     tidyverse,
+    blaseRdata,
     R (>= 2.10)
 VignetteBuilder: knitr
 Remotes: 

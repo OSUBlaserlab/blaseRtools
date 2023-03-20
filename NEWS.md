@@ -286,7 +286,7 @@
 
 * added assay option to cite umap
 
-# blaseRtools 0.0.0.9126 - 7
+# blaseRtools 0.0.0.9126 - 8
 
 * major update to ape functions
 * refactored

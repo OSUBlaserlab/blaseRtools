@@ -41,7 +41,3 @@ An APE object
 \description{
 This function takes either a gene name or sequence coordinates and returns an ape object with DNA sequence from the the selected genome reference.  You can choose from hg38 and GRCz11.  Features are generated from ensembl GFF files.  Features overlapping the query range (gene or sequence) are returned as a GRanges object and as features within the Ape object.  The features included can optionally be filtered using the "include_type" argument to the function. Using the "additional_granges" argument, you can provide additional features not present in the standard gene model which will be added to the Ape object GRanges slot and to the features slot.
 }
-\seealso{
-\code{\link[blaseRdata]{hg38_granges}}, \code{\link[blaseRdata]{zfin_granges}}
-\code{\link[cli]{cli_abort}}
-}

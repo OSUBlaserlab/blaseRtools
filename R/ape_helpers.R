@@ -60,12 +60,12 @@ dnastring_to_origin <-
 #' @importFrom cli cli_abort
 #' @importFrom GenomicRanges elementMetadata GRanges start end
 #' @importFrom IRanges IRanges
-parse_query <- function(query, genome, extend_left, extend_right, granges_use) {
+parse_query <- function(query, genome, extend_left, extend_right, grange_use) {
   if (is.character(query)) {
     if (length(query) != 1) cli::cli_abort("You must provide only one gene name for the query.")
-    if (query %notin% GenomicRanges::elementMetadata(granges_use)[, "gene_name"]) cli::cli_abort("Your gene name was not found.")
+    if (query %notin% GenomicRanges::elementMetadata(grange_use)[, "gene_name"]) cli::cli_abort("Your gene name was not found.")
     query_grange <-
-      granges_use[(GenomicRanges::elementMetadata(granges_use)[, "gene_name"] %in% query)]
+      grange_use[(GenomicRanges::elementMetadata(grange_use)[, "gene_name"] %in% query)]
     query_grange <-
       query_grange[(GenomicRanges::elementMetadata(query_grange)[, "type"] %in% "gene")]
     if (length(query_grange) != 1) cli::cli_abort("Your query returned multiple hits. This is not supported by this function.")
@@ -212,7 +212,7 @@ make_grange <-
            include_type,
            additional_granges) {
     dna_grange <-
-      IRanges::subsetByOverlaps(hg38_granges, query_grange)
+      IRanges::subsetByOverlaps(grange_use, query_grange)
     dna_grange <-
       dna_grange[(GenomicRanges::elementMetadata(dna_grange)[, "type"] %in% include_type)]
     #transform the seqnames

@@ -13,12 +13,9 @@
 #'    "unconfirmed_transcript")
 #' @param additional_granges A GRanges object with features to add to the Ape Object.  Coordinates should all be relative to the reference, *NOT* the sequence extracted for the ape file.  The Granges object can be constructed with the following syntax:  GenomicRanges::makeGRangesFromDataFrame(data.frame(seqname = "chr6", start = 40523370, end = 40523380, strand = "+", type = "addl_feature", gene_name = "prkcda", label = "feature1"), keep.extra.columns = T).  The gene_name argument here is optional.  If you have defined features based on the extracted sequence, (i.e. relative to position 1 in the ORIGIN section of the Ape object), the best option is to use the feature setting function FEATURES(instance_of_Ape) <- GRanges_Object.
 #' @return An APE object
-#' @seealso
-#'  \code{\link[blaseRdata]{hg38_granges}}, \code{\link[blaseRdata]{zfin_granges}}
-#'  \code{\link[cli]{cli_abort}}
 #' @rdname bb_make_ape_genomic
 #' @export
-#' @importFrom blaseRdata hg38_granges zfin_granges
+#' @import blaseRdata
 #' @importFrom cli cli_abort
 bb_make_ape_genomic <-
   function(query,
@@ -56,19 +53,18 @@ bb_make_ape_genomic <-
     genome <- match.arg(genome)
     include_type <- match.arg(include_type, several.ok = TRUE)
     if (genome == "hg38") {
-      granges_use <- blaseRdata::hg38_granges
+      grange_use <- hg38_granges
     } else if (genome == "GRCz11") {
-      granges_use <- blaseRdata::zfin_granges
+      grange_use <- zfin_granges
     } else {
       cli::cli_abort("You must choose either hg38 or GRCz11 genomes.")
     }
-    # return(granges_use)
 
     query_grange <- parse_query(query,
                                 genome,
                                 extend_left,
                                 extend_right,
-                                granges_use)
+                                grange_use)
     dna <-
       get_sequence(genome, query_grange)
 
