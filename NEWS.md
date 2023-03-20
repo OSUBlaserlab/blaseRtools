@@ -285,3 +285,10 @@
 # blaseRtools 0.0.0.9117-25
 
 * added assay option to cite umap
+
+# blaseRtools 0.0.0.9126
+
+* major update to ape functions
+* refactored
+* corrected bugs
+* added transcriptome APE function
