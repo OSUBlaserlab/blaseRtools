@@ -609,11 +609,11 @@ It should look like a genbank/Ape file.</p>
 <p>You can also create an Ape object based on hg38 or danRer11 reference
 data like so:</p>
 <pre class="r"><code>
-vignette_CXCL1_ape &lt;- bb_hg38_ape(&quot;CXCL1&quot;)
+vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        13-MAR-2023 
-#&gt; COMMENT     Sequence is from Homo sapiens, GRCh38.
+#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        20-MAR-2023 
+#&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
 #&gt; COMMENT     Extensions 0 bp left and 0 bp right.
@@ -736,18 +736,16 @@ vignette_CXCL1_ape
 #&gt;      1861 TTTTGGGGGG AAACAAGGGC TACCTTTACT GGAAAATCTG GTGATTTATA TCAATA
 #&gt; 
 #&gt; //</code></pre>
-<p>For zebrafish you would use the function <code>bb_grcz11_ape()</code>
-which works the same.</p>
 <p>You can select certain feature types to include by specifying the
 <code>include_type</code> argument.</p>
 <p>You may also add flanking sequences or specify genomic regions by
 coordinate rather than gene name.</p>
 <pre class="r"><code># Get genomic sequence and extend 100 bp left and right.
-vignette_CXCL1_ape &lt;- bb_hg38_ape(&quot;CXCL1&quot;, extend_left = 100, extend_right = 100)
+vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;, extend_left = 100, extend_right = 100)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        13-MAR-2023 
-#&gt; COMMENT     Sequence is from Homo sapiens, GRCh38.
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-MAR-2023 
+#&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
 #&gt; COMMENT     Extensions 100 bp left and 100 bp right.
@@ -883,24 +881,30 @@ had a feature that you knew about in terms of genomic coordinates that
 you wanted include when making the object. Here is how you do that:</p>
 <pre class="r"><code># Get genomic sequence and extend 100 bp left and right.
 # Now add a new custom feature based on original coordinates:  chr4 73869293-73871408
-vignette_CXCL1_ape &lt;- bb_hg38_ape(&quot;CXCL1&quot;, 
-                                  extend_left = 100, 
-                                  extend_right = 100, 
-                                  additional_granges = GenomicRanges::makeGRangesFromDataFrame(data.frame(
-                                    seqname = &quot;chr4&quot;, 
-                                    start = 73869293,
-                                    end = 73871408,
-                                    strand = &quot;+&quot;,
-                                    gene_name = &quot;CXCL1&quot;,
-                                    type = &quot;custom_feature&quot;,
-                                    label = &quot;custom_feature_1&quot;,
-                                    fwdcolor = &quot;red&quot;,
-                                    revcolor = &quot;blue&quot;
-                                  ), keep.extra.columns = T))
+vignette_CXCL1_ape &lt;- bb_make_ape_genomic(
+  &quot;CXCL1&quot;,
+  genome = &quot;hg38&quot;,
+  extend_left = 100,
+  extend_right = 100,
+  additional_granges = GenomicRanges::makeGRangesFromDataFrame(
+    data.frame(
+      seqname = &quot;chr4&quot;,
+      start = 73869293,
+      end = 73871408,
+      strand = &quot;+&quot;,
+      gene_name = &quot;CXCL1&quot;,
+      type = &quot;custom_feature&quot;,
+      label = &quot;custom_feature_1&quot;,
+      fwdcolor = &quot;red&quot;,
+      revcolor = &quot;blue&quot;
+    ),
+    keep.extra.columns = T
+  )
+)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        13-MAR-2023 
-#&gt; COMMENT     Sequence is from Homo sapiens, GRCh38.
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-MAR-2023 
+#&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
 #&gt; COMMENT     Extensions 100 bp left and 100 bp right.
@@ -1054,8 +1058,8 @@ need to know a bit more about GRanges and Biostrings.</p>
 <pre class="r"><code># get the sequence
 Ape.DNA(vignette_CXCL1_ape)
 #&gt; DNAStringSet object of length 1:
-#&gt;     width seq                                                                                       names               
-#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCCCTGGCCCGGGGG...AATCAAACTATGAGTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
+#&gt;     width seq                                                                                                             names               
+#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCCCTGGCCCGGGGGCTCCGGGCTTT...CTATACAGATAAATCAAACTATGAGTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
 
 # get the features
 Ape.granges(vignette_CXCL1_ape)
@@ -1082,8 +1086,8 @@ new_features &lt;- old_features[mcols(old_features)$type == &quot;gene&quot;]
 
 new_vignette_CXCL1_ape &lt;- Ape.setFeatures(vignette_CXCL1_ape, gr = new_features)
 new_vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        13-MAR-2023 
-#&gt; COMMENT     Sequence is from Homo sapiens, GRCh38.
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-MAR-2023 
+#&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
 #&gt; COMMENT     Extensions 100 bp left and 100 bp right.

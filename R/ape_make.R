@@ -125,7 +125,7 @@ bb_make_ape_genomic <-
 #' @importFrom TxDb.Hsapiens.UCSC.hg38.knownGene TxDb.Hsapiens.UCSC.hg38.knownGene
 #' @importFrom BSgenome.Hsapiens.UCSC.hg38 BSgenome.Hsapiens.UCSC.hg38
 #' @importFrom org.Hs.eg.db org.Hs.eg.db
-#' @importFrom blaseRdata TxDb.Drerio.UCSC.danRer11.ensGene
+#' @importFrom TxDb.Drerio.UCSC.danRer11.ensGene TxDb.Drerio.UCSC.danRer11.ensGene
 #' @importFrom BSgenome.Drerio.UCSC.danRer11 BSgenome.Drerio.UCSC.danRer11
 #' @importFrom org.Dr.eg.db org.Dr.eg.db
 #' @importFrom cli cli_abort
@@ -143,7 +143,7 @@ bb_make_ape_transcript <- function(query,
     org <- org.Hs.eg.db::org.Hs.eg.db
     species <- "Homo sapiens"
   } else if (transcriptome == "GRCz11") {
-    txdb <- blaseRdata::TxDb.Drerio.UCSC.danRer11.ensGene
+    txdb <- TxDb.Drerio.UCSC.danRer11.ensGene::TxDb.Drerio.UCSC.danRer11.ensGene
     genome <-
       BSgenome.Drerio.UCSC.danRer11::BSgenome.Drerio.UCSC.danRer11
     org <- org.Dr.eg.db::org.Dr.eg.db

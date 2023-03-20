@@ -162,6 +162,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.2.0	TMB	1.9.1	2022-10-01T12:04:31Z	6fd92172e8e87e7d3f304e30138ba910	/workspace/rst/cache_R_4_2/library/TMB/1.9.1/6fd92172e8e87e7d3f304e30138ba910/TMB	available
 4.2.0	TSP	1.2.1	2022-09-06T21:45:05Z	bdc7cb1f29e4e91c52373effe1afa036	/workspace/rst/cache_R_4_2/library/TSP/1.2-1/bdc7cb1f29e4e91c52373effe1afa036/TSP	available
 4.2.0	Ternary	2.1.0	2022-09-06T21:45:13Z	7a51237ff5571319841fd49578bb961a	/workspace/rst/cache_R_4_2/library/Ternary/2.1.0/7a51237ff5571319841fd49578bb961a/Ternary	available
+4.2.0	TxDb.Drerio.UCSC.danRer11.ensGene	1.0.0	2023-03-20T20:08:35Z	1b6a95d6ca36893f283e579d61712bd2	/workspace/rst/cache_R_4_2/library/TxDb.Drerio.UCSC.danRer11.ensGene/1.0.0/1b6a95d6ca36893f283e579d61712bd2/TxDb.Drerio.UCSC.danRer11.ensGene	active
 4.2.0	TxDb.Drerio.UCSC.danRer11.refGene	3.4.6	2022-09-06T21:45:43Z	d7d37dc719feb1277bd8886611149afa	/workspace/rst/cache_R_4_2/library/TxDb.Drerio.UCSC.danRer11.refGene/3.4.6/d7d37dc719feb1277bd8886611149afa/TxDb.Drerio.UCSC.danRer11.refGene	available
 4.2.0	TxDb.Hsapiens.UCSC.hg19.knownGene	3.2.2	2022-09-06T19:42:20Z	8104b7e22a24ddbf611bc462a0c60e45	/workspace/rst/cache_R_4_2/library/TxDb.Hsapiens.UCSC.hg19.knownGene/3.2.2/8104b7e22a24ddbf611bc462a0c60e45/TxDb.Hsapiens.UCSC.hg19.knownGene	available
 4.2.0	TxDb.Hsapiens.UCSC.hg38.knownGene	3.15.0	2022-09-06T21:46:38Z	100fe9e763990d3f21799a1a85226320	/workspace/rst/cache_R_4_2/library/TxDb.Hsapiens.UCSC.hg38.knownGene/3.15.0/100fe9e763990d3f21799a1a85226320/TxDb.Hsapiens.UCSC.hg38.knownGene	active
