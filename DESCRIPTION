@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9128
+Version: 0.0.0.9129
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -90,7 +90,10 @@ Imports:
     BSgenome.Drerio.UCSC.danRer11,
     BSgenome.Hsapiens.UCSC.hg38,
     TxDb.Hsapiens.UCSC.hg38.knownGene,
-    TxDb.Drerio.UCSC.danRer11.ensGene
+    TxDb.Drerio.UCSC.danRer11.ensGene,
+    AnnotationDbi, 
+    GenomicFeatures, 
+    lubridate
 Depends: 
     tidyverse,
     blaseRdata,
