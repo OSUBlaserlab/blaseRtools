@@ -8,3 +8,4 @@ R/local_configs.R
 *.pdf
 */git_commands.R
 */regenerated_git_commands.R
+docs
