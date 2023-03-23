@@ -7,23 +7,21 @@ This R package includes commonly used functions for R analysis in the Blaser Lab
 You can install the latest version of blaseRtools with:
 
 ``` r
-devtools::install_github("blaserlab/blaseRtools", build_vignettes = TRUE)
+# using base function
+install.packages('blaseRtools', repos = c('https://blaserlab.r-universe.dev', 'https://cloud.r-project.org'))
+
+# or if using blaseRtemplates function
+blaseRtemplates::install_one_package("blaseRtools", "new")
+
 ```
 
-The package uses a number of precomputed data objects which we keep in a separate repository.  It should be installed automatically as a dependency but if not it can be installed using:
 
-``` r
-devtools::install_github("blaserlab/blaseRdata")
-```
+
+## Useage
 
 All commonly used functions for the end user are prefixed "bb_".  If you load the blaseRtools package and supporting data with 
 
-``` r
-library(blaseRtools)
-library(blaseRdata)
-```
-
-Then you can access functions by typing "bb_" and an autocomplete window with selections should pop up.
+Then if you run ``library("blaseRtools")``` you can access functions by typing "bb_" and an autocomplete window with selections should pop up.
 
 Functions related to the "Ape" and "Trace" classes are prefixed "Ape." and "Trace.", respectively.
 
@@ -61,9 +59,9 @@ All functions are documented and have help pages which can be reviewed after ins
     * Ape.granges
     * Ape.save
     * Ape.setFeatures
-    * bb_grcz11_ape
-    * bb_hg38_ape
     * bb_parseape
+    * bb_make_ape_genomic
+    * bb_make_ape_transcript
     
 * Trace class:  A container for working with range-based data from ATAC and ChIP-seq experiments.
     * bb_buff_granges
