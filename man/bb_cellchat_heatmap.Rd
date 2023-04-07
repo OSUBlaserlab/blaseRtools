@@ -8,6 +8,7 @@ bb_cellchat_heatmap(
   object,
   source_filter = NULL,
   target_filter = NULL,
+  interaction_filter = NULL,
   interaction_threshold = 0,
   colors = c("transparent", "red3"),
   rowanno = c(NULL, "Annotation", "Pathway"),
@@ -26,7 +27,8 @@ bb_cellchat_heatmap(
   heatmap_column_title = NULL,
   heatmap_column_title_gp = gpar(fontsize = 12, fontface = "bold"),
   col_anno_name_gp = gpar(fontsize = 10, fontface = "bold"),
-  row_anno_name_gp = gpar(fontsize = 10, fontface = "bold")
+  row_anno_name_gp = gpar(fontsize = 10, fontface = "bold"),
+  return_value = c("heatmap", "plot", "matrix")
 )
 }
 \arguments{
@@ -35,6 +37,10 @@ bb_cellchat_heatmap(
 \item{source_filter}{Optional filter for source cell clusters from the object metadata.  Accepts a single string or vector of cell groups., Default: NULL}
 
 \item{target_filter}{Optional filter for target cell clusters from the object metadata.  Accepts a single string or vector of cell groups., Default: NULL}
+
+\item{interaction_filter}{Optional filter to include only certain interactions in the figure.}
+
+\item{interaction_threshold}{Optional filter to only include interactions above a certain threshold.}
 
 \item{colors}{Color scale endpoints, Default: c("transparent", "red3")}
 
@@ -71,6 +77,8 @@ bb_cellchat_heatmap(
 \item{col_anno_name_gp}{Column annotation name graphical params, Default: gpar(fonmtsize = 10, fontface = "bold")}
 
 \item{row_anno_name_gp}{Row annotation name graphical params, Default: gpar(fontsize = 10, fontface = "bold")}
+
+\item{return_value}{Return a heatmap plot or a matrix.}
 }
 \value{
 a heatmap as a grid object; plot using cowplot::plot_grid

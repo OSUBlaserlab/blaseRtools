@@ -135,6 +135,8 @@ bb_cellchat <-
 #' @param object The CellChat object to plot
 #' @param source_filter Optional filter for source cell clusters from the object metadata.  Accepts a single string or vector of cell groups., Default: NULL
 #' @param target_filter Optional filter for target cell clusters from the object metadata.  Accepts a single string or vector of cell groups., Default: NULL
+#' @param interaction_filter Optional filter to include only certain interactions in the figure.
+#' @param interaction_threshold Optional filter to only include interactions above a certain threshold.
 #' @param colors Color scale endpoints, Default: c("transparent", "red3")
 #' @param rowanno Options for simple row annotation; must be one of c(NULL, "Annotation", "Pathway")
 #' @param rowanno_colors Optional colors to replace the poor color selections from Complex heatmap.  Must be supplied as a named list with one element each for "Annotation" and "Pathway".  Not required if not showing these annotations.  The list should be of the form:  list(Annotation = c("name1" = "color value1", "name2" = "color_value2")), Default: NULL
@@ -153,6 +155,7 @@ bb_cellchat <-
 #' @param heatmap_column_title_gp Column title graphical params, Default: gpar(fontsize = 12, fontface = "bold")
 #' @param col_anno_name_gp Column annotation name graphical params, Default: gpar(fonmtsize = 10, fontface = "bold")
 #' @param row_anno_name_gp Row annotation name graphical params, Default: gpar(fontsize = 10, fontface = "bold")
+#' @param return_value Return a heatmap plot or a matrix.
 #' @return a heatmap as a grid object; plot using cowplot::plot_grid
 #' @details see github::sqjin/CellChat
 #' @seealso
@@ -176,6 +179,7 @@ bb_cellchat <-
 bb_cellchat_heatmap <- function(object,
                                 source_filter = NULL,
                                 target_filter = NULL,
+                                interaction_filter = NULL,
                                 interaction_threshold = 0,
                                 colors = c("transparent", "red3"),
                                 rowanno = c(NULL, "Annotation", "Pathway"),
@@ -194,7 +198,8 @@ bb_cellchat_heatmap <- function(object,
                                 heatmap_column_title = NULL,
                                 heatmap_column_title_gp = gpar(fontsize = 12, fontface = "bold"),
                                 col_anno_name_gp = gpar(fontsize = 10, fontface = "bold"),
-                                row_anno_name_gp = gpar(fontsize = 10, fontface = "bold")) {
+                                row_anno_name_gp = gpar(fontsize = 10, fontface = "bold"),
+                                return_value = c("heatmap", "plot","matrix")) {
   stopifnot("The object must be of class CellChat." = "CellChat" %in% class(object))
   stopifnot("You must select valid colors." = all(areColors(colors)))
   stopifnot("You can only select 2 colors." = length(colors) == 2)
@@ -204,6 +209,7 @@ bb_cellchat_heatmap <- function(object,
   stopifnot(
     "You can only annotate columns by c(NULL, 'Source', 'Target')" = colanno %in% c(NULL, "Source", "Target")
   )
+  return_value <- match.arg(return_value)
 
   mtx <- CellChat::subsetCommunication(object = object) |>
     tibble::as_tibble() |>
@@ -222,81 +228,114 @@ bb_cellchat_heatmap <- function(object,
     ) |>
     bb_tbl_to_matrix() |>
     t()
-  mtx <- mtx[MatrixGenerics::rowMaxs(mtx) > interaction_threshold, ]
 
-  if (!is.null(rowanno)) {
-    row_anno_df <- tibble::tibble(rownames = rownames(mtx)) |>
-      dplyr::left_join(
-        CellChat::subsetCommunication(object) |>
-          dplyr::group_by(rownames = interaction_name_2, Annotation = annotation, Pathway = pathway_name) |>
-          dplyr::summarise() |>
-          dplyr::select(dplyr::any_of(c("rownames", rowanno)))
-      )
-
-    row_anno_df <- row_anno_df |>
-      tibble::column_to_rownames("rownames") |>
-      as.data.frame()
-
-    rowanno <-
-      ComplexHeatmap::rowAnnotation(df = row_anno_df,
-                                    col = rowanno_colors,
-                                    annotation_name_gp = row_anno_name_gp)
-
+  if (!is.null(interaction_filter)) {
+    mtx <- mtx[,interaction_filter]
   }
 
-  if (!is.null(colanno)) {
-    col_anno_df <- tibble::tibble(colnames = colnames(mtx)) |>
-      dplyr::left_join(
-        CellChat::subsetCommunication(object) |>
-          dplyr::mutate(source_target = paste0(source, " -> ", target)) |>
-          dplyr::group_by(colnames = source_target, Source = source, Target = target) |>
-          dplyr::summarise() |>
-          dplyr::select(dplyr::any_of(c("colnames", colanno)))
-      )
+  mtx <- mtx[MatrixGenerics::rowMaxs(mtx) > interaction_threshold,]
 
-    col_anno_df <- col_anno_df |>
-      tibble::column_to_rownames("colnames") |>
-      as.data.frame()
+  if (return_value == "matrix") {
+    return(mtx)
+  } else {
+    if (!is.null(rowanno)) {
+      row_anno_df <- tibble::tibble(rownames = rownames(mtx)) |>
+        dplyr::left_join(
+          CellChat::subsetCommunication(object) |>
+            dplyr::group_by(
+              rownames = interaction_name_2,
+              Annotation = annotation,
+              Pathway = pathway_name
+            ) |>
+            dplyr::summarise() |>
+            dplyr::ungroup() |>
+            dplyr::select(dplyr::any_of(c(
+              "rownames", rowanno
+            )))
+        )
 
-    colanno <-
-      ComplexHeatmap::columnAnnotation(df = col_anno_df,
-                                       col = colanno_colors,
-                                       annotation_name_gp = col_anno_name_gp)
+      row_anno_df <- row_anno_df |>
+        tibble::column_to_rownames("rownames") |>
+        as.data.frame()
+
+      rowanno <-
+        ComplexHeatmap::rowAnnotation(df = row_anno_df,
+                                      col = rowanno_colors,
+                                      annotation_name_gp = row_anno_name_gp)
+
+    }
+
+    if (!is.null(colanno)) {
+      col_anno_df <- tibble::tibble(colnames = colnames(mtx)) |>
+        dplyr::left_join(
+          CellChat::subsetCommunication(object) |>
+            dplyr::mutate(source_target = paste0(source, " -> ", target)) |>
+            dplyr::group_by(
+              colnames = source_target,
+              Source = source,
+              Target = target
+            ) |>
+            dplyr::summarise() |>
+            dplyr::ungroup() |>
+            dplyr::select(dplyr::any_of(c(
+              "colnames", colanno
+            )))
+        )
+
+      col_anno_df <- col_anno_df |>
+        tibble::column_to_rownames("colnames") |>
+        as.data.frame()
+
+      colanno <-
+        ComplexHeatmap::columnAnnotation(df = col_anno_df,
+                                         col = colanno_colors,
+                                         annotation_name_gp = col_anno_name_gp)
 
 
-  }
+    }
 
-  col_fun <-
-   circlize::colorRamp2(breaks = c(min(mtx), max(mtx)),
-                               colors = colors)
-  grid::grid.grabExpr(
-    ComplexHeatmap::draw(
-      ComplexHeatmap::Heatmap(
-        mtx,
-        name = heatmap_name,
-        col = col_fun,
-        left_annotation = rowanno,
-        top_annotation = colanno,
-        show_row_dend = heatmap_show_row_dend,
-        row_dend_width = heatmap_row_dend_width,
-        show_column_dend = heatmap_show_column_dend,
-        column_dend_height = heatmap_column_dend_height,
-        row_names_gp = heatmap_row_names_gp,
-        column_names_gp = heatmap_column_names_gp,
-        column_names_rot = heatmap_column_names_rot,
-        column_title = heatmap_column_title,
-        column_title_gp = heatmap_column_title_gp
-
+    col_fun <-
+      circlize::colorRamp2(breaks = c(min(mtx), max(mtx)),
+                           colors = colors)
+    grid::grid.grabExpr(
+      ComplexHeatmap::draw(
+        ComplexHeatmap::Heatmap(
+          mtx,
+          name = heatmap_name,
+          col = col_fun,
+          left_annotation = rowanno,
+          top_annotation = colanno,
+          show_row_dend = heatmap_show_row_dend,
+          row_dend_width = heatmap_row_dend_width,
+          show_column_dend = heatmap_show_column_dend,
+          column_dend_height = heatmap_column_dend_height,
+          row_names_gp = heatmap_row_names_gp,
+          column_names_gp = heatmap_column_names_gp,
+          column_names_rot = heatmap_column_names_rot,
+          column_title = heatmap_column_title,
+          column_title_gp = heatmap_column_title_gp
+        ),
+        heatmap_legend_side = "right",
+        annotation_legend_side = "bottom",
+        legend_grouping = "original"
       ),
-      heatmap_legend_side = "right",
-      annotation_legend_side = "bottom",
-      legend_grouping = "original"
-    ),
-    wrap = TRUE
-  )
+      wrap = FALSE
+    )
+
+
+  }
 
 
 
+}
+
+
+
+areColors <- function(x) {
+  sapply(x, function(X) {
+    tryCatch(is.matrix(col2rgb(X)),
+             error = function(e) FALSE)
+  })
 }
 
 

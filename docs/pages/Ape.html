@@ -612,7 +612,7 @@ data like so:</p>
 vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        23-MAR-2023 
+#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear         7-APR-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -744,7 +744,7 @@ coordinate rather than gene name.</p>
 vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;, extend_left = 100, extend_right = 100)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        23-MAR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         7-APR-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -903,7 +903,7 @@ vignette_CXCL1_ape &lt;- bb_make_ape_genomic(
 )
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        23-MAR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         7-APR-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -1058,25 +1058,38 @@ need to know a bit more about GRanges and Biostrings.</p>
 <pre class="r"><code># get the sequence
 Ape.DNA(vignette_CXCL1_ape)
 #&gt; DNAStringSet object of length 1:
-#&gt;     width seq                                                                                            names               
-#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCCCTGGCCCGGGGGCTC...TAAATCAAACTATGAGTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
+#&gt;     width seq                                                              names               
+#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCC...GTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
 
 # get the features
 Ape.granges(vignette_CXCL1_ape)
 #&gt; GRanges object with 17 ranges and 4 metadata columns:
-#&gt;                          seqnames    ranges strand |            type              locus_tag    fwdcolor    revcolor
-#&gt;                             &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; |     &lt;character&gt;            &lt;character&gt; &lt;character&gt; &lt;character&gt;
-#&gt;               CXCL1_gene  ape_seq  101-2016      + |            gene             CXCL1_gene     #deebf7     #e5f5e0
-#&gt;                CXCL1_CDS  ape_seq   179-278      + |             CDS              CXCL1_CDS     #deebf7     #e5f5e0
-#&gt;                CXCL1_CDS  ape_seq   377-500      + |             CDS              CXCL1_CDS     #deebf7     #e5f5e0
-#&gt;                CXCL1_CDS  ape_seq   614-697      + |             CDS              CXCL1_CDS     #deebf7     #e5f5e0
-#&gt;                CXCL1_CDS  ape_seq 1229-1244      + |             CDS              CXCL1_CDS     #deebf7     #e5f5e0
-#&gt;                      ...      ...       ...    ... .             ...                    ...         ...         ...
-#&gt;             CXCL1_exon_4  ape_seq   377-500      + |            exon           CXCL1_exon_4     #3182bd     #31a354
-#&gt;             CXCL1_exon_6  ape_seq   614-697      + |            exon           CXCL1_exon_6     #3182bd     #31a354
-#&gt;             CXCL1_exon_7  ape_seq 1229-2016      + |            exon           CXCL1_exon_7     #3182bd     #31a354
-#&gt;    CXCL1_three_prime_UTR  ape_seq 1245-2016      + | three_prime_UTR  CXCL1_three_prime_UTR     #9ecae1     #a1d99b
-#&gt;   CXCL1_custom_feature_1  ape_seq    1-2116      + |  custom_feature CXCL1_custom_feature_1         red        blue
+#&gt;                          seqnames    ranges strand |            type              locus_tag
+#&gt;                             &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; |     &lt;character&gt;            &lt;character&gt;
+#&gt;               CXCL1_gene  ape_seq  101-2016      + |            gene             CXCL1_gene
+#&gt;                CXCL1_CDS  ape_seq   179-278      + |             CDS              CXCL1_CDS
+#&gt;                CXCL1_CDS  ape_seq   377-500      + |             CDS              CXCL1_CDS
+#&gt;                CXCL1_CDS  ape_seq   614-697      + |             CDS              CXCL1_CDS
+#&gt;                CXCL1_CDS  ape_seq 1229-1244      + |             CDS              CXCL1_CDS
+#&gt;                      ...      ...       ...    ... .             ...                    ...
+#&gt;             CXCL1_exon_4  ape_seq   377-500      + |            exon           CXCL1_exon_4
+#&gt;             CXCL1_exon_6  ape_seq   614-697      + |            exon           CXCL1_exon_6
+#&gt;             CXCL1_exon_7  ape_seq 1229-2016      + |            exon           CXCL1_exon_7
+#&gt;    CXCL1_three_prime_UTR  ape_seq 1245-2016      + | three_prime_UTR  CXCL1_three_prime_UTR
+#&gt;   CXCL1_custom_feature_1  ape_seq    1-2116      + |  custom_feature CXCL1_custom_feature_1
+#&gt;                             fwdcolor    revcolor
+#&gt;                          &lt;character&gt; &lt;character&gt;
+#&gt;               CXCL1_gene     #deebf7     #e5f5e0
+#&gt;                CXCL1_CDS     #deebf7     #e5f5e0
+#&gt;                CXCL1_CDS     #deebf7     #e5f5e0
+#&gt;                CXCL1_CDS     #deebf7     #e5f5e0
+#&gt;                CXCL1_CDS     #deebf7     #e5f5e0
+#&gt;                      ...         ...         ...
+#&gt;             CXCL1_exon_4     #3182bd     #31a354
+#&gt;             CXCL1_exon_6     #3182bd     #31a354
+#&gt;             CXCL1_exon_7     #3182bd     #31a354
+#&gt;    CXCL1_three_prime_UTR     #9ecae1     #a1d99b
+#&gt;   CXCL1_custom_feature_1         red        blue
 #&gt;   -------
 #&gt;   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 <p>You can set the features of an Ape object like so:</p>
@@ -1086,7 +1099,7 @@ new_features &lt;- old_features[mcols(old_features)$type == &quot;gene&quot;]
 
 new_vignette_CXCL1_ape &lt;- Ape.setFeatures(vignette_CXCL1_ape, gr = new_features)
 new_vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        23-MAR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         7-APR-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
