@@ -1,5 +1,5 @@
-#' Calculate Differential Cell Representation
-#' @description Use this function to determine the differential representation of cells in clusters.  It will determine fold change in a single experimental class over a single control or reference class.  This value is normalized to the number of cells captured in all clusters from the class.  Significance is determined using Fisher's exact test.
+#' @title Cluster Representation By Fisher Exact Test Per Cell
+#' @description Use this function to determine the differential representation of cells in clusters.  It will determine fold change in a single experimental class over a single control or reference class.  This value is normalized to the number of cells captured in all clusters from the class.  Significance is determined using Fisher's exact test.  This test may overestimate significance in large data sets.  In this case, bb_cluster_representation2 may be more robust.
 #' @param cds A cell data set object
 #' @param cluster_var The CDS cell metadata column holding cluster data.  There can be any number of clusters in this column.
 #' @param class_var The CDS cell metadata column holding sample class data.  There can be only 2 classes in this column.  You may need to subset or reclass the samples to achieve this.
@@ -10,6 +10,7 @@
 #' @export
 #' @import tidyverse monocle3
 #' @importFrom rstatix fisher_test
+#' @importFrom cli::cli_alert_info
 bb_cluster_representation <- function(cds,
                                       cluster_var,
                                       class_var,
@@ -17,6 +18,9 @@ bb_cluster_representation <- function(cds,
                                       control_class,
                                       pseudocount = 1,
                                       return_value = c("table", "plot")) {
+  cli::cli_alert_info("This function calculates differential representation on a per-cell basis and uses the Fisher exact test to calculate significance.")
+  cli::cli_alert_info("In large datasets this may inflate the significance to an undesirable level.")
+  cli::cli_alert_info("Alternatively consider using bb_cluster_representation2 which calculates these values using a regression method and may be more robust.")
   stopifnot("You must select a table or a plot to return." = return_value %in% c("table", "plot"))
   stopifnot("You can only return a table OR a plot." = length(return_value) == 1)
   res <- bb_cellmeta(cds) %>%

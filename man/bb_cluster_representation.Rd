@@ -2,7 +2,7 @@
 % Please edit documentation in R/bb_cluster_representation.R
 \name{bb_cluster_representation}
 \alias{bb_cluster_representation}
-\title{Calculate Differential Cell Representation}
+\title{Cluster Representation By Fisher Exact Test Per Cell}
 \usage{
 bb_cluster_representation(
   cds,
@@ -31,5 +31,5 @@ bb_cluster_representation(
 A ggplot or a table of data for plotting
 }
 \description{
-Use this function to determine the differential representation of cells in clusters.  It will determine fold change in a single experimental class over a single control or reference class.  This value is normalized to the number of cells captured in all clusters from the class.  Significance is determined using Fisher's exact test.
+Use this function to determine the differential representation of cells in clusters.  It will determine fold change in a single experimental class over a single control or reference class.  This value is normalized to the number of cells captured in all clusters from the class.  Significance is determined using Fisher's exact test.  This test may overestimate significance in large data sets.  In this case, bb_cluster_representation2 may be more robust.
 }

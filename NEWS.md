@@ -292,3 +292,7 @@
 * refactored
 * corrected bugs
 * added transcriptome APE function
+
+# blaseRtools 0.0.0.9132
+
+* added bb_cluster_representation2
