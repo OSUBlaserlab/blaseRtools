@@ -94,7 +94,8 @@ Imports:
     AnnotationDbi, 
     GenomicFeatures, 
     lubridate,
-    edgeR
+    edgeR,
+    ggtext
 Depends: 
     tidyverse,
     blaseRdata,
