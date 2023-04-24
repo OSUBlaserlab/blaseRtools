@@ -95,7 +95,8 @@ Imports:
     GenomicFeatures, 
     lubridate,
     edgeR,
-    ggtext
+    ggtext,
+    speedglm
 Depends: 
     tidyverse,
     blaseRdata,
@@ -107,4 +108,5 @@ Remotes:
     github::mojaveazure/seurat-disk,
     github::chris-mcginnis-ucsf/DoubletFinder,
     github::blaserlab/blaseRtemplates,
-    github::sqjin/CellChat
+    github::sqjin/CellChat,
+    github::cran/speedglm
