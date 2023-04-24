@@ -93,7 +93,8 @@ Imports:
     TxDb.Drerio.UCSC.danRer11.ensGene,
     AnnotationDbi, 
     GenomicFeatures, 
-    lubridate
+    lubridate,
+    edgeR
 Depends: 
     tidyverse,
     blaseRdata,
