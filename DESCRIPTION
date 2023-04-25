@@ -104,7 +104,7 @@ Depends:
 VignetteBuilder: knitr
 Remotes: 
     github::blaserlab/blaseRdata,
-    github::cole-trapnell-lab/monocle3,
+    github::blaserlab/monocle3,
     github::mojaveazure/seurat-disk,
     github::chris-mcginnis-ucsf/DoubletFinder,
     github::blaserlab/blaseRtemplates,
