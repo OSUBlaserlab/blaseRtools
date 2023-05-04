@@ -612,7 +612,7 @@ data like so:</p>
 vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        20-APR-2023 
+#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear         4-MAY-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -744,7 +744,7 @@ coordinate rather than gene name.</p>
 vignette_CXCL1_ape &lt;- bb_make_ape_genomic(&quot;CXCL1&quot;, genome = &quot;hg38&quot;, extend_left = 100, extend_right = 100)
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-APR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         4-MAY-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -903,7 +903,7 @@ vignette_CXCL1_ape &lt;- bb_make_ape_genomic(
 )
 
 vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-APR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         4-MAY-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1
@@ -1058,8 +1058,8 @@ need to know a bit more about GRanges and Biostrings.</p>
 <pre class="r"><code># get the sequence
 Ape.DNA(vignette_CXCL1_ape)
 #&gt; DNAStringSet object of length 1:
-#&gt;     width seq                                                                                                                                     names               
-#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCCCTGGCCCGGGGGCTCCGGGCTTTCCAGCCCCAACC...GTGTTCAATTTGCTATACAGATAAATCAAACTATGAGTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
+#&gt;     width seq                                                                                          names               
+#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGGGAATTTCCCTGGCCCGGGGGCT...AAATCAAACTATGAGTTATGCTTCATTTCATGCGGTGATTGCTG ape_seq
 
 # get the features
 Ape.granges(vignette_CXCL1_ape)
@@ -1086,7 +1086,7 @@ new_features &lt;- old_features[mcols(old_features)$type == &quot;gene&quot;]
 
 new_vignette_CXCL1_ape &lt;- Ape.setFeatures(vignette_CXCL1_ape, gr = new_features)
 new_vignette_CXCL1_ape
-#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        20-APR-2023 
+#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear         4-MAY-2023 
 #&gt; COMMENT     Sequence is from Homo sapiens hg38.
 #&gt; COMMENT     Gene models are from ensembl.
 #&gt; COMMENT     Gene is CXCL1

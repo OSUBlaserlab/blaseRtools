@@ -144,6 +144,9 @@ bb_split_citeseq <- function(cds) {
   # convert from SingleCellExperiment class back to cell_data_set
   cds <- as(object = cds, Class = "cell_data_set")
 
+  # reestimate size factors now that the antibodies are gone
+  cds <- monocle3::estimate_size_factors(cds)
+
   return(cds)
 
 }
