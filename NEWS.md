@@ -297,7 +297,7 @@
 
 * added bb_cluster_representation2
 
-# blaseRtools 0.0.0.9133
+# blaseRtools 0.0.0.9133-4
 
 * added bb_load_tensx_h5
 * edited bb_split_citeseq to recalculate size factors after removing the antibody matrix

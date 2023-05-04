@@ -4,7 +4,7 @@
 \alias{bb_load_tenx_h5}
 \title{Load a 10X Genomics H5 File and Return a CDS}
 \usage{
-bb_load_tenx_h5(filename)
+bb_load_tenx_h5(filename, sample_metadata_tbl = NULL)
 }
 \arguments{
 \item{filename}{Path to the h5 file.}

@@ -105,7 +105,8 @@ bb_load_tenx_targz <- function (targz_file,
 #' @importFrom Seurat as.sparse
 #' @importFrom monocle3 new_cell_data_set
 #' @importFrom SingleCellExperiment mainExpName
-bb_load_tenx_h5 <- function (filename) {
+bb_load_tenx_h5 <- function (filename,
+                             sample_metadata_tbl = NULL) {
   if (!requireNamespace("hdf5r", quietly = TRUE)) {
     cli::cli_abort("Please install hdf5r to read HDF5 files")
   }
@@ -170,6 +171,13 @@ bb_load_tenx_h5 <- function (filename) {
 
   if ("Antibody Capture" %in% types) {
     cds <- bb_split_citeseq(cds)
+  }
+
+  if (!is.null(sample_metadata_tbl)) {
+    sample_metadata_expanded <- dplyr::bind_cols(bb_cellmeta(cds), sample_metadata_tbl) |>
+      dplyr::select(c(cell_id, matches(colnames(sample_metadata_tbl))))
+    cds <- bb_tbl_to_coldata(obj = cds, min_tbl = sample_metadata_expanded)
+
   }
 
   return(cds)

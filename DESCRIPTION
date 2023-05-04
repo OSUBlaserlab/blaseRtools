@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9133
+Version: 0.0.0.9134
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -96,7 +96,8 @@ Imports:
     lubridate,
     edgeR,
     ggtext,
-    speedglm
+    speedglm,
+    hdf5r
 Depends: 
     tidyverse,
     blaseRdata,
