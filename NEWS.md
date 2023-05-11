@@ -301,3 +301,7 @@
 
 * added bb_load_tensx_h5
 * edited bb_split_citeseq to recalculate size factors after removing the antibody matrix
+
+# blaseRtools 0.0.0.9135
+
+* debugged seurat_anno
