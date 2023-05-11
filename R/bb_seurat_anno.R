@@ -10,7 +10,7 @@
 #' @importFrom tibble tibble as_tibble
 #' @importFrom SeuratObject CreateSeuratObject
 #' @importFrom Seurat SCTransform FindTransferAnchors VariableFeatures TransferData IntegrateEmbeddings ProjectUMAP
-#' @importFrom SingleCellExperiment colData
+#' @importFrom SummarizedExperiment colData
 bb_seurat_anno <- function(cds, reference) {
   seurat_reference <- SeuratDisk::LoadH5Seurat(reference)
   exprs <- monocle3::exprs(cds_main)
@@ -69,14 +69,15 @@ bb_seurat_anno <- function(cds, reference) {
   seurat_data <- dplyr::left_join(seurat_dims, seurat_metadata)
   cds_data <-
     dplyr::left_join(
-      SingleCellExperiment::colData(cds) |>
+      SummarizedExperiment::colData(cds) |>
         tibble::as_tibble(rownames = "barcode_sample"),
       seurat_data,
       by = c(barcode_sample = "barcode")
     )
-  SingleCellExperiment::colData(cds)$seurat_dim1 <- cds_data$refUMAP_1
-  SingleCellExperiment::colData(cds)$seurat_dim2 <- cds_data$refUMAP_2
-  SingleCellExperiment::colData(cds)$seurat_celltype_l1 <- cds_data$predicted.celltype.l1
-  SingleCellExperiment::colData(cds)$seurat_celltype_l2 <- cds_data$predicted.celltype.l2
+  SummarizedExperiment::colData(cds)$seurat_dim1 <- cds_data$refUMAP_1
+  SummarizedExperiment::colData(cds)$seurat_dim2 <- cds_data$refUMAP_2
+  SummarizedExperiment::colData(cds)$seurat_celltype_l1 <- cds_data$predicted.celltype.l1
+  SummarizedExperiment::colData(cds)$seurat_celltype_l2 <- cds_data$predicted.celltype.l2
   return(cds)
 }
+
