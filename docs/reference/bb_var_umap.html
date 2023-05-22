@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9136</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9137</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +81,14 @@
 <span>  sample_equally <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rasterize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  raster_dpi <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  show_trajectory_graph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  trajectory_graph_color <span class="op">=</span> <span class="st">"grey28"</span>,</span>
+<span>  trajectory_graph_segment_size <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  label_branch_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label_roots <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label_leaves <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label_principal_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  graph_label_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  cds <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  man_text_df <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -176,6 +184,45 @@
 
 <dt>raster_dpi</dt>
 <dd><p>If rasterize then this is the DPI used.  Default = 300.</p></dd>
+
+
+<dt>show_trajectory_graph</dt>
+<dd><p>Whether to render the principal graph for the
+trajectory. Requires that learn_graph() has been called on cds.</p></dd>
+
+
+<dt>trajectory_graph_color</dt>
+<dd><p>The color to be used for plotting the
+trajectory graph.</p></dd>
+
+
+<dt>trajectory_graph_segment_size</dt>
+<dd><p>The size of the line segments used for
+plotting the trajectory graph.</p></dd>
+
+
+<dt>label_branch_points</dt>
+<dd><p>Whether to plot a label for each branch point in
+the principal graph.</p></dd>
+
+
+<dt>label_roots</dt>
+<dd><p>Whether to plot a label for each root in the principal
+graph.</p></dd>
+
+
+<dt>label_leaves</dt>
+<dd><p>Whether to plot a label for each leaf node in the principal graph.</p></dd>
+
+
+<dt>label_principal_points</dt>
+<dd><p>Logical indicating whether to label roots,
+leaves, and branch points with principal point names. This is useful for
+order_cells and choose_graph_segments in non-interactive mode.</p></dd>
+
+
+<dt>graph_label_size</dt>
+<dd><p>How large to make the branch, root, and leaf labels.</p></dd>
 
 
 <dt>cds</dt>

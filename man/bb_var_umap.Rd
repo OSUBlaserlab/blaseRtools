@@ -27,6 +27,14 @@ bb_var_umap(
   sample_equally = FALSE,
   rasterize = FALSE,
   raster_dpi = 300,
+  show_trajectory_graph = FALSE,
+  trajectory_graph_color = "grey28",
+  trajectory_graph_segment_size = 0.75,
+  label_branch_points = FALSE,
+  label_roots = FALSE,
+  label_leaves = FALSE,
+  label_principal_points = FALSE,
+  graph_label_size = 2,
   cds = NULL,
   ...,
   man_text_df = NULL,
@@ -77,6 +85,29 @@ bb_var_umap(
 \item{rasterize}{Whether to render the graphical layer as a raster image.  Default is FALSE.}
 
 \item{raster_dpi}{If rasterize then this is the DPI used.  Default = 300.}
+
+\item{show_trajectory_graph}{Whether to render the principal graph for the
+trajectory. Requires that learn_graph() has been called on cds.}
+
+\item{trajectory_graph_color}{The color to be used for plotting the
+trajectory graph.}
+
+\item{trajectory_graph_segment_size}{The size of the line segments used for
+plotting the trajectory graph.}
+
+\item{label_branch_points}{Whether to plot a label for each branch point in
+the principal graph.}
+
+\item{label_roots}{Whether to plot a label for each root in the principal
+graph.}
+
+\item{label_leaves}{Whether to plot a label for each leaf node in the principal graph.}
+
+\item{label_principal_points}{Logical indicating whether to label roots,
+leaves, and branch points with principal point names. This is useful for
+order_cells and choose_graph_segments in non-interactive mode.}
+
+\item{graph_label_size}{How large to make the branch, root, and leaf labels.}
 
 \item{cds}{Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL}
 

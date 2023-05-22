@@ -305,3 +305,7 @@
 # blaseRtools 0.0.0.9135-6
 
 * debugged seurat_anno
+
+# blaseRtools 0.0.0.9137
+
+* pseuodime functions

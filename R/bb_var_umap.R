@@ -24,6 +24,21 @@
 #' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
 #' @param ... Additional params for facetting.
 #' @param man_text_df A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.
+#' @param show_trajectory_graph Whether to render the principal graph for the
+#'   trajectory. Requires that learn_graph() has been called on cds.
+#' @param trajectory_graph_color The color to be used for plotting the
+#'   trajectory graph.
+#' @param trajectory_graph_segment_size The size of the line segments used for
+#'   plotting the trajectory graph.
+#' @param graph_label_size How large to make the branch, root, and leaf labels.
+#' @param label_principal_points Logical indicating whether to label roots,
+#'   leaves, and branch points with principal point names. This is useful for
+#'   order_cells and choose_graph_segments in non-interactive mode.
+#' @param label_branch_points Whether to plot a label for each branch point in
+#'   the principal graph.
+#' @param label_roots Whether to plot a label for each root in the principal
+#'   graph.
+#' @param label_leaves Whether to plot a label for each leaf node in the principal graph.
 #' @param cds Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL
 #' @return a ggplot
 #' @rdname bb_var_umap
@@ -56,12 +71,18 @@ bb_var_umap <- function(obj,
                         sample_equally = FALSE,
                         rasterize = FALSE,
                         raster_dpi = 300,
+                        show_trajectory_graph = FALSE,
+                        trajectory_graph_color = "grey28",
+                        trajectory_graph_segment_size = 0.75,
+                        label_branch_points = FALSE,
+                        label_roots = FALSE,
+                        label_leaves = FALSE,
+                        label_principal_points = FALSE,
+                        graph_label_size = 2,
                         cds = NULL,
                         ...,
                         man_text_df = NULL,
                         text_geom = "text") {
-
-
   cds_warn(cds)
   obj_stop(obj)
 
@@ -139,7 +160,7 @@ bb_var_umap <- function(obj,
   } else {
     text_df <-
       plot_data |> tidyr::pivot_longer(cols = !!sym(alt_label_col),
-                                 names_to = "var") |> dplyr::group_by(value)
+                                       names_to = "var") |> dplyr::group_by(value)
   }
   if (overwrite_labels == T && is.null(man_text_df)) {
     median_coord_df <-
@@ -163,12 +184,13 @@ bb_var_umap <- function(obj,
   if (!is.null(value_to_highlight)) {
     data_background <-
       data_long |> dplyr::filter(value %notin% value_to_highlight)
-    data_long <- data_long |> dplyr::filter(value %in% value_to_highlight)
+    data_long <-
+      data_long |> dplyr::filter(value %in% value_to_highlight)
     plot <- plot +
       ggplot2::geom_point(
         data = data_background,
         ggplot2::aes(x = !!sym(dim_x),
-            y = !!sym(dim_y)),
+                     y = !!sym(dim_y)),
         stroke = 0.25,
         shape = 1,
         size = cell_size,
@@ -229,8 +251,8 @@ bb_var_umap <- function(obj,
         alpha = foreground_alpha
       ) +
       ggplot2::scale_color_viridis_c(option = "inferno",
-                            begin = 0.1,
-                            end = 0.9) +
+                                     begin = 0.1,
+                                     end = 0.9) +
       ggplot2::scale_fill_viridis_c(
         option = "inferno",
         begin = 0.1,
@@ -283,7 +305,8 @@ bb_var_umap <- function(obj,
           n = nbin
         ))
     }
-    data_long <- data_long |> dplyr::mutate(log_local_n = log10(local_n))
+    data_long <-
+      data_long |> dplyr::mutate(log_local_n = log10(local_n))
     plot <- ggplot2::ggplot(data_long) +
       ggplot2::geom_point(
         ggplot2::aes_string(
@@ -298,8 +321,8 @@ bb_var_umap <- function(obj,
         alpha = foreground_alpha
       ) +
       ggplot2::scale_color_viridis_c(option = "inferno",
-                            begin = 0.1,
-                            end = 0.9) +
+                                     begin = 0.1,
+                                     end = 0.9) +
       ggplot2::scale_fill_viridis_c(
         option = "inferno",
         begin = 0.1,
@@ -329,13 +352,15 @@ bb_var_umap <- function(obj,
       plot <- plot +
         ggplot2::scale_fill_viridis_d(begin = 0.1, end = 0.9) +
         ggplot2::scale_color_viridis_d(begin = 0.1,
-                              end = 0.9,
-                              guide = "none")
+                                       end = 0.9,
+                                       guide = "none")
     } else if (length(palette) == 1 && palette == "rcolorbrewer") {
-      plot <- plot + ggplot2::scale_color_brewer(palette = "Paired", guide = "none") +
+      plot <-
+        plot + ggplot2::scale_color_brewer(palette = "Paired", guide = "none") +
         ggplot2::scale_fill_brewer(palette = "Paired")
     } else if (!is.null(palette)) {
-      plot <- plot + ggplot2::scale_color_manual(values = palette, guide = "none") +
+      plot <-
+        plot + ggplot2::scale_color_manual(values = palette, guide = "none") +
         ggplot2::scale_fill_manual(values = palette)
     } else {
       plot <- plot + ggplot2::scale_color_discrete(guide = "none") +
@@ -394,10 +419,59 @@ bb_var_umap <- function(obj,
     }
   }
 
+  if (show_trajectory_graph)
+    plot <- make_trajectory_graph(
+      g = plot,
+      cds = obj,
+      trajectory_graph_segment_size = trajectory_graph_segment_size,
+      trajectory_graph_color = trajectory_graph_color
+    )
+
+  if (label_principal_points)
+    plot <-
+    make_pp_labels(
+      g = plot,
+      cds = obj,
+      graph_label_size = graph_label_size,
+      trajectory_graph_segment_size = trajectory_graph_segment_size
+    )
+
+  if (label_roots)
+    plot <-
+    make_root_labels(
+      g = plot,
+      cds = obj,
+      trajectory_graph_segment_size = trajectory_graph_segment_size,
+      graph_label_size = graph_label_size
+    )
+
+  if (label_leaves)
+    plot <-
+    make_leaf_labels(
+      g = plot,
+      cds = obj,
+      trajectory_graph_segment_size = trajectory_graph_segment_size,
+      graph_label_size = graph_label_size
+    )
+
+  if (label_branch_points)
+    plot <-
+    make_branch_labels(
+      g = plot,
+      cds = obj,
+      graph_label_size = graph_label_size,
+      trajectory_graph_segment_size = trajectory_graph_segment_size
+    )
+
   # optionally rasterize the point layers
-  if (rasterize) plot <- ggrastr::rasterise(plot,
-                                            layers = "Point",
-                                            dpi = raster_dpi)
+  if (rasterize)
+    plot <- ggrastr::rasterise(plot,
+                               layers = "Point",
+                               dpi = raster_dpi)
+  # finally trim the plot
+  plot <- plot +
+    xlim(range(obj@int_colData@listData$reducedDims@listData$UMAP[, 1])) +
+    ylim(range(obj@int_colData@listData$reducedDims@listData$UMAP[, 2]))
 
   return(plot)
 }
@@ -423,7 +497,7 @@ get_hexcount <- function(data, x, y, n) {
   )
   hexdata_cells_counts <-
     tibble::tibble(hexcell = as.character(hexdata@cell),
-           local_n = hexdata@count)
+                   local_n = hexdata@count)
 
   data <-
     data |>
@@ -436,9 +510,12 @@ get_hexcount <- function(data, x, y, n) {
 #' @importFrom SingleCellExperiment reducedDims
 #' @importFrom tibble tibble
 get_cds_umap_dims <- function(obj) {
-  res <- tibble::tibble(cell_id = rownames(SingleCellExperiment::reducedDims(obj)$UMAP),
-                        UMAP_1 = SingleCellExperiment::reducedDims(obj)$UMAP[,1],
-                        UMAP_2 = SingleCellExperiment::reducedDims(obj)$UMAP[,2])
+  res <-
+    tibble::tibble(
+      cell_id = rownames(SingleCellExperiment::reducedDims(obj)$UMAP),
+      UMAP_1 = SingleCellExperiment::reducedDims(obj)$UMAP[, 1],
+      UMAP_2 = SingleCellExperiment::reducedDims(obj)$UMAP[, 2]
+    )
   return(res)
 }
 
@@ -448,9 +525,224 @@ get_seurat_umap_dims <- function(obj, assay) {
   SeuratObject::DefaultAssay(obj) <- assay
   mat <- obj[["umap"]]@cell.embeddings
   res <- tibble::tibble(cell_id = rownames(mat),
-                        UMAP_1 = mat[,1],
-                        UMAP_2 = mat[,2])
+                        UMAP_1 = mat[, 1],
+                        UMAP_2 = mat[, 2])
   return(res)
 }
 
 `%notin%` <- Negate(`%in%`)
+
+get_ica_space_df <- function(cds) {
+  mat <- t(cds@principal_graph_aux[["UMAP"]]$dp_mst)
+  tibble::tibble(
+    prin_graph_dim_1 = mat[, 1],
+    prin_graph_dim_2 = mat[, 2],
+    sample_name = rownames(mat),
+    sample_state = rownames(mat)
+  )
+}
+
+get_edge_df <- function(cds) {
+  ica_space_df <- get_ica_space_df(cds)
+  dp_mst <- cds@principal_graph[["UMAP"]]
+  edge_df <- dp_mst %>%
+    igraph::as_data_frame() %>%
+    dplyr::select(source = "from", target = "to") %>%
+    dplyr::left_join(
+      ica_space_df %>%
+        dplyr::select(
+          source = "sample_name",
+          source_prin_graph_dim_1 = "prin_graph_dim_1",
+          source_prin_graph_dim_2 = "prin_graph_dim_2"
+        ),
+      by = "source"
+    ) %>%
+    dplyr::left_join(
+      ica_space_df %>%
+        dplyr::select(
+          target = "sample_name",
+          target_prin_graph_dim_1 = "prin_graph_dim_1",
+          target_prin_graph_dim_2 = "prin_graph_dim_2"
+        ),
+      by = "target"
+    )
+  edge_df
+
+}
+
+
+make_trajectory_graph <-
+  function(g,
+           cds,
+           trajectory_graph_segment_size,
+           trajectory_graph_color) {
+    edge_df <- get_edge_df(cds)
+    g + geom_segment(
+      aes_string(
+        x = "source_prin_graph_dim_1",
+        y = "source_prin_graph_dim_2",
+        xend = "target_prin_graph_dim_1",
+        yend = "target_prin_graph_dim_2"
+      ),
+      size = trajectory_graph_segment_size,
+      color = I(trajectory_graph_color),
+      linetype = "solid",
+      na.rm = TRUE,
+      data = edge_df
+    )
+
+
+  }
+
+branch_nodes <- function(cds) {
+  g <- principal_graph(cds)[["UMAP"]]
+  branch_points <- which(igraph::degree(g) > 2)
+  branch_points <-
+    branch_points[branch_points %in% root_nodes(cds) == FALSE]
+  return(branch_points)
+}
+
+root_nodes <- function(cds) {
+  g <- principal_graph(cds)[["UMAP"]]
+  root_pr_nodes <-
+    which(names(igraph::V(g)) %in% cds@principal_graph_aux[["UMAP"]]$root_pr_nodes)
+  names(root_pr_nodes) <-
+    cds@principal_graph_aux[["UMAP"]]$root_pr_nodes
+  return(root_pr_nodes)
+}
+
+leaf_nodes <- function (cds) {
+  g <- principal_graph(cds)[["UMAP"]]
+  leaves <- which(igraph::degree(g) == 1)
+  leaves <- leaves[leaves %in% root_nodes(cds) == FALSE]
+  return(leaves)
+}
+
+make_pp_labels <-
+  function(g,
+           cds,
+           graph_label_size,
+           trajectory_graph_segment_size) {
+    ica_space_df <- get_ica_space_df(cds)
+    mst_branch_nodes <- branch_nodes(cds)
+    mst_leaf_nodes <- leaf_nodes(cds)
+    mst_root_nodes <- root_nodes(cds)
+    pps <- c(mst_branch_nodes, mst_leaf_nodes, mst_root_nodes)
+    princ_point_df <- ica_space_df %>%
+      dplyr::slice(match(names(pps), sample_name))
+
+    g +
+      geom_point(
+        aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+        shape = 21,
+        stroke = I(trajectory_graph_segment_size),
+        color = "white",
+        fill = "black",
+        size = I(graph_label_size * 1.5),
+        na.rm = TRUE,
+        princ_point_df
+      ) +
+      ggrepel::geom_text_repel(
+        aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+                   label = "sample_name"),
+        size = I(graph_label_size * 1.5),
+        color = "Black",
+        na.rm = TRUE,
+        princ_point_df
+      )
+
+  }
+
+make_branch_labels <- function(g,
+                               cds,
+                               graph_label_size,
+                               trajectory_graph_segment_size) {
+  ica_space_df <- get_ica_space_df(cds)
+  mst_branch_nodes <- branch_nodes(cds)
+  branch_point_df <- ica_space_df %>%
+    dplyr::slice(match(names(mst_branch_nodes), sample_name)) %>%
+    dplyr::mutate(branch_point_idx = seq_len(dplyr::n()))
+
+  g +
+    geom_point(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+      shape = 21,
+      stroke = I(trajectory_graph_segment_size),
+      color = "white",
+      fill = "black",
+      size = I(graph_label_size * 1.5),
+      na.rm = TRUE,
+      branch_point_df
+    ) +
+    geom_text(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+                 label = "branch_point_idx"),
+      size = I(graph_label_size),
+      color = "white",
+      na.rm = TRUE,
+      branch_point_df
+    )
+
+}
+make_leaf_labels <- function(g,
+                             cds,
+                             trajectory_graph_segment_size,
+                             graph_label_size) {
+  mst_leaf_nodes <- leaf_nodes(cds)
+  ica_space_df <- get_ica_space_df(cds)
+  leaf_df <- ica_space_df %>%
+    dplyr::slice(match(names(mst_leaf_nodes), sample_name)) %>%
+    dplyr::mutate(leaf_idx = seq_len(dplyr::n()))
+
+  g +
+    geom_point(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+      shape = 21,
+      stroke = I(trajectory_graph_segment_size),
+      color = "black",
+      fill = "lightgray",
+      size = I(graph_label_size * 1.5),
+      na.rm = TRUE,
+      leaf_df
+    ) +
+    geom_text(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+                 label = "leaf_idx"),
+      size = I(graph_label_size),
+      color = "black",
+      na.rm = TRUE,
+      leaf_df
+    )
+
+}
+
+make_root_labels <- function(g,
+                             cds,
+                             trajectory_graph_segment_size,
+                             graph_label_size) {
+  mst_root_nodes <- root_nodes(cds)
+  ica_space_df <- get_ica_space_df(cds)
+  root_df <- ica_space_df %>%
+    dplyr::slice(match(names(mst_root_nodes), sample_name)) %>%
+    dplyr::mutate(root_idx = seq_len(dplyr::n()))
+
+  g +
+    geom_point(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+      shape = 21,
+      stroke = I(trajectory_graph_segment_size),
+      color = "black",
+      fill = "white",
+      size = I(graph_label_size * 1.5),
+      na.rm = TRUE,
+      root_df
+    ) +
+    geom_text(
+      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+                 label = "root_idx"),
+      size = I(graph_label_size),
+      color = "black",
+      na.rm = TRUE,
+      root_df
+    )
+}
