@@ -30,12 +30,12 @@ bb_var_umap(
   show_trajectory_graph = FALSE,
   trajectory_graph_color = "grey28",
   trajectory_graph_segment_size = 0.75,
-  label_branch_points = FALSE,
-  label_roots = FALSE,
-  label_leaves = FALSE,
+  label_root_node = FALSE,
+  pseudotime_dim = var,
   label_principal_points = FALSE,
   graph_label_size = 2,
   cds = NULL,
+  test = TRUE,
   ...,
   man_text_df = NULL,
   text_geom = "text"
@@ -95,13 +95,9 @@ trajectory graph.}
 \item{trajectory_graph_segment_size}{The size of the line segments used for
 plotting the trajectory graph.}
 
-\item{label_branch_points}{Whether to plot a label for each branch point in
-the principal graph.}
+\item{label_root_node}{Logical; whether to label the root node for the selected pseudotime trajectory.  The function will requires that a valid pseudotime column be identified, usually as the value of the "var" argument in the form of "pseudotime_cluster_value".  If you wish to use var to color the cells in some other way, the pseudotime_dim argument needs to be supplied with the correct pseudotime dimension to pick the root node from.}
 
-\item{label_roots}{Whether to plot a label for each root in the principal
-graph.}
-
-\item{label_leaves}{Whether to plot a label for each leaf node in the principal graph.}
+\item{pseudotime_dim}{An alternative column to pick the pseudoetime root node from, if not supplied to var.}
 
 \item{label_principal_points}{Logical indicating whether to label roots,
 leaves, and branch points with principal point names. This is useful for

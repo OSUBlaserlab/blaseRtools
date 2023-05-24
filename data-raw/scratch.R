@@ -7,11 +7,16 @@ pseudotime_cds_1 <-
     cluster_value = "1",
     calculate_pseudotime = TRUE
   )
-pseudotime_cds_1 <- bb_pseudotime(pseudotime_cds_1,
-                                  cluster_variable = "leiden",
-                                  cluster_value = "2")
 
-bb_cellmeta(pseudotime_cds_1) |> glimpse()
+pseudotime_cds_1 <-
+  bb_pseudotime(
+    pseudotime_cds_1,
+    cluster_variable = "leiden",
+    cluster_value = "2",
+    calculate_pseudotime = TRUE
+  )
+
+
 bb_var_umap(pseudotime_cds_1, "leiden", overwrite_labels = TRUE)
 bb_var_umap(pseudotime_cds_1,
             "pseudotime_leiden_2",
@@ -19,9 +24,24 @@ bb_var_umap(pseudotime_cds_1,
             trajectory_graph_color = "red",
             trajectory_graph_segment_size = 2,
             label_principal_points = FALSE,
-            label_roots = TRUE,
-            label_leaves = FALSE,
-            label_branch_points = TRUE)
+            label_root_node = TRUE)
+bb_var_umap(pseudotime_cds_1,
+            "pseudotime_leiden_1",
+            show_trajectory_graph = TRUE,
+            trajectory_graph_color = "red",
+            trajectory_graph_segment_size = 2,
+            label_principal_points = FALSE,
+            label_root_node = TRUE)
+bb_var_umap(pseudotime_cds_1,
+            "leiden",
+            pseudotime_dim = "pseudotime_leiden_1",
+            show_trajectory_graph = TRUE,
+            trajectory_graph_color = "red",
+            trajectory_graph_segment_size = 2,
+            label_principal_points = TRUE,
+            label_root_node = TRUE)
+
+
 bb_var_umap(filtered,
             "pseudotime_leiden_1",
             show_trajectory_graph = TRUE,

@@ -31,14 +31,11 @@
 #' @param trajectory_graph_segment_size The size of the line segments used for
 #'   plotting the trajectory graph.
 #' @param graph_label_size How large to make the branch, root, and leaf labels.
+#' @param label_root_node Logical; whether to label the root node for the selected pseudotime trajectory.  The function will requires that a valid pseudotime column be identified, usually as the value of the "var" argument in the form of "pseudotime_cluster_value".  If you wish to use var to color the cells in some other way, the pseudotime_dim argument needs to be supplied with the correct pseudotime dimension to pick the root node from.
+#' @param pseudotime_dim An alternative column to pick the pseudoetime root node from, if not supplied to var.
 #' @param label_principal_points Logical indicating whether to label roots,
 #'   leaves, and branch points with principal point names. This is useful for
 #'   order_cells and choose_graph_segments in non-interactive mode.
-#' @param label_branch_points Whether to plot a label for each branch point in
-#'   the principal graph.
-#' @param label_roots Whether to plot a label for each root in the principal
-#'   graph.
-#' @param label_leaves Whether to plot a label for each leaf node in the principal graph.
 #' @param cds Provided for backward compatibility with prior versions.  If a value is supplied, a warning will be emitted and the value will be transferred to the obj argument, Default: NULL
 #' @return a ggplot
 #' @rdname bb_var_umap
@@ -74,12 +71,12 @@ bb_var_umap <- function(obj,
                         show_trajectory_graph = FALSE,
                         trajectory_graph_color = "grey28",
                         trajectory_graph_segment_size = 0.75,
-                        label_branch_points = FALSE,
-                        label_roots = FALSE,
-                        label_leaves = FALSE,
+                        label_root_node = FALSE,
+                        pseudotime_dim = var,
                         label_principal_points = FALSE,
                         graph_label_size = 2,
                         cds = NULL,
+                        test = TRUE,
                         ...,
                         man_text_df = NULL,
                         text_geom = "text") {
@@ -436,32 +433,50 @@ bb_var_umap <- function(obj,
       trajectory_graph_segment_size = trajectory_graph_segment_size
     )
 
-  if (label_roots)
-    plot <-
-    make_root_labels(
-      g = plot,
-      cds = obj,
-      trajectory_graph_segment_size = trajectory_graph_segment_size,
-      graph_label_size = graph_label_size
-    )
+  if (label_root_node) {
+    # check if we have a valid pseudotime dimension
+    if (stringr::str_detect(pseudotime_dim, "pseudotime.*", negate = TRUE))
+      cli::cli_abort("You must provide a valid pseudotime dimension to identify the root node.")
+    if (!is.numeric(SummarizedExperiment::colData(obj)[[pseudotime_dim]]))
+      cli::cli_abort("You must provide a valid pseudotime dimension to identify the root node.")
+    if (min(SummarizedExperiment::colData(obj)[[pseudotime_dim]]) != 0)
+      cli::cli_abort("You must provide a valid pseudotime dimension to identify the root node.")
+    plot <- make_root_node_labels(g = plot,
+                                  cds = obj,
+                                  pseudotime_dim = pseudotime_dim,
+                                  trajectory_graph_segment_size = trajectory_graph_segment_size,
+                                  graph_label_size = graph_label_size)
 
-  if (label_leaves)
-    plot <-
-    make_leaf_labels(
-      g = plot,
-      cds = obj,
-      trajectory_graph_segment_size = trajectory_graph_segment_size,
-      graph_label_size = graph_label_size
-    )
 
-  if (label_branch_points)
-    plot <-
-    make_branch_labels(
-      g = plot,
-      cds = obj,
-      graph_label_size = graph_label_size,
-      trajectory_graph_segment_size = trajectory_graph_segment_size
-    )
+  }
+
+
+  # if (label_roots)
+  #   plot <-
+  #   make_root_labels(
+  #     g = plot,
+  #     cds = obj,
+  #     trajectory_graph_segment_size = trajectory_graph_segment_size,
+  #     graph_label_size = graph_label_size
+  #   )
+
+  # if (label_leaves)
+  #   plot <-
+  #   make_leaf_labels(
+  #     g = plot,
+  #     cds = obj,
+  #     trajectory_graph_segment_size = trajectory_graph_segment_size,
+  #     graph_label_size = graph_label_size
+  #   )
+
+  # if (label_branch_points)
+  #   plot <-
+  #   make_branch_labels(
+  #     g = plot,
+  #     cds = obj,
+  #     graph_label_size = graph_label_size,
+  #     trajectory_graph_segment_size = trajectory_graph_segment_size
+  #   )
 
   # optionally rasterize the point layers
   if (rasterize)
@@ -653,78 +668,126 @@ make_pp_labels <-
 
   }
 
-make_branch_labels <- function(g,
-                               cds,
-                               graph_label_size,
-                               trajectory_graph_segment_size) {
+
+
+
+
+
+
+
+
+
+# make_branch_labels <- function(g,
+#                                cds,
+#                                graph_label_size,
+#                                trajectory_graph_segment_size) {
+#   ica_space_df <- get_ica_space_df(cds)
+#   mst_branch_nodes <- branch_nodes(cds)
+#   branch_point_df <- ica_space_df %>%
+#     dplyr::slice(match(names(mst_branch_nodes), sample_name)) %>%
+#     dplyr::mutate(branch_point_idx = seq_len(dplyr::n()))
+#
+#   g +
+#     geom_point(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+#       shape = 21,
+#       stroke = I(trajectory_graph_segment_size),
+#       color = "white",
+#       fill = "black",
+#       size = I(graph_label_size * 1.5),
+#       na.rm = TRUE,
+#       branch_point_df
+#     ) +
+#     geom_text(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+#                  label = "branch_point_idx"),
+#       size = I(graph_label_size),
+#       color = "white",
+#       na.rm = TRUE,
+#       branch_point_df
+#     )
+#
+# }
+# make_leaf_labels <- function(g,
+#                              cds,
+#                              trajectory_graph_segment_size,
+#                              graph_label_size) {
+#   mst_leaf_nodes <- leaf_nodes(cds)
+#   ica_space_df <- get_ica_space_df(cds)
+#   leaf_df <- ica_space_df %>%
+#     dplyr::slice(match(names(mst_leaf_nodes), sample_name)) %>%
+#     dplyr::mutate(leaf_idx = seq_len(dplyr::n()))
+#
+#   g +
+#     geom_point(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+#       shape = 21,
+#       stroke = I(trajectory_graph_segment_size),
+#       color = "black",
+#       fill = "lightgray",
+#       size = I(graph_label_size * 1.5),
+#       na.rm = TRUE,
+#       leaf_df
+#     ) +
+#     geom_text(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+#                  label = "leaf_idx"),
+#       size = I(graph_label_size),
+#       color = "black",
+#       na.rm = TRUE,
+#       leaf_df
+#     )
+#
+# }
+
+# make_root_labels <- function(g,
+#                              cds,
+#                              trajectory_graph_segment_size,
+#                              graph_label_size) {
+#   mst_root_nodes <- root_nodes(cds)
+#   ica_space_df <- get_ica_space_df(cds)
+#   root_df <- ica_space_df %>%
+#     dplyr::slice(match(names(mst_root_nodes), sample_name)) %>%
+#     dplyr::mutate(root_idx = seq_len(dplyr::n()))
+#
+#   g +
+#     geom_point(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
+#       shape = 21,
+#       stroke = I(trajectory_graph_segment_size),
+#       color = "black",
+#       fill = "white",
+#       size = I(graph_label_size * 1.5),
+#       na.rm = TRUE,
+#       root_df
+#     ) +
+#     geom_text(
+#       aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
+#                  label = "root_idx"),
+#       size = I(graph_label_size),
+#       color = "black",
+#       na.rm = TRUE,
+#       root_df
+#     )
+# }
+
+make_root_node_labels <- function(g,
+                                  cds,
+                                  pseudotime_dim,
+                                  trajectory_graph_segment_size,
+                                  graph_label_size) {
+  zero_cell <- bb_cellmeta(cds) |>
+    dplyr::filter(!!sym(pseudotime_dim) == 0) |>
+    dplyr::pull(cell_id)
+  if (length(zero_cell) > 1)
+    cli::cli_abort("Couldn't identify a single cell to label as root node.")
+  closest_pp <-
+    cds@principal_graph_aux$UMAP$pr_graph_cell_proj_closest_vertex[zero_cell, ] |> unname()
+  closest_pp <- paste0("Y_", closest_pp)
   ica_space_df <- get_ica_space_df(cds)
-  mst_branch_nodes <- branch_nodes(cds)
-  branch_point_df <- ica_space_df %>%
-    dplyr::slice(match(names(mst_branch_nodes), sample_name)) %>%
-    dplyr::mutate(branch_point_idx = seq_len(dplyr::n()))
-
-  g +
-    geom_point(
-      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
-      shape = 21,
-      stroke = I(trajectory_graph_segment_size),
-      color = "white",
-      fill = "black",
-      size = I(graph_label_size * 1.5),
-      na.rm = TRUE,
-      branch_point_df
-    ) +
-    geom_text(
-      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
-                 label = "branch_point_idx"),
-      size = I(graph_label_size),
-      color = "white",
-      na.rm = TRUE,
-      branch_point_df
-    )
-
-}
-make_leaf_labels <- function(g,
-                             cds,
-                             trajectory_graph_segment_size,
-                             graph_label_size) {
-  mst_leaf_nodes <- leaf_nodes(cds)
-  ica_space_df <- get_ica_space_df(cds)
-  leaf_df <- ica_space_df %>%
-    dplyr::slice(match(names(mst_leaf_nodes), sample_name)) %>%
-    dplyr::mutate(leaf_idx = seq_len(dplyr::n()))
-
-  g +
-    geom_point(
-      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2"),
-      shape = 21,
-      stroke = I(trajectory_graph_segment_size),
-      color = "black",
-      fill = "lightgray",
-      size = I(graph_label_size * 1.5),
-      na.rm = TRUE,
-      leaf_df
-    ) +
-    geom_text(
-      aes_string(x = "prin_graph_dim_1", y = "prin_graph_dim_2",
-                 label = "leaf_idx"),
-      size = I(graph_label_size),
-      color = "black",
-      na.rm = TRUE,
-      leaf_df
-    )
-
-}
-
-make_root_labels <- function(g,
-                             cds,
-                             trajectory_graph_segment_size,
-                             graph_label_size) {
-  mst_root_nodes <- root_nodes(cds)
-  ica_space_df <- get_ica_space_df(cds)
-  root_df <- ica_space_df %>%
-    dplyr::slice(match(names(mst_root_nodes), sample_name)) %>%
-    dplyr::mutate(root_idx = seq_len(dplyr::n()))
+  root_df <- ica_space_df |>
+    dplyr::filter(sample_name == closest_pp) |>
+    dplyr::mutate(root_idx = "1")
 
   g +
     geom_point(
