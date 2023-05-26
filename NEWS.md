@@ -309,3 +309,7 @@
 # blaseRtools 0.0.0.9137-8
 
 * pseuodime functions
+
+# blaseRtools 0.0.0.9139
+
+* added plot geens in pseudotime

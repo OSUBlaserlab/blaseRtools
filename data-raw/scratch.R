@@ -1,63 +1,13 @@
+blaseRtemplates::project_data(path = "~/network/X/Labs/Blaser/share/collaborators/lapalombella_pu_network/datapkg")
+bb_cellmeta(cds_WT_AML_bALL) |> glimpse()
+theme_set(theme_cowplot())
+bb_plot_genes_in_pseudotime(
+  cds = filter_cds(
+    cds_WT_AML_bALL,
+    cells = bb_cellmeta(cds_WT_AML_bALL) |> filter(leiden_best_consensus_all == "tusi_MPP")
+  ),
+  gene_or_genes = c("Kit", "Mpo"),
+  pseudotime_dim = "pseudotime_leiden_best_consensus_all_tusi_MPP", legend_title = "pseudotime", color_cells_by = "louvain"
+) + panel_border()
 
 
-pseudotime_cds_1 <-
-  bb_pseudotime(
-    vignette_cds,
-    cluster_variable = "leiden",
-    cluster_value = "1",
-    calculate_pseudotime = TRUE
-  )
-
-pseudotime_cds_1 <-
-  bb_pseudotime(
-    pseudotime_cds_1,
-    cluster_variable = "leiden",
-    cluster_value = "2",
-    calculate_pseudotime = TRUE
-  )
-
-
-bb_var_umap(pseudotime_cds_1, "leiden", overwrite_labels = TRUE)
-bb_var_umap(pseudotime_cds_1,
-            "pseudotime_leiden_2",
-            show_trajectory_graph = TRUE,
-            trajectory_graph_color = "red",
-            trajectory_graph_segment_size = 2,
-            label_principal_points = FALSE,
-            label_root_node = TRUE)
-bb_var_umap(pseudotime_cds_1,
-            "pseudotime_leiden_1",
-            show_trajectory_graph = TRUE,
-            trajectory_graph_color = "red",
-            trajectory_graph_segment_size = 2,
-            label_principal_points = FALSE,
-            label_root_node = TRUE)
-bb_var_umap(pseudotime_cds_1,
-            "leiden",
-            pseudotime_dim = "pseudotime_leiden_1",
-            show_trajectory_graph = TRUE,
-            trajectory_graph_color = "red",
-            trajectory_graph_segment_size = 2,
-            label_principal_points = TRUE,
-            label_root_node = TRUE)
-
-
-bb_var_umap(filtered,
-            "pseudotime_leiden_1",
-            show_trajectory_graph = TRUE,
-            trajectory_graph_color = "red",
-            trajectory_graph_segment_size = 2,
-            label_principal_points = FALSE,
-            label_roots = TRUE,
-            label_leaves = TRUE,
-            label_branch_points = TRUE)
-monocle3::plot_cells(pseudotime_cds_1, color_cells_by = "pseudotime", label_leaves = FALSE)
-
-
-filtered <- filter_cds(pseudotime_cds_1, cells = bb_cellmeta(pseudotime_cds_1) |> filter(leiden == "1"))
-
-bb_var_umap(filtered, "pseudotime_leiden_1", show_trajectory_graph = TRUE)
-
-str(filtered)
-filtered@int_colData@listData$reducedDims@listData$UMAP
-vignette_cds@int_colData@listData$reducedDims@listData$UMAP
