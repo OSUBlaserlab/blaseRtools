@@ -313,3 +313,7 @@
 # blaseRtools 0.0.0.9139
 
 * added plot geens in pseudotime
+
+# blaseRtools 0.0.0.9140
+
+* fixed transcriptome ape function

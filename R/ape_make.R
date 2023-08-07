@@ -130,90 +130,95 @@ bb_make_ape_genomic <-
 bb_make_ape_transcript <- function(query,
                                    transcriptome = c("hg38", "GRCz11")
                                    ) {
-  transcriptome <- match.arg(transcriptome)
-  if (transcriptome == "hg38") {
-    txdb <-
-      TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
-    genome <-
-      BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-    org <- org.Hs.eg.db::org.Hs.eg.db
-    species <- "Homo sapiens"
-  } else if (transcriptome == "GRCz11") {
-    txdb <- TxDb.Drerio.UCSC.danRer11.ensGene::TxDb.Drerio.UCSC.danRer11.ensGene
-    genome <-
-      BSgenome.Drerio.UCSC.danRer11::BSgenome.Drerio.UCSC.danRer11
-    org <- org.Dr.eg.db::org.Dr.eg.db
-    species <- "Danio rerio"
-  } else {
-    cli::cli_abort("You must choose either hg38 or GRCz11 genomes.")
-  }
-  gene_name <- get_transcript_genename(query, org, txdb)
-  transcripts <-
-    suppressWarnings(GenomicFeatures::exonsBy(txdb, by = "tx", use.names = TRUE))
-  transcript <- transcripts[query]
-  tx_seq <- GenomicFeatures::extractTranscriptSeqs(genome, transcript)
-  cdss <- suppressWarnings(GenomicFeatures::cdsBy(txdb, by = "tx", use.names = TRUE))
-  cds <- cdss[query]
-  cds_seq <- GenomicFeatures::extractTranscriptSeqs(genome, cds)
-  overlap <-
-    Biostrings::matchPattern(pattern = cds_seq[[1]], subject = tx_seq[[1]])
-  cds_grange <- GRanges(
-    seqnames = "ape_transcript",
-    ranges = IRanges(start = start(overlap),
-                     width = width(overlap)),
-    locus_tag = paste0(gene_name,"_cds"),
-    type = "cds",
-    fwdcolor = "#deebf7",
-    revcolor = "#deebf7"
-  )
-  utr_5_grange <- GRanges(
-    seqnames = "ape_transcript",
-    ranges = IRanges(start = 1,
-                     end = start(overlap) - 1),
-    locus_tag = paste0(gene_name, "_five_prime_UTR"),
-    type = "five_prime_UTR",
-    fwdcolor = "#9ecae1",
-    revcolor = "#9ecae1"
-  )
-  utr_3_grange <- GRanges(
-    seqnames = "ape_transcript",
-    ranges = IRanges(
-      start = start(overlap) +
-        width(overlap),
-      end = width(tx_seq)
-    ),
-    locus_tag = paste0(gene_name, "_three_prime_UTR"),
-    type = "three_prime_UTR",
-    fwdcolor = "#9ecae1",
-    revcolor = "#9ecae1"
-  )
-  tx_grange <- c(utr_5_grange, cds_grange, utr_3_grange)
-  seqs <- c(tx_seq, cds_seq)
-  names(seqs) <- c("cDNA", "cds")
-
-  ape_features <- granges_to_features(tx_grange)
-
-  ape_origin <- dnastring_to_origin(tx_seq)
-
-
-  comment_string <- make_transcript_comment(species,
-                                            transcriptome,
-                                            gene_name,
-                                            query)
-
-  locus_string <- make_locus_string(dna = seqs["cDNA"],
-                                    query = query)
-
-  ape_instance <- Ape(
-    LOCUS = locus_string,
-    COMMENT = comment_string,
-    FEATURES = ape_features,
-    ORIGIN = ape_origin,
-    dna_biostring = seqs,
-    granges = tx_grange#
-  )
-
-  return(ape_instance)
-
+    transcriptome <- match.arg(transcriptome)
+    if (transcriptome == "hg38") {
+      txdb <-
+        TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
+      genome <-
+        BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
+      org <- org.Hs.eg.db::org.Hs.eg.db
+      species <- "Homo sapiens"
+      keytype <- "ENTREZID"
+    }
+    else if (transcriptome == "GRCz11") {
+      txdb <-
+        TxDb.Drerio.UCSC.danRer11.ensGene::TxDb.Drerio.UCSC.danRer11.ensGene
+      genome <-
+        BSgenome.Drerio.UCSC.danRer11::BSgenome.Drerio.UCSC.danRer11
+      org <- org.Dr.eg.db::org.Dr.eg.db
+      species <- "Danio rerio"
+      keytype <- "ENSEMBL"
+    }
+    else {
+      cli::cli_abort("You must choose either hg38 or GRCz11 genomes.")
+    }
+    gene_name <- get_transcript_genename(query, org, txdb, keytype)
+    transcripts <- suppressWarnings(GenomicFeatures::exonsBy(txdb,
+                                                             by = "tx", use.names = TRUE))
+    transcript <- transcripts[query]
+    tx_seq <- GenomicFeatures::extractTranscriptSeqs(genome,
+                                                     transcript)
+    cdss <- suppressWarnings(GenomicFeatures::cdsBy(txdb, by = "tx",
+                                                    use.names = TRUE))
+    cds <- cdss[query]
+    cds_seq <- GenomicFeatures::extractTranscriptSeqs(genome,
+                                                      cds)
+    overlap <- Biostrings::matchPattern(pattern = cds_seq[[1]],
+                                        subject = tx_seq[[1]])
+    cds_grange <-
+      GRanges(
+        seqnames = "ape_transcript",
+        ranges = IRanges(start = start(overlap),
+                         width = width(overlap)),
+        locus_tag = paste0(gene_name,
+                           "_cds"),
+        type = "cds",
+        fwdcolor = "#deebf7",
+        revcolor = "#deebf7"
+      )
+    utr_5_grange <-
+      GRanges(
+        seqnames = "ape_transcript",
+        ranges = IRanges(start = 1,
+                         end = start(overlap) - 1),
+        locus_tag = paste0(gene_name,
+                           "_five_prime_UTR"),
+        type = "five_prime_UTR",
+        fwdcolor = "#9ecae1",
+        revcolor = "#9ecae1"
+      )
+    utr_3_grange <-
+      GRanges(
+        seqnames = "ape_transcript",
+        ranges = IRanges(
+          start = start(overlap) +
+            width(overlap),
+          end = width(tx_seq)
+        ),
+        locus_tag = paste0(gene_name,
+                           "_three_prime_UTR"),
+        type = "three_prime_UTR",
+        fwdcolor = "#9ecae1",
+        revcolor = "#9ecae1"
+      )
+    tx_grange <- c(utr_5_grange, cds_grange, utr_3_grange)
+    seqs <- c(tx_seq, cds_seq)
+    names(seqs) <- c("cDNA", "cds")
+    ape_features <- granges_to_features(tx_grange)
+    ape_origin <- dnastring_to_origin(tx_seq)
+    comment_string <- make_transcript_comment(species, transcriptome,
+                                              gene_name, query)
+    locus_string <-
+      make_locus_string(dna = seqs["cDNA"], query = query)
+    ape_instance <-
+      Ape(
+        LOCUS = locus_string,
+        COMMENT = comment_string,
+        FEATURES = ape_features,
+        ORIGIN = ape_origin,
+        dna_biostring = seqs,
+        granges = tx_grange
+      )
+    return(ape_instance)
 
 }

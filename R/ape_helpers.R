@@ -317,13 +317,14 @@ make_grange <-
 #' @importFrom AnnotationDbi select
 get_transcript_genename <- function(query, org, txdb) {
   gene_id <- AnnotationDbi::select(txdb,
-                        keytype = "TXNAME",
-                        keys = query,
-                        columns = "GENEID")
+                                   keytype = "TXNAME",
+                                   keys = query,
+                                   columns = "GENEID")
+  gene_id$GENEID <- str_remove(gene_id$GENEID, "\\..*")
   gene_name <- AnnotationDbi::select(org,
-                                      keytype = "ENTREZID",
-                                      columns = "SYMBOL",
-                                      keys = gene_id$GENEID)
+                                     keytype = keytype,
+                                     columns = "SYMBOL",
+                                     keys = gene_id$GENEID)
   return(gene_name$SYMBOL)
 
 }
