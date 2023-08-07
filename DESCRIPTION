@@ -97,7 +97,11 @@ Imports:
     edgeR,
     ggtext,
     speedglm,
-    hdf5r
+    hdf5r,
+    assertthat,
+    plyr,
+    igraph,
+    reshape2
 Depends: 
     tidyverse,
     blaseRdata,
