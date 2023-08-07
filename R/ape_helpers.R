@@ -315,7 +315,7 @@ make_grange <-
 
 
 #' @importFrom AnnotationDbi select
-get_transcript_genename <- function(query, org, txdb) {
+get_transcript_genename <- function(query, org, txdb, keytype) {
   gene_id <- AnnotationDbi::select(txdb,
                                    keytype = "TXNAME",
                                    keys = query,
