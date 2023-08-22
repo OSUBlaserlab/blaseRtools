@@ -35,7 +35,11 @@ bb_var_umap(
   label_principal_points = FALSE,
   graph_label_size = 2,
   cds = NULL,
-  test = TRUE,
+  outline_cluster = FALSE,
+  outline_color = "black",
+  outline_size = 1,
+  outline_type = "solid",
+  outline_alpha = 1,
   ...,
   man_text_df = NULL,
   text_geom = "text"

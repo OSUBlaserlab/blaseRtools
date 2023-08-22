@@ -76,7 +76,11 @@ bb_var_umap <- function(obj,
                         label_principal_points = FALSE,
                         graph_label_size = 2,
                         cds = NULL,
-                        test = TRUE,
+                        outline_cluster = FALSE,
+                        outline_color = "black",
+                        outline_size = 1,
+                        outline_type = "solid",
+                        outline_alpha = 1,
                         ...,
                         man_text_df = NULL,
                         text_geom = "text") {
@@ -383,25 +387,6 @@ bb_var_umap <- function(obj,
   plot <- plot +
     ggplot2::theme(legend.position = legend_pos)#+coord_fixed()
 
-  #option to overwrite labels
-  if (overwrite_labels == T && is.null(man_text_df)) {
-    plot <- plot +
-      ggplot2::theme(legend.position = "none") +
-      text_geom_repel(
-        data = text_df,
-        mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
-        size = group_label_size,
-        min.segment.length = 1
-      )
-  } else if (!is.null(man_text_df)) {
-    plot <- plot +
-      ggplot2::theme(legend.position = "none") +
-      text_geom(
-        data = text_df,
-        mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
-        size = group_label_size
-      )
-  }
   if (!is.null(facet_by)) {
     if (length(facet_by) == 1) {
       plot <- plot +
@@ -479,6 +464,37 @@ bb_var_umap <- function(obj,
   #   )
 
   # optionally rasterize the point layers
+  if (outline_cluster) {
+    plot <- plot + ggforce::geom_mark_hull(data = data_long,
+                                           color = outline_color,
+                                           size = outline_size,
+                                           linetype = outline_type,
+                                           alpha = outline_alpha,
+                                           expand = unit(0, "mm"),
+                                           radius = unit(0.1, "mm"),
+                                           aes(group = value,
+                                               x = UMAP_1,
+                                               y = UMAP_2))
+  }
+  #option to overwrite labels
+  if (overwrite_labels == T && is.null(man_text_df)) {
+    plot <- plot +
+      ggplot2::theme(legend.position = "none") +
+      text_geom_repel(
+        data = text_df,
+        mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
+        size = group_label_size,
+        min.segment.length = 1
+      )
+  } else if (!is.null(man_text_df)) {
+    plot <- plot +
+      ggplot2::theme(legend.position = "none") +
+      text_geom(
+        data = text_df,
+        mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
+        size = group_label_size
+      )
+  }
   if (rasterize)
     plot <- ggrastr::rasterise(plot,
                                layers = "Point",

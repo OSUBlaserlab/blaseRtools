@@ -314,6 +314,10 @@
 
 * added plot geens in pseudotime
 
-# blaseRtools 0.0.0.9140
+# blaseRtools 0.0.0.9140-1
 
 * fixed transcriptome ape function
+
+# blaseRtools 0.0.0.9142
+
+* added outline function to bb_var_umap
