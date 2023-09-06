@@ -56,7 +56,7 @@ bb_genebubbles <- function(obj,
       dplyr::select(cell_id, cell_grouping),
     experiment_type = e_t
   )
-  mat <- mat[rownames(mat) %in% ids,]
+  mat <- mat[rownames(mat) %in% ids, ]
   if (class(mat) == "numeric") {
     mat <- as.matrix(mat)
     colnames(mat) <- ids
@@ -73,7 +73,7 @@ bb_genebubbles <- function(obj,
     experiment_type = e_t,
     binary_min = expression_threshold
   )
-  bin_mat <- bin_mat[rownames(bin_mat) %in% ids,]
+  bin_mat <- bin_mat[rownames(bin_mat) %in% ids, ]
   if (class(bin_mat) == "numeric") {
     bin_mat <- as.matrix(bin_mat)
     colnames(bin_mat) <- ids
@@ -113,16 +113,21 @@ bb_genebubbles <- function(obj,
                     gene_short_name = factor(gene_short_name, levels = gene_order))
   }
 
-  if (group_ordering == "bicluster" && length(genes) > 1) {
-    plot_data <-
-      dplyr::mutate(plot_data, group = factor(group, levels = levels(bicluster_bubbles(mat)$groups)))
-  }
   # now join the cell metadata back on in case you want it later
   # return(list(plot_data, bb_cellmeta(obj)))
   group_meta <- bb_cellmeta(obj) |>
-    select(matches(paste0("^", c(cg, "cell_grouping"), "$"))) |>
+    select(matches(paste0("^", c(
+      cg, "cell_grouping"
+    ), "$"))) |>
     distinct()
-  plot_data <- left_join(plot_data, group_meta, by = c("group" = "cell_grouping"))
+  plot_data <-
+    left_join(plot_data, group_meta, by = c("group" = "cell_grouping"))
+
+  if (group_ordering == "bicluster") {
+    plot_data <-
+      dplyr::mutate(plot_data, group = factor(group, levels = levels(bicluster_bubbles(mat)$groups)))
+  }
+
 
   plot <-
     ggplot2::ggplot(
@@ -140,7 +145,11 @@ bb_genebubbles <- function(obj,
     ggplot2::labs(
       x = NULL,
       y = NULL,
-      color = ifelse(experiment_type == "Antibody Capture", "Binding", "Expression"),
+      color = ifelse(
+        experiment_type == "Antibody Capture",
+        "Binding",
+        "Expression"
+      ),
       size = "Proportion"
     )
 

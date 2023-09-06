@@ -321,3 +321,7 @@
 # blaseRtools 0.0.0.9142
 
 * added outline function to bb_var_umap
+
+# blaseRtools 0.0.0.9143
+
+* fixed bug where factors got lost from bb_genebubbles
