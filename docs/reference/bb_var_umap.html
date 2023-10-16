@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9137</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9143</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,12 +84,16 @@
 <span>  show_trajectory_graph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  trajectory_graph_color <span class="op">=</span> <span class="st">"grey28"</span>,</span>
 <span>  trajectory_graph_segment_size <span class="op">=</span> <span class="fl">0.75</span>,</span>
-<span>  label_branch_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  label_roots <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  label_leaves <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label_root_node <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pseudotime_dim <span class="op">=</span> <span class="va">var</span>,</span>
 <span>  label_principal_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  graph_label_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  cds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  outline_cluster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  outline_color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  outline_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  outline_type <span class="op">=</span> <span class="st">"solid"</span>,</span>
+<span>  outline_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  man_text_df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  text_geom <span class="op">=</span> <span class="st">"text"</span></span>
@@ -201,18 +205,12 @@ trajectory graph.</p></dd>
 plotting the trajectory graph.</p></dd>
 
 
-<dt>label_branch_points</dt>
-<dd><p>Whether to plot a label for each branch point in
-the principal graph.</p></dd>
+<dt>label_root_node</dt>
+<dd><p>Logical; whether to label the root node for the selected pseudotime trajectory.  The function will requires that a valid pseudotime column be identified, usually as the value of the "var" argument in the form of "pseudotime_cluster_value".  If you wish to use var to color the cells in some other way, the pseudotime_dim argument needs to be supplied with the correct pseudotime dimension to pick the root node from.</p></dd>
 
 
-<dt>label_roots</dt>
-<dd><p>Whether to plot a label for each root in the principal
-graph.</p></dd>
-
-
-<dt>label_leaves</dt>
-<dd><p>Whether to plot a label for each leaf node in the principal graph.</p></dd>
+<dt>pseudotime_dim</dt>
+<dd><p>An alternative column to pick the pseudoetime root node from, if not supplied to var.</p></dd>
 
 
 <dt>label_principal_points</dt>

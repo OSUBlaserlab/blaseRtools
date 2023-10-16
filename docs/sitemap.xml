@@ -208,6 +208,9 @@
     <loc>/reference/bb_parseape.html</loc>
   </url>
   <url>
+    <loc>/reference/bb_plot_genes_in_pseudotime.html</loc>
+  </url>
+  <url>
     <loc>/reference/bb_plot_rowData_col.html</loc>
   </url>
   <url>
@@ -236,6 +239,9 @@
   </url>
   <url>
     <loc>/reference/bb_pseudobulk_mf.html</loc>
+  </url>
+  <url>
+    <loc>/reference/bb_pseudotime.html</loc>
   </url>
   <url>
     <loc>/reference/bb_qc.html</loc>

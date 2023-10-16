@@ -550,49 +550,45 @@ bb_gene_umap(vignette_cds,
 
 ## Gene Dotplots
 
-A more information-dense way to plot these data is as a gene dotplot.  This plot is less susceptible to misleading the reader because of overplotting.
+A more information-dense way to plot these data is as a gene dotplot, or "gene bubbles".  This plot is less susceptible to misleading the reader because of overplotting.
 
-As it currently stands, this function requires 2 or more genes to be plotted at the same time.  This is usally not a problem because the point of this type of plot is to show how gene expression differs between clusters.
-
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
-bb_gene_dotplot(vignette_cds, 
-                markers = c("CD3E", "CD14", "CD19"), 
-                group_cells_by = "leiden_assignment")
-```
-
-If run with default settings, this will order the genes and cell groups using a biclustering algorithm.  But you can also specify the order:
 
 ```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
-bb_gene_dotplot(vignette_cds, 
-                markers = c("CD3E", "CD14", "CD19"), 
-                group_cells_by = "leiden_assignment", 
-                gene_ordering = c("CD19", "CD14", "CD3E"),
-                group_ordering = c("T/NK", "DC/Mono", "B"))
+bb_genebubbles(vignette_cds,
+               genes = c("CD3E", "CD14", "CD19"), 
+               cell_grouping = "leiden_assignment")
+```
+
+If run with default settings, this will order the genes and cell groups using a biclustering algorithm.  This is not apparent on the plot above because of the small number of groups and genes.  But you can also specify the order:
+
+```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+bb_genebubbles(vignette_cds, 
+                genes = c("CD3E", "CD14", "CD19"), 
+                cell_grouping = "leiden_assignment", 
+                gene_ordering = c("as_supplied"),
+                group_ordering = c("as_supplied"))#will be alphabetical or by factor level
 
 ```
 
-This function also provides a way to group cells by 2 factors.  You specify which factors you want as plot facets and which as ticks on the X axis.  You have to provide a pretty verbose table in order to do this, but it is a useful feature.
+You can generate composite variables like so:
 
-```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
-cell_groupings <-
-  tribble(
-  ~aesthetic,~variable, ~value, ~level,
-  "facet","equipment", "chromium", 1,
-  "facet","equipment", "X", 2,
-  "axis", "leiden_assignment", "B", 1,
-  "axis", "leiden_assignment", "T/NK", 2,
-  "axis", "leiden_assignment", "DC/Mono", 3 
-  )
-    
+```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3.5}
+bb_genebubbles(vignette_cds, 
+                genes = c("CD3E", "CD14", "CD19"), 
+                cell_grouping = c("leiden_assignment", "louvain")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
-bb_gene_dotplot(vignette_cds, 
-                markers = c("CD3E", "CD14", "CD19"), 
-                group_cells_by = "multifactorial", 
-                gene_ordering = c("CD19", "CD14", "CD3E"),
-                group_ordering = cell_groupings)
 ```
 
-These are simple ggplots which can be altered as usual.  We also provide parameters to modify legend titles internally if desired.
+For more complicated figures, you can return a tibble and make the plot on your own:
+
+```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3.5}
+bb_genebubbles(vignette_cds, 
+               genes = c("CD3E", "CD14", "CD19"), 
+               cell_grouping = c("leiden_assignment", "louvain"),
+               return_value = "data")
+
+```
 
 ## Differential Gene Expression
 

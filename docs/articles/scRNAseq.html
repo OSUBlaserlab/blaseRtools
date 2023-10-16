@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9136</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9143</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -926,52 +926,55 @@ column being ensembl cell id and the second being the gene grouping.</p>
 <div class="section level2">
 <h2 id="gene-dotplots">Gene Dotplots<a class="anchor" aria-label="anchor" href="#gene-dotplots"></a>
 </h2>
-<p>A more information-dense way to plot these data is as a gene dotplot.
-This plot is less susceptible to misleading the reader because of
-overplotting.</p>
-<p>As it currently stands, this function requires 2 or more genes to be
-plotted at the same time. This is usally not a problem because the point
-of this type of plot is to show how gene expression differs between
-clusters.</p>
+<p>A more information-dense way to plot these data is as a gene dotplot,
+or “gene bubbles”. This plot is less susceptible to misleading the
+reader because of overplotting.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_gene_dotplot.html">bb_gene_dotplot</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
-<span>                markers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
-<span>                group_cells_by <span class="op">=</span> <span class="st">"leiden_assignment"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_genebubbles.html">bb_genebubbles</a></span><span class="op">(</span><span class="va">vignette_cds</span>,</span>
+<span>               genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
+<span>               cell_grouping <span class="op">=</span> <span class="st">"leiden_assignment"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="scRNAseq_files/figure-html/unnamed-chunk-42-1.png" width="432" style="display: block; margin: auto;"></p>
 <p>If run with default settings, this will order the genes and cell
-groups using a biclustering algorithm. But you can also specify the
-order:</p>
+groups using a biclustering algorithm. This is not apparent on the plot
+above because of the small number of groups and genes. But you can also
+specify the order:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_gene_dotplot.html">bb_gene_dotplot</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
-<span>                markers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
-<span>                group_cells_by <span class="op">=</span> <span class="st">"leiden_assignment"</span>, </span>
-<span>                gene_ordering <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD19"</span>, <span class="st">"CD14"</span>, <span class="st">"CD3E"</span><span class="op">)</span>,</span>
-<span>                group_ordering <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"T/NK"</span>, <span class="st">"DC/Mono"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_genebubbles.html">bb_genebubbles</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
+<span>                genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
+<span>                cell_grouping <span class="op">=</span> <span class="st">"leiden_assignment"</span>, </span>
+<span>                gene_ordering <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"as_supplied"</span><span class="op">)</span>,</span>
+<span>                group_ordering <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"as_supplied"</span><span class="op">)</span><span class="op">)</span><span class="co">#will be alphabetical or by factor level</span></span></code></pre></div>
 <p><img src="scRNAseq_files/figure-html/unnamed-chunk-43-1.png" width="432" style="display: block; margin: auto;"></p>
-<p>This function also provides a way to group cells by 2 factors. You
-specify which factors you want as plot facets and which as ticks on the
-X axis. You have to provide a pretty verbose table in order to do this,
-but it is a useful feature.</p>
+<p>You can generate composite variables like so:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cell_groupings</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
-<span>  <span class="op">~</span><span class="va">aesthetic</span>,<span class="op">~</span><span class="va">variable</span>, <span class="op">~</span><span class="va">value</span>, <span class="op">~</span><span class="va">level</span>,</span>
-<span>  <span class="st">"facet"</span>,<span class="st">"equipment"</span>, <span class="st">"chromium"</span>, <span class="fl">1</span>,</span>
-<span>  <span class="st">"facet"</span>,<span class="st">"equipment"</span>, <span class="st">"X"</span>, <span class="fl">2</span>,</span>
-<span>  <span class="st">"axis"</span>, <span class="st">"leiden_assignment"</span>, <span class="st">"B"</span>, <span class="fl">1</span>,</span>
-<span>  <span class="st">"axis"</span>, <span class="st">"leiden_assignment"</span>, <span class="st">"T/NK"</span>, <span class="fl">2</span>,</span>
-<span>  <span class="st">"axis"</span>, <span class="st">"leiden_assignment"</span>, <span class="st">"DC/Mono"</span>, <span class="fl">3</span> </span>
-<span>  <span class="op">)</span></span>
-<span>    </span>
-<span></span>
-<span><span class="fu"><a href="../reference/bb_gene_dotplot.html">bb_gene_dotplot</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
-<span>                markers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
-<span>                group_cells_by <span class="op">=</span> <span class="st">"multifactorial"</span>, </span>
-<span>                gene_ordering <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD19"</span>, <span class="st">"CD14"</span>, <span class="st">"CD3E"</span><span class="op">)</span>,</span>
-<span>                group_ordering <span class="op">=</span> <span class="va">cell_groupings</span><span class="op">)</span></span></code></pre></div>
-<p><img src="scRNAseq_files/figure-html/unnamed-chunk-44-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>These are simple ggplots which can be altered as usual. We also
-provide parameters to modify legend titles internally if desired.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_genebubbles.html">bb_genebubbles</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
+<span>                genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
+<span>                cell_grouping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"leiden_assignment"</span>, <span class="st">"louvain"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="scRNAseq_files/figure-html/unnamed-chunk-44-1.png" width="720" style="display: block; margin: auto;"></p>
+<p>For more complicated figures, you can return a tibble and make the
+plot on your own:</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bb_genebubbles.html">bb_genebubbles</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
+<span>               genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3E"</span>, <span class="st">"CD14"</span>, <span class="st">"CD19"</span><span class="op">)</span>, </span>
+<span>               cell_grouping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"leiden_assignment"</span>, <span class="st">"louvain"</span><span class="op">)</span>,</span>
+<span>               return_value <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 54 × 13</span></span></span>
+<span><span class="co">#&gt;    group feature_id expression proportion id    gene_short_name data_type module</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> B_10  ENSG00000…    -<span style="color: #BB0000;">0.806</span>      0.090<span style="text-decoration: underline;">9</span> ENSG… CD14            Gene Exp… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> B_10  ENSG00000…    -<span style="color: #BB0000;">0.669</span>      0.127  ENSG… CD3E            Gene Exp… 2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> B_10  ENSG00000…     2.38       0.436  ENSG… CD19            Gene Exp… 3     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> B_14  ENSG00000…    -<span style="color: #BB0000;">0.804</span>      0.074<span style="text-decoration: underline;">1</span> ENSG… CD14            Gene Exp… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> B_14  ENSG00000…    -<span style="color: #BB0000;">0.699</span>      0.074<span style="text-decoration: underline;">1</span> ENSG… CD3E            Gene Exp… 2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> B_14  ENSG00000…     3.08       0.463  ENSG… CD19            Gene Exp… 3     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> DC/M… ENSG00000…    -<span style="color: #BB0000;">0.087</span><span style="color: #BB0000; text-decoration: underline;">6</span>     0.619  ENSG… CD14            Gene Exp… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> DC/M… ENSG00000…    -<span style="color: #BB0000;">0.764</span>      0.047<span style="text-decoration: underline;">6</span> ENSG… CD3E            Gene Exp… 2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> DC/M… ENSG00000…    -<span style="color: #BB0000;">0.355</span>      0      ENSG… CD19            Gene Exp… 3     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> DC/M… ENSG00000…     1.51       1      ENSG… CD14            Gene Exp… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 44 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: module_labeled &lt;fct&gt;, supermodule &lt;fct&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   supermodule_labeled &lt;fct&gt;, leiden_assignment &lt;fct&gt;, louvain &lt;fct&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="differential-gene-expression">Differential Gene Expression<a class="anchor" aria-label="anchor" href="#differential-gene-expression"></a>
@@ -1041,7 +1044,7 @@ covariates that you wish to include in the design. In the example CDS we
 are working with, “sample” identifies the biological replicates and
 “leiden_assignment” identifies the cell groups we wish to compare. There
 are no other non-redundant sample variables.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vignette_exp_design</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="../reference/bb_cellmeta.html">bb_cellmeta</a></span><span class="op">(</span><span class="va">vignette_cds</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">leiden_assignment</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1061,14 +1064,14 @@ are no other non-redundant sample variables.</p>
 it represents a group of cells from either a biologically distinct
 sample or cell cluster. For this simple comparison, we are now ready to
 run the pseudobulk function.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vignette_pseudobulk_res</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/bb_pseudobulk_mf.html">bb_pseudobulk_mf</a></span><span class="op">(</span>cds <span class="op">=</span> <span class="va">vignette_cds</span>,</span>
 <span>                   pseudosample_table <span class="op">=</span> <span class="va">vignette_exp_design</span>, </span>
 <span>                   design_formula <span class="op">=</span> <span class="st">"~ leiden_assignment"</span>,</span>
 <span>                   result_recipe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"leiden_assignment"</span>, <span class="st">"T/NK"</span>, <span class="st">"DC/Mono"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now explore the result:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Detailed column headers for the results tables.</span></span>
 <span><span class="va">vignette_pseudobulk_res</span><span class="op">$</span><span class="va">Header</span> </span>
 <span><span class="co">#&gt; [1] "mean of normalized counts for all samples"                </span></span>
@@ -1077,7 +1080,7 @@ run the pseudobulk function.</p>
 <span><span class="co">#&gt; [4] "Wald statistic: leiden_assignment T_NK vs DC_Mono"        </span></span>
 <span><span class="co">#&gt; [5] "Wald test p-value: leiden_assignment T_NK vs DC_Mono"     </span></span>
 <span><span class="co">#&gt; [6] "BH adjusted p-values"</span></span></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Differential expression results.  Positive L2FC indicates up in T/NK vs DC/Mono</span></span>
 <span></span>
 <span><span class="va">vignette_pseudobulk_res</span><span class="op">$</span><span class="va">Result</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1161,7 +1164,7 @@ similar to DESeq2 which we ahve already used.</p>
 <p>The blaseRtools package has a function that wraps the multivariate
 regression function from <em>monocle3</em> and add some minor
 functionality.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vignette_regression_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_monocle_regression.html">bb_monocle_regression</a></span><span class="op">(</span>cds <span class="op">=</span> <span class="va">vignette_cds</span>, </span>
 <span>                      gene_or_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD19"</span>, <span class="st">"CD3D"</span>, <span class="st">"CD14"</span><span class="op">)</span>, </span>
 <span>                      form <span class="op">=</span> <span class="st">"~leiden_assignment"</span><span class="op">)</span></span>
@@ -1181,7 +1184,7 @@ functionality.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: q_value &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>If you look at the term column you can see the comparisons being
 made:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vignette_regression_res</span><span class="op">$</span><span class="va">term</span></span>
 <span><span class="co">#&gt; [1] "leiden_assignmentDC/Mono"        "leiden_assignmentB"             </span></span>
 <span><span class="co">#&gt; [3] "stats::offset(log(Size_Factor))" "leiden_assignmentDC/Mono"       </span></span>
