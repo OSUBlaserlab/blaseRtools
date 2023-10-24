@@ -1,0 +1,41 @@
+---
+title: "Blinding Images"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{blinding}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+
+Objective analysis of imaging data by human observers is always important.  In many cases, the file name or order within a directory will reveal critical information about the experimental group the image belongs to, which can be a source of bias.
+
+To address this, you can use the two functions demonstrated in this vignette to blind and unblind images.
+
+## Prerequisites
+
+1.  All files for a set of imaging data to be analyzed should be in the same directory.
+2.  Information about experimental group assignment should not be detectable on the same image that is being scored.  For example, if you are using green hearts for group assignment and scoring green cells in the tail, you should crop those areas into their own files in a preliminary step and then blind and score them separately.
+
+## Usage
+
+1.  Start by running bb_blind_images.  You identify an analysis file.  This should have one line per sample you want to blind and one column identifying the paths to the images you want to blind.  In addition, it should have all of the other important identifying information you want about the sample.
+2.  You identify an output directory to hold the blinded images.  This will be created with a timestamp appended to the directory name.
+3.  R will copy all of the files from their original location to the new directory for blinding.  They will all go into the same directory for blinding, no matter where they come from.
+4.  R will generate a new name for the file based on a hash of the original file location (not a hash of the file itself).  
+5.  R will generate two new files and put them in the blinded directory.  One is "scoresheet.csv" and the other is "blinding_key.csv".  
+6.  You score each of the images in whatever way makes the most sense (quantiative, semi-quantitative etc.) and add these values to a new column on the scoresheet.  Do not open the blinding key.
+7.  When you are done, run bb_unblind.  You identify the directory with the scoresheet and blinding key (similar to what was provided to bb_blind images, but with a timestamp).  You also supply the original analysis file and the column on this file with the paths to the original images you blinded.
+8.  R will join the blinding key and the score sheet to generate a new csv file with the unblinded data.  
+9.  Finally, R will rejoin the unblinded data to the analysis file and return that to the R session.  This can be saved in a second step using write_csv or similar.  Importantly, bb_unblind will not overwrite the original analysis file on its own.  You can do that if you wish with write_csv.
+
+

@@ -325,3 +325,8 @@
 # blaseRtools 0.0.0.9143
 
 * fixed bug where factors got lost from bb_genebubbles
+
+# blaseRtools 0.0.0.9144
+
+* updated blind and unblind functions to use fs::path
+* added blinding vignette

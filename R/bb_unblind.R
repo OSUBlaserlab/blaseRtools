@@ -8,19 +8,19 @@
 #' @param file_column The column in analysis_file containing file paths for the files that were blinded.
 #' @return nothing
 #' @export
-#' @import tidyverse
+#' @import tidyverse fs
 bb_unblind_images <-
   function(directory,
            keyfile = "blinding_key.csv",
            scorefile = "scoresheet.csv",
            analysis_file,
            file_column)  {
-    key <- read_csv(paste0(directory, "/", keyfile))
-    scores <- read_csv(paste0(directory, "/", scorefile))
+    key <- read_csv(fs::path(directory, keyfile))
+    scores <- read_csv(fs::path(directory, scorefile))
     res <- left_join(key,
                      scores) %>%
       arrange(source_file)
-    write_csv(res, file = paste0(directory, "/unblinded_result.csv"))
+    write_csv(res, file = fs::path(directory, "unblinded_result.csv"))
     analysis_file <-
       read_csv(analysis_file)  %>%
       mutate(across(contains(file_column), bb_fix_file_path)) %>%
