@@ -6,23 +6,29 @@
 \usage{
 bb_plot_trace_data(
   trace,
-  yvar = "score",
-  facet_var = NULL,
-  colvar = NULL,
-  pal = NULL
+  yvar = "coverage",
+  yvar_label = "Coverage",
+  facet_var = "group",
+  color_var = "group",
+  pal = NULL,
+  legend_pos = "none"
 )
 }
 \arguments{
 \item{trace}{A Trace object}
 
-\item{yvar}{The variable that will become the Y axis.  Defaults to "score".}
+\item{yvar}{The trace_data metadata variable that will become the y axis.  Defaults to "coverage".  Must be numeric.}
 
-\item{facet_var}{The variable describing data facets.  Each will be placed as a separate horizontal track with the value printed to the left. Optional but recommended.}
+\item{yvar_label}{The y-axis label for the coverage track.  Defaults to "Coverage".}
 
-\item{colvar}{The variable to color traces by.  Optional but recommended.}
+\item{facet_var}{The trace_data metadata variable describing data facets.  Each will be placed as a separate horizontal track with the value printed to the left. Optional but recommended.  Defaults to "group".}
+
+\item{color_var}{The variable to color groups of traces by.  Optional but recommended.  Defaults to "group".}
 
 \item{pal}{A color palette.  Can also be added after the fact.}
+
+\item{legend_pos}{Color legend position. Can also be added after the fact.  Defaults to "none".}
 }
 \description{
-A function to generate a line plot from tracklike genomic data.
+A function to generate a line plot from tracklike genomic data.  This pulls data from the Trace object trace_data slot.  Check what numeric and categorical variables are available for plotting using Trace.data.
 }

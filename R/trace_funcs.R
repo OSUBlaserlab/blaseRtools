@@ -3,16 +3,26 @@
 #' @importFrom BiocGenerics as.data.frame
 #' @importFrom dplyr mutate filter
 buff_granges <- function(x, gen = NULL) {
-    std_chroms <-c(as.character(1:25), paste0("chr", 1:25), "X", "Y", "chrX", "chrY")
-    x_df <- as.data.frame(x) %>%
-      as_tibble() %>%
-      mutate(seqnames = as.character(seqnames)) %>%
-      filter(seqnames %in% std_chroms) %>%
-      mutate(seqnames = ifelse(str_detect(seqnames, "chr"), seqnames, paste0("chr", seqnames)))
+  std_chroms <-
+    c(as.character(1:25),
+      paste0("chr", 1:25),
+      "X",
+      "Y",
+      "chrX",
+      "chrY")
+  x_df <- as.data.frame(x) |>
+    as_tibble() |>
+    mutate(seqnames = as.character(seqnames)) |>
+    filter(seqnames %in% std_chroms) |>
+    mutate(seqnames = ifelse(
+      str_detect(seqnames, "chr"),
+      seqnames,
+      paste0("chr", seqnames)
+    ))
 
-    x <- makeGRangesFromDataFrame(x_df, keep.extra.columns = T)
-    genome(x) <- gen
-    return(x)
+  x <- makeGRangesFromDataFrame(x_df, keep.extra.columns = T)
+  genome(x) <- gen
+  return(x)
 }
 
 #' Clean Up Your GRanges Object
@@ -26,16 +36,26 @@ buff_granges <- function(x, gen = NULL) {
 #' @importFrom BiocGenerics as.data.frame
 #' @importFrom dplyr mutate filter
 bb_buff_granges <- function(x, gen) {
-    std_chroms <-c(as.character(1:25), paste0("chr", 1:25), "X", "Y", "chrX", "chrY")
-    x_df <- as.data.frame(x) %>%
-      as_tibble() %>%
-      mutate(seqnames = as.character(seqnames)) %>%
-      filter(seqnames %in% std_chroms) %>%
-      mutate(seqnames = ifelse(str_detect(seqnames, "chr"), seqnames, paste0("chr", seqnames)))
+  std_chroms <-
+    c(as.character(1:25),
+      paste0("chr", 1:25),
+      "X",
+      "Y",
+      "chrX",
+      "chrY")
+  x_df <- as.data.frame(x) |>
+    as_tibble() |>
+    mutate(seqnames = as.character(seqnames)) |>
+    filter(seqnames %in% std_chroms) |>
+    mutate(seqnames = ifelse(
+      str_detect(seqnames, "chr"),
+      seqnames,
+      paste0("chr", seqnames)
+    ))
 
-    x <- makeGRangesFromDataFrame(x_df, keep.extra.columns = T)
-    genome(x) <- gen
-    return(x)
+  x <- makeGRangesFromDataFrame(x_df, keep.extra.columns = T)
+  genome(x) <- gen
+  return(x)
 }
 
 #' @importFrom IRanges subsetByOverlaps
@@ -47,11 +67,11 @@ trim_and_drop_levels <- function(x, trim_to) {
 
 #' An S4 class to Hold Genome Track Data
 #'
-#' @description An instance of this class is created by calling "bb_makeTrace".  All slots in this object are coerced to GRanges objects.  It is easiest to have everything start in UCSC-formated GRanges format but this is not necessary.  Validation checks will make sure data, features, links, and gene models all are bound by the same plot range on the same chromosome of the same genome.  Currently hg38 and danRer11 are the supported genomes.  Use this class to plot coverage tracks from ATAC or similar experiments.  Link plotting is available for cicero-style links.
+#' @description An instance of this class is created by calling "bb_makeTrace".  All slots in this object are GRanges objects.  Validation checks will make sure data, peaks, links, and gene models all are bound by the same plot range on the same chromosome of the same genome.  This is different from the standard GRangesList object in that each slot can have it's own metadata columns.  Currently, hg38 and danRer11 are the supported genomes.  Use this class to plot coverage tracks from bulk or single cell ATAC, CHIP, or similar experiments.  Link plotting is available for cicero-style links.
 #'
-#' @slot trace_data A Granges object or a dataframe coercible to a GRanges object.  bb_makeTrace should be able to handle NCBI or UCSC formatting styles.  Data will be rewritten as the latter.  Trace data should have a metadata column for "score" or "coverage" intended to be plotted as a y-variable.  Trace data must be normalized and combined into a single GRanges or dataframe before loading.  A group variable should be included to annotate color and and facets in the final plotting.  Whole sample bigwig files can be converted to GRanges objects using import.bw from rtracklayer.  All track data is trimmed during import but pre-trimming to the approximate range desired will significantly speed up processing.
-#' @slot features A GRanges object containing features to plot in a track-style format.  This object should include a "type" column to enable plotting each type in its own track.  All features of a given type are plotted on the same line.
-#' @slot links A GRanges object with Cicero-style links.  Must be GRanges but can be in either NCBI or UCSC format.
+#' @slot trace_data A GRanges object with a metadata column for "score" or "coverage" intended to be plotted as a y-variable.  Metadata variables may be included to annotate color and and facets in the final plotting.  This is particularly important for single cell data or when combining bulk tracks from different samples.  Whole sample bigwig files can be converted to GRanges objects using import.bw from rtracklayer.  All track data is trimmed during import but pre-trimming to the approximate range desired will significantly speed up processing.  The plyranges package is recommended for granges manipulations such as filtering by chromosome, adding metadata and binding GRanges objects together.  Bulk tracks from different samples should be pre-normalized before importing.
+#' @slot peaks A GRanges object containing peaks to plot in a track-style format.
+#' @slot links A GRanges object with Cicero-style links.
 #' @slot gene_model The gene model for plotting.  Will be automatically generated by bb_makeTrace.
 #' @slot plot_range The master GRange for the whole object.  Validity checks and/or constructors ensure all other ranges are contained within.
 #' @import methods
@@ -61,7 +81,7 @@ Trace <- setClass(
   "Trace",
   slots = list(
     trace_data = "GRanges",
-    features = "GRanges",
+    peaks = "GRanges",
     links = "GRanges",
     gene_model = "GRanges",
     plot_range = "GRanges"
@@ -75,13 +95,18 @@ Trace <- setClass(
 setMethod("show",
           "Trace",
           function(object) {
-            cat(paste0("A Trace object from genome " ,
-                       genome(object@trace_data),
-                       ", sequence ",
-                       names(genome(object@trace_data))))
-            cat(paste0(".\n\nThe plot range is set to ",
-                start(object@plot_range), "-",
-                end(object@plot_range)), ".")
+            cat(paste0(
+              "A Trace object from genome " ,
+              genome(object@trace_data),
+              ", sequence ",
+              names(genome(object@trace_data))
+            ))
+            cat(paste0(
+              ".\n\nThe plot range is set to ",
+              start(object@plot_range),
+              "-",
+              end(object@plot_range)
+            ), ".")
           })
 
 # Validity Check
@@ -89,16 +114,16 @@ setMethod("show",
 setValidity("Trace", function(object) {
   if (genome(object@trace_data) %notin% c("danRer11", "hg38"))
     return("The trace data genome must be either danRer11 or hg38")
-  if (genome(object@trace_data) != genome(object@features))
-    return("The trace data and features genomes must match.")
+  if (genome(object@trace_data) != genome(object@peaks))
+    return("The trace data and peaks genomes must match.")
   if (genome(object@trace_data) != genome(object@links))
     return("The trace data and links genomes must match.")
   if (genome(object@trace_data) != genome(object@gene_model))
     return("The trace data and gene model genomes must match.")
   if (genome(object@trace_data) != genome(object@plot_range))
     return("The trace data and plot range genomes must match.")
-  if (levels(seqnames(object@trace_data)) != levels(seqnames(object@features)))
-    return("The trace data and features seqnames must match.")
+  if (levels(seqnames(object@trace_data)) != levels(seqnames(object@peaks)))
+    return("The trace data and peaks seqnames must match.")
   if (levels(seqnames(object@trace_data)) != levels(seqnames(object@links)))
     return("The trace data and links seqnames must match.")
   if (levels(seqnames(object@trace_data)) != levels(seqnames(object@gene_model)))
@@ -110,132 +135,162 @@ setValidity("Trace", function(object) {
 
 })
 
-#' Construct a Trace object from a Dataframe
+#' Construct a Trace object from a Signac Object or Granges object
 #'
-#' @description Use this function to create a trace object.  See details of the trace class for a complete description. Generally data can be in either NCBI or UCSC style.
+#' @description Problem 1:  Signac objects and GRanges made from bigwigs are large and it is computationally expensive to get data from them when tweaking plots.  Problem 2:  For the most part we like how Signac plots genomic coverage of track-like data and we would like to show bulk data in a similar way with a similar compuatational interface.  The trace object is a small intermediate object that holds the minimal amount of data you need to make a coverage plot showing accessibility or binding to a specific genomic region.  Then you can use the trace object to quickly and easily generate tracks as needed for your plot.  These tracks are all ggplots and are easy to configure for legible graphics.  There are options for displaying groups by color or facet which are built in with good graphical defaults.  If these are not suitable, they can be changed post hoc like any other ggplot.
 #'
-#' @param trace_data A GRanges object or dataframe coercible to a GRanges object.  Should have metadata columns for "score" or "coverage" and "group".
-#' @param startcol The dataframe column containing the start position.  Required only if trace_data is a dataframe.  Ignored if trace_data is a GRanges object.
-#' @param endcol The dataframe column containing the end position.  Required only if trace_data is a dataframe.  Ignored if trace_data is a GRanges object.
-#' @param genome The genome for the analysis.  Required.
-#' @param seqname The sequence name, generally chromosome number.  Not required if trace_data is a GRanges object.
-#' @param plot_range The bounding range for all slots in the object.  Everything will be trimmed to this range during generation of the object.  Can be shrunk after creation but not expanded.  There are three options for setting this:  1.  An explicit GRanges object can be provided.  2.  A valid gene name can be provided.  3.  Default:  the plot_range is set to match the initial range of the trace_data.  This last case will err if trace_data spans multiple chromosomes as is he case with unfiltered whole-sample bigwigs.
+#' @param obj A Signac/Seurat object or a GRanges object.  Import a bigwig file to a GRanges object using import.bw from rtracklayer.  Use plyranges functions to easily pre-filter the GRanges objec e.g. by chr to reduce processing time.  The precise range will be defined by gene_to_plot and the extend arguments.  You may wish to add grouping metadata columns and to merge several bulk tracks before importing.
+#' @param gene_to_plot The gene you want to display.  Must be a valid gene in the genome assembly being used.
+#' @param genome The genome assembly.  Required.  Must be either "hg38" or "danRer11".
 #' @param extend_left Bases to extend plot_range left, or upstream relative to the top strand.
 #' @param extend_right Bases to extend plot_range right, or downstream relative to the top strand.
-#' @param features A GRanges object with features to plot.  Should include a "type" metadata column for all feature types likely to be plotted.  Optional
-#' @param links A GRanges object with cicero-style gene links.  Optional
-#'
-#'
-#' @import GenomicRanges tidyverse blaseRdata
+#' @param peaks An optional GRanges object holding peak data.  Ignored for Signac/Seurat objects which carry this internally.
+#' @param bulk_group_col This parameter allows identification of a grouping variable in your bigwig/Granges object if you have added one.  One example is if you are adding multiple bulk tracks:  You can use this to plot the data in different colors or facets.  A new metadata column called "group" will be added to hold this.  If you haven't added grouping data in upstream processing, leave it NULL (default).  In this case the new group column will be filled with a single string (see bulk_group_id).  Will be ignored for Signac/Seurat objects.
+#' @param bulk_group_id The value you want to display with the track data on faceted plots when you haven't added any grouping information before making the object.  Defaults to "bulk" which is not a great choice.  Will be ignored for Signac/Seurat objects.
+#' @param bulk_coverage_col If you are making the object from a bigwig/GRanges, you need to identify which column in your bigwig/GRanges object holds the coverage data to plot on the y axis.  Defaults to "score".  Will be ignored for Signac/Seurat objects.
+#' @import GenomicRanges tidyverse blaseRdata cli
+#' @importFrom Signac CoveragePlot granges Links
 #' @export
-bb_makeTrace <- function(trace_data,
-                             startcol = NULL,
-                             endcol = NULL,
-                             genome = c("hg38", "danRer11"),
-                             seqname = NULL,
-                             plot_range = "trace",
-                             extend_left = 0,
-                             extend_right = 0,
-                             features = NULL,
-                             links = NULL) {
+bb_makeTrace <- function(obj,
+                         gene_to_plot,
+                         genome = c("hg38", "danRer11"),
+                         extend_left = 0,
+                         extend_right = 0,
+                         peaks = NULL,
+                         bulk_group_col = NULL,
+                         bulk_group_id = "bulk",
+                         bulk_coverage_col = "score") {
+  genome <- match.arg(genome, choices = c("hg38", "danRer11"))
 
-  stopifnot("You must choose either hg38 or danRer11 for the genome" = genome %in% c("hg38", "danRer11") & length(genome) == 1)
-
-  # make the trace_data GRanges object
-  if ("data.frame" %in% class(trace_data)) {
-    stopifnot("You must identify supply startcol when using a data frame for this function." = !is.null(startcol))
-    stopifnot("You must identify supply endcol when using a data frame for this function." = !is.null(endcol))
-    stopifnot("You must identify supply a seqname when using a data frame for this function." = !is.null(seqname))
-    trace_data <- trace_data %>% mutate(seqname = seqname)
-    gr <- makeGRangesFromDataFrame(
-      trace_data,
-      keep.extra.columns = TRUE,
-      start.field = startcol,
-      end.field = endcol,
-      seqnames.field = "seqname"
-    )
-
-  } else if ("GRanges" %in% class(trace_data)) {
-    gr <- trace_data
-  } else {
-    return("Trace data must either be a data frame or a GRanges object.")
-  }
-  gr <- buff_granges(gr, gen = genome)
-
-  # make the initial plot_range
+  # find the chromosome needed needed
   available_genes <- c(mcols(hg38_granges_reduced)$gene_name,
                        mcols(zfin_granges_reduced)$gene_name)
 
   if (genome == "hg38") {
     full_gene_model = hg38_granges_reduced
-  } else if (genome == "danRer11") {
+  } else {
     full_gene_model = zfin_granges_reduced
-  } else {
-    return("You must specify and available genome.")
   }
 
-  if (class(plot_range) == "GRanges") {
-    plot_range_init <- plot_range
-  } else if (plot_range %in% available_genes) {
-    selected_range <- full_gene_model[mcols(full_gene_model)$gene_name %in% plot_range]
-    plot_range_init <- range(selected_range)
-  } else if (plot_range == "trace") {
-    plot_range_init <- range(gr)
+  if (gene_to_plot %in% available_genes) {
+    selected_range <-
+      full_gene_model[mcols(full_gene_model)$gene_name %in% gene_to_plot]
+    plot_range <- range(selected_range)
   } else {
-    return("You must specify an appropriate range to plot.")
+    cli::cli_abort("This gene is not available")
   }
-  start(plot_range_init) <- start(plot_range_init) - extend_left
-  end(plot_range_init) <- end(plot_range_init) + extend_right
-  plot_range_init <- buff_granges(plot_range_init, gen = genome)
-  # seqlevels(plot_range_init, pruning.mode = "tidy") <- seqlevels(gr)
+  start(plot_range) <- start(plot_range) - extend_left
+  end(plot_range) <- end(plot_range) + extend_right
+  plot_range <- buff_granges(plot_range, gen = genome)
+  # make the strand "*"
+  plot_range <- GRanges(seqnames = seqnames(plot_range),
+                        ranges = ranges(plot_range))
+  genome(plot_range) <- genome
 
-  # trim the data to reduce size
-  gr <- trim_and_drop_levels(x = gr, trim_to = plot_range_init)
-  seqname <- unique(as.vector(seqnames(plot_range_init)))
+  # make the trace_data GRanges object
+  if ("Seurat" %in% class(obj)) {
+    trace_data <- Signac::CoveragePlot(
+      obj,
+      region = gene_to_plot,
+      extend.upstream = extend_left,
+      extend.downstream = extend_right
+    )
+    trace_data <- trace_data[[1]][[1]][["data"]]
+    seqname <- levels(seqnames(plot_range))
+    trace_data <- trace_data |> mutate(seqname = seqname)
+    gr <- makeGRangesFromDataFrame(
+      trace_data,
+      keep.extra.columns = TRUE,
+      start.field = "position",
+      end.field = "position",
+      seqnames.field = "seqname"
+    )
+
+  } else if ("GRanges" %in% class(obj)) {
+    gr <- obj
+  } else {
+    return("Trace data must either be a data frame or a GRanges object.")
+  }
+  gr <- buff_granges(gr, gen = genome)
+
+  # trim the data and clean up levels
+  gr <- trim_and_drop_levels(x = gr, trim_to = plot_range)
+
+  # clean up the metadata if you are working from a GRanges;
+  if ("GRanges" %in% class(obj)) {
+    if (!is.null(bulk_group_col)) {
+      values(gr)$group <- values(gr)[[bulk_group_col]]
+      values(gr)$coverage <- values(gr)[[bulk_coverage_col]]
+    } else {
+      values(gr) <-
+        data.frame(group = bulk_group_id, coverage = values(gr)[[bulk_coverage_col]])
+    }
+
+  }
 
   # get the species-specific gene-model
-  selected_gene_model <- trim_and_drop_levels(x = full_gene_model, trim_to = plot_range_init)
+  selected_gene_model <-
+    trim_and_drop_levels(x = full_gene_model, trim_to = plot_range)
 
-  # add in the features
-  if (!is.null(features)) {
-    features_to_add <- features
-  } else {
-    # add in a zero-length feature to hold the place
-    features_to_add <-GRanges(seqnames = seqname, ranges = IRanges(
-                              start = start(plot_range_init) +1,
-                              end = start(plot_range_init))
+  # add in the peaks/features
+ if (!is.null(peaks)) {
+    # read in the peak file in granges format
+    peaks_to_add <- peaks
+    values(peaks_to_add) <- NULL
+    peaks_to_add <- buff_granges(peaks_to_add, gen = genome)
 
-    )
+    # trim the data and clean up levels
+    peaks_to_add <-
+      trim_and_drop_levels(x = peaks_to_add, trim_to = plot_range)
+ } else if ("Seurat" %in% class(obj)) {
+   peaks_to_add <- Signac::granges(obj)
+ } else {
+    # add in a zero-length peak to hold the place
+    peaks_to_add <-
+      GRanges(
+        seqnames = levels(seqnames(plot_range)),
+        ranges = IRanges(
+          start = start(plot_range) + 1,
+          end = start(plot_range)
+        )
+      )
+
   }
 
-  features_to_add <- buff_granges(features_to_add, gen = genome)
 
-  # trim the features
-  features_to_add <- trim_and_drop_levels(x = features_to_add, trim_to = plot_range_init)
+  peaks_to_add <-
+    IRanges::subsetByOverlaps(peaks_to_add, plot_range)
+  peaks_to_add <- buff_granges(peaks_to_add, gen = genome)
+
+  # trim the peaks
+  # peaks_to_add <- trim_and_drop_levels(x = peaks_to_add, trim_to = plot_range)
 
   # add in the links
-  if (!is.null(links)) {
-    links_to_add <- links
+  if ("Seurat" %in% class(obj) && !is.null(Signac::Links(obj))) {
+    links_to_add <- Signac::Links(obj)
   } else {
     # add in a zero-length feature to hold the place
-    links_to_add <-GRanges(seqnames = seqname,
-                           ranges = IRanges(
-                              start = start(plot_range_init) +1,
-                              end = start(plot_range_init))
-
+    links_to_add <- GRanges(
+      seqnames = levels(seqnames(plot_range)),
+      ranges = IRanges(
+        start = start(plot_range) + 1,
+        end = start(plot_range)
+      )
     )
   }
 
   links_to_add <- buff_granges(links_to_add, gen = genome)
 
-  # trim the features
-  links_to_add <- trim_and_drop_levels(x = links_to_add, trim_to = plot_range_init)
+  # trim the peaks
+  links_to_add <-
+    trim_and_drop_levels(x = links_to_add, trim_to = plot_range)
 
-  theTrace <- Trace(trace_data = gr,
-                    gene_model = selected_gene_model,
-                    features = features_to_add,
-                    links = links_to_add,
-                    plot_range = plot_range_init
+  theTrace <- Trace(
+    trace_data = gr,
+    gene_model = selected_gene_model,
+    peaks = peaks_to_add,
+    links = links_to_add,
+    plot_range = plot_range
 
   )
   return(theTrace)
@@ -247,15 +302,17 @@ bb_makeTrace <- function(trace_data,
 setGeneric("Trace.data", function(trace)
   standardGeneric("Trace.data"))
 #' @export
-setMethod("Trace.data", "Trace", function(trace) trace@trace_data)
+setMethod("Trace.data", "Trace", function(trace)
+  trace@trace_data)
 
-#' Get the Features Slot from a Trace Object
+#' Get the peaks Slot from a Trace Object
 #'
 #' @export
-setGeneric("Trace.features", function(trace)
-  standardGeneric("Trace.features"))
+setGeneric("Trace.peaks", function(trace)
+  standardGeneric("Trace.peaks"))
 #' @export
-setMethod("Trace.features", "Trace", function(trace) trace@features)
+setMethod("Trace.peaks", "Trace", function(trace)
+  trace@peaks)
 
 #' Get the Links Slot from a Trace Object
 #'
@@ -263,7 +320,8 @@ setMethod("Trace.features", "Trace", function(trace) trace@features)
 setGeneric("Trace.links", function(trace)
   standardGeneric("Trace.links"))
 #' @export
-setMethod("Trace.links", "Trace", function(trace) trace@links)
+setMethod("Trace.links", "Trace", function(trace)
+  trace@links)
 
 #' Get the gene_model Slot from a Trace Object
 #'
@@ -271,15 +329,18 @@ setMethod("Trace.links", "Trace", function(trace) trace@links)
 setGeneric("Trace.gene_model", function(trace)
   standardGeneric("Trace.gene_model"))
 #' @export
-setMethod("Trace.gene_model", "Trace", function(trace) trace@gene_model)
+setMethod("Trace.gene_model", "Trace", function(trace)
+  trace@gene_model)
 
 
 #' Get the plot_range Slot from a Trace Object
 #'
 #' @export
-setGeneric("Trace.plot_range", function(trace) standardGeneric("Trace.plot_range"))
+setGeneric("Trace.plot_range", function(trace)
+  standardGeneric("Trace.plot_range"))
 #' @export
-setMethod("Trace.plot_range", "Trace", function(trace) trace@plot_range)
+setMethod("Trace.plot_range", "Trace", function(trace)
+  trace@plot_range)
 
 #' Set the Plot Range Slot of a GRanges Object
 #'
@@ -291,26 +352,30 @@ setGeneric("Trace.setRange", function(trace, gr)
 #' @export
 setMethod("Trace.setRange", "Trace", function(trace, gr) {
   trace@plot_range <- gr
-  trace@trace_data <- trim_and_drop_levels(x = trace@trace_data, trim_to = gr)
-  trace@features <- trim_and_drop_levels(x = trace@features, trim_to = gr)
-  trace@gene_model <- trim_and_drop_levels(x = trace@gene_model, trim_to = gr)
+  trace@trace_data <-
+    trim_and_drop_levels(x = trace@trace_data, trim_to = gr)
+  trace@peaks <-
+    trim_and_drop_levels(x = trace@peaks, trim_to = gr)
+  trace@gene_model <-
+    trim_and_drop_levels(x = trace@gene_model, trim_to = gr)
   trace@links <- trim_and_drop_levels(x = trace@links, trim_to = gr)
   validObject(trace)
   trace
 })
 
-#' Set the Features Slot of a GRanges Object
+#' Set the peaks Slot of a GRanges Object
 #'
 #' @param trace An ape object
-#' @param gr A GRanges object.  This object will become the new plot features.
+#' @param gr A GRanges object.  This object will become the new plot peaks.
 #' @export
-setGeneric("Trace.setFeatures", function(trace, gr)
-  standardGeneric("Trace.setFeatures"))
+setGeneric("Trace.setpeaks", function(trace, gr)
+  standardGeneric("Trace.setpeaks"))
 #' @export
-setMethod("Trace.setFeatures", "Trace", function(trace, gr) {
+setMethod("Trace.setpeaks", "Trace", function(trace, gr) {
   gr <- buff_granges(gr, gen = genome(trace@plot_range))
-  new_features <- trim_and_drop_levels(x = gr, trim_to = trace@plot_range)
-  trace@features <- new_features
+  new_peaks <-
+    trim_and_drop_levels(x = gr, trim_to = trace@plot_range)
+  trace@peaks <- new_peaks
   validObject(trace)
   trace
 })
@@ -325,7 +390,8 @@ setGeneric("Trace.setLinks", function(trace, gr)
 #' @export
 setMethod("Trace.setLinks", "Trace", function(trace, gr) {
   gr <- buff_granges(gr, gen = genome(trace@plot_range))
-  new_links <- trim_and_drop_levels(x = gr, trim_to = trace@plot_range)
+  new_links <-
+    trim_and_drop_levels(x = gr, trim_to = trace@plot_range)
   trace@links <- new_links
   validObject(trace)
   trace
@@ -343,18 +409,22 @@ set_range <- function(grange) {
 
 #' @import ggplot2
 theme_no_x <- function() {
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x  = element_blank(),
-        axis.title.x = element_blank(),
-        axis.line.x = element_blank())
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x  = element_blank(),
+    axis.title.x = element_blank(),
+    axis.line.x = element_blank()
+  )
 }
 
 #' @import ggplot2
 theme_no_y <- function() {
-  theme(axis.text.y = element_blank(),
-        axis.ticks.y  = element_blank(),
-        axis.title.y = element_blank(),
-        axis.line.y = element_blank())
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y  = element_blank(),
+    axis.title.y = element_blank(),
+    axis.line.y = element_blank()
+  )
 }
 
 #' @import ggplot2
@@ -366,84 +436,100 @@ theme_min_y <- function() {
 
 #' Plot The Trace Data From A Trace Object
 #'
-#' @description A function to generate a line plot from tracklike genomic data.
+#' @description A function to generate a line plot from tracklike genomic data.  This pulls data from the Trace object trace_data slot.  Check what numeric and categorical variables are available for plotting using Trace.data.
 #'
 #' @param trace A Trace object
-#' @param yvar The variable that will become the Y axis.  Defaults to "score".
-#' @param facet_var The variable describing data facets.  Each will be placed as a separate horizontal track with the value printed to the left. Optional but recommended.
-#' @param colvar The variable to color traces by.  Optional but recommended.
+#' @param yvar The trace_data metadata variable that will become the y axis.  Defaults to "coverage".  Must be numeric.
+#' @param yvar_label The y-axis label for the coverage track.  Defaults to "Coverage".
+#' @param facet_var The trace_data metadata variable describing data facets.  Each will be placed as a separate horizontal track with the value printed to the left. Optional but recommended.  Defaults to "group".
+#' @param color_var The variable to color groups of traces by.  Optional but recommended.  Defaults to "group".
 #' @param pal A color palette.  Can also be added after the fact.
+#' @param legend_pos Color legend position. Can also be added after the fact.  Defaults to "none".
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @export
 bb_plot_trace_data <- function(trace,
-                          yvar = "score",
-                          facet_var = NULL,
-                          colvar = NULL,
-                          pal = NULL) {
+                               yvar = "coverage",
+                               yvar_label = "Coverage",
+                               facet_var = "group",
+                               color_var = "group",
+                               pal = NULL,
+                               legend_pos = "none") {
   data_gr <- Trace.data(trace)
-  data_tbl <-
-    as.data.frame(data_gr) %>%
-    as_tibble() %>%
-    dplyr::mutate(mid = width / 2 + start)
 
-  p <-ggplot(data = data_tbl,
-             mapping = aes(x = mid,
-                           y = !!sym(yvar)))
-  if (!is.null(colvar)) {
-    p <- p + geom_line(mapping = aes_string(color = colvar))
+  data_tbl <-
+    as.data.frame(data_gr) |>
+    as_tibble() |>
+    mutate(mid = width / 2 + start)
+
+  p <- ggplot(data = data_tbl,
+              mapping = aes(x = mid,
+                            y = !!sym(yvar)))
+  if (!is.null(color_var)) {
+    p <- p + geom_line(aes(color = !!sym(color_var)))
   } else {
     p <- p + geom_line()
   }
+
   if (!is.null(pal)) {
-    stopifnot("You must specify a variable for the color palette." = !is.null(colvar))
     p <- p + scale_color_manual(values = pal,
                                 breaks = names(pal))
   }
 
   if (!is.null(facet_var)) {
-    p <- p + facet_wrap(facets = vars(!!sym(facet_var)), ncol = 1, strip.position = "left") +
+    p <- p + facet_wrap(
+      facets = vars(!!sym(facet_var)),
+      ncol = 1,
+      strip.position = "left"
+    ) +
       theme(strip.background = element_blank(),
             strip.text.y.left = element_text(angle = 0))
   }
   p <- p +
     xlim(set_range(Trace.plot_range(trace))) +
     theme_no_x() +
-    theme(legend.position = "none")
+    theme(legend.position = legend_pos) +
+    labs(y = yvar_label)
 
   return(p)
 }
 
-#' Plot The Feature Data From A Trace Object
+#' Plot The peak Data From A Trace Object
 #'
-#' @description A function to generate a feature plot from tracklike genomic data.
+#' @description A function to generate a peak plot from tracklike genomic data.
 #'
-#' @param trace A Trace object.  Should have a metadata column in the features slot named "type".
-#' @param type_to_plot Value of the type variable to plot.  This will be come the Y-axis label.
+#' @param trace A Trace object.
+#' @param fill_color The color to fill the peak graphics with.  Defaults to grey60.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
+#' @importFrom cli cli_abort
 #' @export
-bb_plot_trace_feature <- function(trace,
-                                  type_to_plot) {
-  gr <- Trace.features(trace)
+bb_plot_trace_peaks <- function(trace,
+                                fill_color = "grey60") {
+  gr <- Trace.peaks(trace)
+
+  if (start(gr[1]) > end(gr[1])) {
+    cli::cli_abort("This trace object contains no peaks!")
+  }
+
 
   gr_tbl <-
-    as.data.frame(gr) %>%
-    as_tibble() %>%
-    dplyr::mutate(mid = width/2 + start) %>%
-    dplyr::filter(type == type_to_plot)
+    as.data.frame(gr) |>
+    as_tibble() |>
+    mutate(mid = width / 2 + start) |>
+    mutate(type = "Peaks")
 
   p <- ggplot(data = gr_tbl,
               mapping = aes(x = mid,
                             y = type,
                             width = width)) +
-    geom_tile(color = "black", fill = "grey60")
+    geom_tile(color = "black", fill = fill_color)
 
   p <- p +
     xlim(set_range(Trace.plot_range(trace))) +
     theme_no_x() +
     theme_min_y() +
-    labs(y = type_to_plot)
+    labs(y = "Peaks")
 
   return(p)
 }
@@ -451,66 +537,82 @@ bb_plot_trace_feature <- function(trace,
 
 #' Plot The Link Data From A Trace Object
 #'
-#' @description A function to generate a link plot from tracklike genomic data.  Links will automatically be trimmed to lie entirely within the plot range.  An additional, optionsl score cutoff can be provided.
+#' @description A function to generate a link plot from tracklike genomic data.  Links will automatically be trimmed to lie entirely within the plot range.  An additional, optional score cutoff can be provided.
 #'
 #' @param trace A Trace object containing a valid links slot.
 #' @param cutoff Score cutoff for link plotting.  Defaults to 0.
+#' @param link_low_color The color of a link with value of 0, default = grey80
+#' @param link_high_color  The color of a link with value of 1, default = red3
+#' @param link_range  The range of the color scale in terms of link values, default = c(0,1)
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
+#' @importFrom cli cli_abort
 #' @import ggforce
 #' @export
-bb_plot_trace_links <- function(trace, cutoff = 0) {
+bb_plot_trace_links <- function(trace,
+                                cutoff = 0,
+                                link_low_color = "grey80",
+                                link_high_color = "red3",
+                                link_range = c(0,1)) {
   gr <- Trace.links(trace)
+  if (start(gr[1]) > end(gr[1])) {
+    cli::cli_abort("This trace object contains no links!")
+  }
 
   gr_tbl <-
-    as.data.frame(gr) %>%
-    as_tibble() %>%
-    dplyr::mutate(mid = width/2 + start) %>%
-    dplyr::filter(score > cutoff) %>%
-    distinct() %>%
+    as.data.frame(gr) |>
+    as_tibble() |>
+    mutate(mid = width / 2 + start) |>
+    filter(score > cutoff) |>
+    distinct() |>
     mutate(group = rank(score))
 
   bezier_data <-
-    tibble(x = c(gr_tbl$start,
-                 gr_tbl$mid,
-                 gr_tbl$end),
-           y = c(rep(0, length(gr_tbl$start)),
-                 rep(-1, length(gr_tbl$mid)),
-                 rep(0, length(gr_tbl$end))),
-           group = rep(gr_tbl$group, 3),
-           score = rep(gr_tbl$score, 3)
+    tibble(
+      x = c(gr_tbl$start,
+            gr_tbl$mid,
+            gr_tbl$end),
+      y = c(rep(0, length(gr_tbl$start)),
+            rep(-1, length(gr_tbl$mid)),
+            rep(0, length(gr_tbl$end))),
+      group = rep(gr_tbl$group, 3),
+      score = rep(gr_tbl$score, 3)
     )
 
   p <- ggplot(data = bezier_data,
-              mapping = aes(x = x,
-                            y = y,
-                            group = group,
-                            color = score)) +
-    ggforce::geom_bezier()
+              mapping = aes(
+                x = x,
+                y = y,
+                group = group,
+                color = score
+              )) +
+    geom_bezier()
   p <- p +
     xlim(set_range(Trace.plot_range(trace))) +
     theme_no_x() +
     theme_min_y() +
-    labs(y = "Links") +
-    scale_color_gradient2(low = "red", mid = "grey", high = "blue")
+    labs(y = "Links", color = "Link Score") +
+    scale_color_gradient(low = link_low_color,
+                         high = link_high_color,
+                         limits = link_range)
   return(p)
 }
 
 #' @importFrom BiocGenerics as.data.frame
 #' @import tidyverse
 select_the_transcripts <- function(gr) {
-    data <-
-      as.data.frame(gr) %>%
-      as_tibble() %>%
-      group_by(gene_name, APPRIS, length, parent_transcript) %>%
-      summarise() %>%
-      ungroup() %>%
-      group_by(gene_name) %>%
-      arrange(APPRIS, desc(length)) %>%
-      slice_head() %>%
-      select(gene_name, parent_transcript) %>%
-      deframe()
-    return(data)
+  data <-
+    as.data.frame(gr) |>
+    as_tibble() |>
+    group_by(gene_name, APPRIS, length, parent_transcript) |>
+    summarise(.groups = "keep") |>
+    ungroup() |>
+    group_by(gene_name) |>
+    arrange(APPRIS, desc(length)) |>
+    slice_head() |>
+    select(gene_name, parent_transcript) |>
+    deframe()
+  return(data)
 
 }
 
@@ -530,13 +632,13 @@ bb_plot_trace_model <- function(trace,
                                 select_transcript = NULL) {
   data_gr <- Trace.gene_model(trace)
   data_tbl <-
-    mcols(data_gr) %>%
-    as_tibble() %>%
-    dplyr::mutate(start = start(data_gr)) %>%
-    dplyr::mutate(end = end(data_gr)) %>%
-    dplyr::mutate(mid = width(data_gr) / 2 + start) %>%
-    dplyr::mutate(width = width(data_gr)) %>%
-    dplyr::mutate(strand = as.vector(strand(data_gr))) %>%
+    mcols(data_gr) |>
+    as_tibble() |>
+    dplyr::mutate(start = start(data_gr)) |>
+    dplyr::mutate(end = end(data_gr)) |>
+    dplyr::mutate(mid = width(data_gr) / 2 + start) |>
+    dplyr::mutate(width = width(data_gr)) |>
+    dplyr::mutate(strand = as.vector(strand(data_gr))) |>
     dplyr::mutate(ht = recode(
       type,
       "five_prime_UTR" = 0.5,
@@ -548,27 +650,27 @@ bb_plot_trace_model <- function(trace,
   if (!is.null(select_transcript)) {
     transcript_lookup <-
       bind_rows(as_tibble(mcols(hg38_granges_reduced)), as_tibble(mcols(zfin_granges_reduced)))
-    selected <- transcript_lookup %>%
-      filter(parent_transcript %in% select_transcript) %>%
-      select(gene_name, parent_transcript) %>%
+    selected <- transcript_lookup |>
+      filter(parent_transcript %in% select_transcript) |>
+      select(gene_name, parent_transcript) |>
       deframe()
     # replace the original with selected transcripts
     transcripts[names(selected)] <- selected
 
   }
 
-  data_to_plot <- data_tbl %>%
+  data_to_plot <- data_tbl |>
     filter(parent_transcript %in% transcripts)
 
-  names_to_plot <- data_to_plot %>%
-    group_by(gene_name, parent_transcript, strand) %>%
-    summarise(gene_start = min(start), gene_end = max(end)) %>%
+  names_to_plot <- data_to_plot |>
+    group_by(gene_name, parent_transcript, strand) |>
+    summarise(gene_start = min(start), gene_end = max(end), .groups = "keep") |>
     mutate(mid_gene = (gene_start + gene_end) / 2)
 
   segments_to_plot <- map_dfr(
     .x = names_to_plot$gene_name,
     .f = function(x, data = names_to_plot) {
-      filtered <- data %>%
+      filtered <- data |>
         filter(gene_name == x)
       xpos <-
         seq.int(from = filtered$gene_start,
@@ -656,20 +758,35 @@ bb_plot_trace_model <- function(trace,
 #' @description Generates the X axis for stacking other track plots on top of.
 #'
 #' @param trace A Trace object.
-#' @param xtitle An optional title for the X axis
+#' @param xtitle An optional title for the X axis.  Defaults to the  genome and chromosome.
 #' @import tidyverse
 #' @import GenomicRanges
 #' @export
 bb_plot_trace_axis <- function(trace,
                                xtitle = NULL) {
-  gr <- range(Trace.plot_range(trace))
+  gr0 <- Trace.plot_range(trace)
+  genome <- genome(gr0)
+  chrom <- levels(seqnames(gr0))
+  if (is.null(xtitle)) {
+    if (genome == "hg38")
+      xtitle <- paste0("GRCh38 ", chrom, " (kb)")
+    else if (genome == "danRer11")
+      xtitle <- paste0("GRCz11 ", chrom, " (kb)")
+  }
+  gr <- range(gr0)
   gr_tbl <-
-    tibble(start = start(gr), end = end(gr)) %>%
+    tibble(start = start(gr), end = end(gr)) |>
     pivot_longer(everything())
   p <- ggplot(data = gr_tbl, mapping = aes(x = value))
   p <- p +
     xlim(set_range(Trace.plot_range(trace))) +
+    scale_x_continuous(labels = formatter1000) +
     theme_no_y() +
     labs(x = xtitle)
   return(p)
 }
+
+formatter1000 <- function(x){
+  x/1000
+}
+

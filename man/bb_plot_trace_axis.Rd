@@ -9,7 +9,7 @@ bb_plot_trace_axis(trace, xtitle = NULL)
 \arguments{
 \item{trace}{A Trace object.}
 
-\item{xtitle}{An optional title for the X axis}
+\item{xtitle}{An optional title for the X axis.  Defaults to the  genome and chromosome.}
 }
 \description{
 Generates the X axis for stacking other track plots on top of.

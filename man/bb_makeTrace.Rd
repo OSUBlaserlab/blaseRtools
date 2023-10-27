@@ -2,42 +2,39 @@
 % Please edit documentation in R/trace_funcs.R
 \name{bb_makeTrace}
 \alias{bb_makeTrace}
-\title{Construct a Trace object from a Dataframe}
+\title{Construct a Trace object from a Signac Object or Granges object}
 \usage{
 bb_makeTrace(
-  trace_data,
-  startcol = NULL,
-  endcol = NULL,
+  obj,
+  gene_to_plot,
   genome = c("hg38", "danRer11"),
-  seqname = NULL,
-  plot_range = "trace",
   extend_left = 0,
   extend_right = 0,
-  features = NULL,
-  links = NULL
+  peaks = NULL,
+  bulk_group_col = NULL,
+  bulk_group_id = "bulk",
+  bulk_coverage_col = "score"
 )
 }
 \arguments{
-\item{trace_data}{A GRanges object or dataframe coercible to a GRanges object.  Should have metadata columns for "score" or "coverage" and "group".}
+\item{obj}{A Signac/Seurat object or a GRanges object.  Import a bigwig file to a GRanges object using import.bw from rtracklayer.  Use plyranges functions to easily pre-filter the GRanges objec e.g. by chr to reduce processing time.  The precise range will be defined by gene_to_plot and the extend arguments.  You may wish to add grouping metadata columns and to merge several bulk tracks before importing.}
 
-\item{startcol}{The dataframe column containing the start position.  Required only if trace_data is a dataframe.  Ignored if trace_data is a GRanges object.}
+\item{gene_to_plot}{The gene you want to display.  Must be a valid gene in the genome assembly being used.}
 
-\item{endcol}{The dataframe column containing the end position.  Required only if trace_data is a dataframe.  Ignored if trace_data is a GRanges object.}
-
-\item{genome}{The genome for the analysis.  Required.}
-
-\item{seqname}{The sequence name, generally chromosome number.  Not required if trace_data is a GRanges object.}
-
-\item{plot_range}{The bounding range for all slots in the object.  Everything will be trimmed to this range during generation of the object.  Can be shrunk after creation but not expanded.  There are three options for setting this:  1.  An explicit GRanges object can be provided.  2.  A valid gene name can be provided.  3.  Default:  the plot_range is set to match the initial range of the trace_data.  This last case will err if trace_data spans multiple chromosomes as is he case with unfiltered whole-sample bigwigs.}
+\item{genome}{The genome assembly.  Required.  Must be either "hg38" or "danRer11".}
 
 \item{extend_left}{Bases to extend plot_range left, or upstream relative to the top strand.}
 
 \item{extend_right}{Bases to extend plot_range right, or downstream relative to the top strand.}
 
-\item{features}{A GRanges object with features to plot.  Should include a "type" metadata column for all feature types likely to be plotted.  Optional}
+\item{peaks}{An optional GRanges object holding peak data.  Ignored for Signac/Seurat objects which carry this internally.}
 
-\item{links}{A GRanges object with cicero-style gene links.  Optional}
+\item{bulk_group_col}{This parameter allows identification of a grouping variable in your bigwig/Granges object if you have added one.  One example is if you are adding multiple bulk tracks:  You can use this to plot the data in different colors or facets.  A new metadata column called "group" will be added to hold this.  If you haven't added grouping data in upstream processing, leave it NULL (default).  In this case the new group column will be filled with a single string (see bulk_group_id).  Will be ignored for Signac/Seurat objects.}
+
+\item{bulk_group_id}{The value you want to display with the track data on faceted plots when you haven't added any grouping information before making the object.  Defaults to "bulk" which is not a great choice.  Will be ignored for Signac/Seurat objects.}
+
+\item{bulk_coverage_col}{If you are making the object from a bigwig/GRanges, you need to identify which column in your bigwig/GRanges object holds the coverage data to plot on the y axis.  Defaults to "score".  Will be ignored for Signac/Seurat objects.}
 }
 \description{
-Use this function to create a trace object.  See details of the trace class for a complete description. Generally data can be in either NCBI or UCSC style.
+Problem 1:  Signac objects and GRanges made from bigwigs are large and it is computationally expensive to get data from them when tweaking plots.  Problem 2:  For the most part we like how Signac plots genomic coverage of track-like data and we would like to show bulk data in a similar way with a similar compuatational interface.  The trace object is a small intermediate object that holds the minimal amount of data you need to make a coverage plot showing accessibility or binding to a specific genomic region.  Then you can use the trace object to quickly and easily generate tracks as needed for your plot.  These tracks are all ggplots and are easy to configure for legible graphics.  There are options for displaying groups by color or facet which are built in with good graphical defaults.  If these are not suitable, they can be changed post hoc like any other ggplot.
 }
