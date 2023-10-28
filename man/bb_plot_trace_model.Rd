@@ -4,7 +4,12 @@
 \alias{bb_plot_trace_model}
 \title{Plot The Gene Model From A Trace Object}
 \usage{
-bb_plot_trace_model(trace, font_face = "italic", select_transcript = NULL)
+bb_plot_trace_model(
+  trace,
+  font_face = "italic",
+  select_transcript = NULL,
+  icon_fill = "cornsilk"
+)
 }
 \arguments{
 \item{trace}{A Trace object.}

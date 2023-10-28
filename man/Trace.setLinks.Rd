@@ -7,7 +7,7 @@
 Trace.setLinks(trace, gr)
 }
 \arguments{
-\item{trace}{An ape object}
+\item{trace}{A trace object}
 
 \item{gr}{A GRanges object.  This object will become the new plot links.}
 }

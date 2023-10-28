@@ -59,8 +59,8 @@ bb_buff_granges <- function(x, gen) {
 }
 
 #' @importFrom IRanges subsetByOverlaps
-trim_and_drop_levels <- function(x, trim_to) {
-  x <- subsetByOverlaps(x, trim_to, type = "within")
+trim_and_drop_levels <- function(x, trim_to, trim_type = "within") {
+  x <- subsetByOverlaps(x, trim_to, type = trim_type)
   seqlevels(x, pruning.mode = "tidy") <- seqlevels(trim_to)
   return(x)
 }
@@ -132,6 +132,15 @@ setValidity("Trace", function(object) {
     return("The trace data and plot range seqnames must match.")
   if (length(object@plot_range) != 1)
     return("The plot range must have length 1.")
+  if (length(findOverlaps(query = object@trace_data, subject = object@plot_range, type = "within")) != length(object@trace_data))
+    return("The plot ranges must all overlap")
+  if (length(findOverlaps(query = object@peaks, subject = object@plot_range, type = "within")) != length(object@peaks))
+    return("The plot ranges must all overlap")
+  if (length(findOverlaps(query = object@links, subject = object@plot_range, type = "within")) != length(object@links))
+    return("The plot ranges must all overlap")
+  if (length(findOverlaps(query = object@gene_model, subject = object@plot_range, type = "within")) != length(object@gene_model))
+    return("The plot ranges must all overlap")
+
 
 })
 
@@ -342,9 +351,30 @@ setGeneric("Trace.plot_range", function(trace)
 setMethod("Trace.plot_range", "Trace", function(trace)
   trace@plot_range)
 
+#' Set the Trace Data Slot of a GRanges Object
+#'
+#' @param trace A trace object
+#' @param gr A GRanges object.  This object will become the new trace_data.  If the range is smaller, it will trim the other slots to match.  Usually this is used to change range metadata only.
+#' @export
+setGeneric("Trace.setData", function(trace, gr)
+  standardGeneric("Trace.setData"))
+#' @export
+setMethod("Trace.setData", "Trace", function(trace, gr) {
+  trace@trace_data <- gr
+  # trace@plot_range <-
+  #   trim_and_drop_levels(x = trace@plot_range, trim_to = gr, trim_type = "any")
+  # trace@peaks <-
+  #   trim_and_drop_levels(x = trace@peaks, trim_to = gr)
+  # trace@gene_model <-
+  #   trim_and_drop_levels(x = trace@gene_model, trim_to = gr)
+  # trace@links <- trim_and_drop_levels(x = trace@links, trim_to = gr)
+  validObject(trace)
+  trace
+})
+
 #' Set the Plot Range Slot of a GRanges Object
 #'
-#' @param trace An ape object
+#' @param trace A trace object
 #' @param gr A GRanges object.  This object will become the new plot range.
 #' @export
 setGeneric("Trace.setRange", function(trace, gr)
@@ -365,7 +395,7 @@ setMethod("Trace.setRange", "Trace", function(trace, gr) {
 
 #' Set the peaks Slot of a GRanges Object
 #'
-#' @param trace An ape object
+#' @param trace A trace object
 #' @param gr A GRanges object.  This object will become the new plot peaks.
 #' @export
 setGeneric("Trace.setpeaks", function(trace, gr)
@@ -382,7 +412,7 @@ setMethod("Trace.setpeaks", "Trace", function(trace, gr) {
 
 #' Set the Links Slot of a GRanges Object
 #'
-#' @param trace An ape object
+#' @param trace A trace object
 #' @param gr A GRanges object.  This object will become the new plot links.
 #' @export
 setGeneric("Trace.setLinks", function(trace, gr)
@@ -629,7 +659,8 @@ select_the_transcripts <- function(gr) {
 #' @export
 bb_plot_trace_model <- function(trace,
                                 font_face = "italic",
-                                select_transcript = NULL) {
+                                select_transcript = NULL,
+                                icon_fill = "cornsilk") {
   data_gr <- Trace.gene_model(trace)
   data_tbl <-
     mcols(data_gr) |>
@@ -729,7 +760,7 @@ bb_plot_trace_model <- function(trace,
         height = ht
       ),
       color = "black",
-      fill = "cornsilk"
+      fill = icon_fill
     ) +
     geom_text(
       data = names_to_plot,

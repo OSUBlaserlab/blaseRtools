@@ -331,7 +331,7 @@
 * updated blind and unblind functions to use fs::path
 * added blinding vignette
 
-# blaseRtools 0.0.0.9145
+# blaseRtools 0.0.0.9145-6
 
 * major updates to trace functions
 

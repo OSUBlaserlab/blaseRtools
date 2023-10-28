@@ -22,6 +22,9 @@
     <loc>/articles/scRNAseq.html</loc>
   </url>
   <url>
+    <loc>/articles/trace.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -88,7 +91,13 @@
     <loc>/reference/Trace.links.html</loc>
   </url>
   <url>
+    <loc>/reference/Trace.peaks.html</loc>
+  </url>
+  <url>
     <loc>/reference/Trace.plot_range.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Trace.setData.html</loc>
   </url>
   <url>
     <loc>/reference/Trace.setFeatures.html</loc>
@@ -98,6 +107,9 @@
   </url>
   <url>
     <loc>/reference/Trace.setRange.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Trace.setpeaks.html</loc>
   </url>
   <url>
     <loc>/reference/add_cds_factor_columns.html</loc>
@@ -230,6 +242,9 @@
   </url>
   <url>
     <loc>/reference/bb_plot_trace_model.html</loc>
+  </url>
+  <url>
+    <loc>/reference/bb_plot_trace_peaks.html</loc>
   </url>
   <url>
     <loc>/reference/bb_plotfootprint.html</loc>

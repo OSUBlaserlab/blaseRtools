@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9144</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9146</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <a class="dropdown-item" href="../articles/Ape.html">Reading, Editing and Writing DNA Sequences with Ape</a>
     <a class="dropdown-item" href="../articles/blind_images.html">Blinding Images</a>
     <a class="dropdown-item" href="../articles/scRNAseq.html">scRNA-seq Data Analysis</a>
+    <a class="dropdown-item" href="../articles/trace.html">Trace:  Representing Track-like Data in R</a>
   </div>
 </li>
 <li class="nav-item">
@@ -340,7 +341,7 @@ data like so:</p>
 <span><span class="va">vignette_CXCL1_ape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_make_ape_genomic.html">bb_make_ape_genomic</a></span><span class="op">(</span><span class="st">"CXCL1"</span>, genome <span class="op">=</span> <span class="st">"hg38"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">vignette_CXCL1_ape</span></span>
-<span><span class="co">#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        24-OCT-2023 </span></span>
+<span><span class="co">#&gt; LOCUS       CXCL1                   1916 bp ds-DNA     linear        28-OCT-2023 </span></span>
 <span><span class="co">#&gt; COMMENT     Sequence is from Homo sapiens hg38.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene models are from ensembl.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene is CXCL1</span></span>
@@ -473,7 +474,7 @@ coordinate rather than gene name.</p>
 <span><span class="va">vignette_CXCL1_ape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_make_ape_genomic.html">bb_make_ape_genomic</a></span><span class="op">(</span><span class="st">"CXCL1"</span>, genome <span class="op">=</span> <span class="st">"hg38"</span>, extend_left <span class="op">=</span> <span class="fl">100</span>, extend_right <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">vignette_CXCL1_ape</span></span>
-<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        24-OCT-2023 </span></span>
+<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        28-OCT-2023 </span></span>
 <span><span class="co">#&gt; COMMENT     Sequence is from Homo sapiens hg38.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene models are from ensembl.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene is CXCL1</span></span>
@@ -633,7 +634,7 @@ you wanted include when making the object. Here is how you do that:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">vignette_CXCL1_ape</span></span>
-<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        24-OCT-2023 </span></span>
+<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        28-OCT-2023 </span></span>
 <span><span class="co">#&gt; COMMENT     Sequence is from Homo sapiens hg38.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene models are from ensembl.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene is CXCL1</span></span>
@@ -791,7 +792,7 @@ need to know a bit more about GRanges and Biostrings.</p>
 <span><span class="fu"><a href="../reference/Ape.DNA.html">Ape.DNA</a></span><span class="op">(</span><span class="va">vignette_CXCL1_ape</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DNAStringSet object of length 1:</span></span>
 <span><span class="co">#&gt;     width seq                                               names               </span></span>
-<span><span class="co">#&gt; [1]  2116 TCGGGATCGATCTGGAACTCCGG...TTCATTTCATGCGGTGATTGCTG ape_seq</span></span>
+<span><span class="co">#&gt; [1]  2116 <span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #AFFFFF;">GGG</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #FFAFAF;">AA</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFAF;">CC</span><span style="color: #000000; background-color: #AFFFFF;">GG</span>...<span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">TTT</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #AFFFFF;">GG</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #FFAFAF;">A</span><span style="color: #000000; background-color: #FFD7AF;">TT</span><span style="color: #000000; background-color: #AFFFFF;">G</span><span style="color: #000000; background-color: #AFFFAF;">C</span><span style="color: #000000; background-color: #FFD7AF;">T</span><span style="color: #000000; background-color: #AFFFFF;">G</span> ape_seq</span></span>
 <span></span>
 <span><span class="co"># get the features</span></span>
 <span><span class="fu"><a href="../reference/Ape.granges.html">Ape.granges</a></span><span class="op">(</span><span class="va">vignette_CXCL1_ape</span><span class="op">)</span></span>
@@ -832,7 +833,7 @@ need to know a bit more about GRanges and Biostrings.</p>
 <span></span>
 <span><span class="va">new_vignette_CXCL1_ape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Ape.setFeatures.html">Ape.setFeatures</a></span><span class="op">(</span><span class="va">vignette_CXCL1_ape</span>, gr <span class="op">=</span> <span class="va">new_features</span><span class="op">)</span></span>
 <span><span class="va">new_vignette_CXCL1_ape</span></span>
-<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        24-OCT-2023 </span></span>
+<span><span class="co">#&gt; LOCUS       CXCL1                   2116 bp ds-DNA     linear        28-OCT-2023 </span></span>
 <span><span class="co">#&gt; COMMENT     Sequence is from Homo sapiens hg38.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene models are from ensembl.</span></span>
 <span><span class="co">#&gt; COMMENT     Gene is CXCL1</span></span>

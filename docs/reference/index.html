@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9144</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9146</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,6 +27,7 @@
     <a class="dropdown-item" href="../articles/Ape.html">Reading, Editing and Writing DNA Sequences with Ape</a>
     <a class="dropdown-item" href="../articles/blind_images.html">Blinding Images</a>
     <a class="dropdown-item" href="../articles/scRNAseq.html">scRNA-seq Data Analysis</a>
+    <a class="dropdown-item" href="../articles/trace.html">Trace:  Representing Track-like Data in R</a>
   </div>
 </li>
 <li class="nav-item">
@@ -134,11 +135,6 @@
         <dd>Get the Trace Data Slot from a Trace Object</dd>
       </dl><dl><dt>
           
-          <code><a href="Trace.features.html">Trace.features()</a></code> 
-        </dt>
-        <dd>Get the Features Slot from a Trace Object</dd>
-      </dl><dl><dt>
-          
           <code><a href="Trace.gene_model.html">Trace.gene_model()</a></code> 
         </dt>
         <dd>Get the gene_model Slot from a Trace Object</dd>
@@ -149,14 +145,19 @@
         <dd>Get the Links Slot from a Trace Object</dd>
       </dl><dl><dt>
           
+          <code><a href="Trace.peaks.html">Trace.peaks()</a></code> 
+        </dt>
+        <dd>Get the peaks Slot from a Trace Object</dd>
+      </dl><dl><dt>
+          
           <code><a href="Trace.plot_range.html">Trace.plot_range()</a></code> 
         </dt>
         <dd>Get the plot_range Slot from a Trace Object</dd>
       </dl><dl><dt>
           
-          <code><a href="Trace.setFeatures.html">Trace.setFeatures()</a></code> 
+          <code><a href="Trace.setData.html">Trace.setData()</a></code> 
         </dt>
-        <dd>Set the Features Slot of a GRanges Object</dd>
+        <dd>Set the Trace Data Slot of a GRanges Object</dd>
       </dl><dl><dt>
           
           <code><a href="Trace.setLinks.html">Trace.setLinks()</a></code> 
@@ -167,6 +168,11 @@
           <code><a href="Trace.setRange.html">Trace.setRange()</a></code> 
         </dt>
         <dd>Set the Plot Range Slot of a GRanges Object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="Trace.setpeaks.html">Trace.setpeaks()</a></code> 
+        </dt>
+        <dd>Set the peaks Slot of a GRanges Object</dd>
       </dl><dl><dt>
           
           <code><a href="add_cds_factor_columns.html">add_cds_factor_columns()</a></code> 
@@ -316,7 +322,7 @@
           
           <code><a href="bb_makeTrace.html">bb_makeTrace()</a></code> 
         </dt>
-        <dd>Construct a Trace object from a Dataframe</dd>
+        <dd>Construct a Trace object from a Signac Object or Granges object</dd>
       </dl><dl><dt>
           
           <code><a href="bb_make_ape_genomic.html">bb_make_ape_genomic()</a></code> 
@@ -374,11 +380,6 @@
         <dd>Plot The Trace Data From A Trace Object</dd>
       </dl><dl><dt>
           
-          <code><a href="bb_plot_trace_feature.html">bb_plot_trace_feature()</a></code> 
-        </dt>
-        <dd>Plot The Feature Data From A Trace Object</dd>
-      </dl><dl><dt>
-          
           <code><a href="bb_plot_trace_links.html">bb_plot_trace_links()</a></code> 
         </dt>
         <dd>Plot The Link Data From A Trace Object</dd>
@@ -387,6 +388,11 @@
           <code><a href="bb_plot_trace_model.html">bb_plot_trace_model()</a></code> 
         </dt>
         <dd>Plot The Gene Model From A Trace Object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="bb_plot_trace_peaks.html">bb_plot_trace_peaks()</a></code> 
+        </dt>
+        <dd>Plot The peak Data From A Trace Object</dd>
       </dl><dl><dt>
           
           <code><a href="bb_plotfootprint.html">bb_plotfootprint()</a></code> 
