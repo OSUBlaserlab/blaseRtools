@@ -284,10 +284,24 @@ bb_parseape <- function(input_file) {
       }
     )
 
+  if (nrow(granges_df) == 0) {
+    granges_df0 <- tibble::tibble(
+      seqname = "ape_seq",
+      type = "misc_feature",
+      start = 1,
+      end = 1,
+      locus_tag = paste0("This placeholding feature was by bb_parseape on ", Sys.time(),"."),
+      fwdcolor = "transparent",
+      revcolor = "transparent"
+    )
+    granges_df <- bind_rows(granges_df0, granges_df)
+
+  }
   granges <-
     GenomicRanges::makeGRangesFromDataFrame(df = granges_df, keep.extra.columns = TRUE)
   names(granges) <- granges_df$locus_tag
   ape_plus$granges <- granges
+
 
   ape_instance <-
     Ape(

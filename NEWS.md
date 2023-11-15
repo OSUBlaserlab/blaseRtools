@@ -335,3 +335,7 @@
 
 * major updates to trace functions
 
+# blaseRtools 0.0.0.9147
+
+* updated ape function to put placeholder feature in gbk files without features.
+
