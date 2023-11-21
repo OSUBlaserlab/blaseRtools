@@ -166,7 +166,6 @@ param_sweep <- function (seu,
 }
 
 #' @importFrom SeuratObject Version
-#' @importFrom base cbind
 #' @import fields Seurat KernSmooth
 doublet_finder <- function(seu,
           PCs,
