@@ -2,9 +2,9 @@
 % Please edit documentation in R/bb_doubletfinder.R
 \name{bb_doubletfinder}
 \alias{bb_doubletfinder}
-\title{Use doubletfinder to modela and mark doublets}
+\title{Use doubletfinder to model and mark doublets}
 \usage{
-bb_doubletfinder(cds, doublet_prediction, qc_table)
+bb_doubletfinder(cds, doublet_prediction, qc_table, ncores = 1)
 }
 \arguments{
 \item{cds}{A cell data set object}
@@ -17,5 +17,5 @@ bb_doubletfinder(cds, doublet_prediction, qc_table)
 A tibble of low- and high-confidence doublet calls by barcode
 }
 \description{
-Use doubletfinder to modela and mark doublets
+Use doubletfinder to model and mark doublets
 }

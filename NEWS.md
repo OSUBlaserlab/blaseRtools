@@ -339,3 +339,8 @@
 
 * updated ape function to put placeholder feature in gbk files without features.
 
+# blaseRtools 0.0.0.9148
+
+* updated bb_doubletfinder to work with seurat v5
+
+
