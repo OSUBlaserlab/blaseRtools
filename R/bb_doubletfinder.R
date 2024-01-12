@@ -82,7 +82,7 @@ bb_doubletfinder <-
 #' @import Seurat
 #' @import fields
 #' @importFrom SeuratObject Version
-#' @importFrom DoubletFinder parallel_paramSweep_v3
+#' @importFrom DoubletFinder parallel_paramSweep
 param_sweep <- function (seu,
                          PCs = 1:10,
                          sct = FALSE,
@@ -120,7 +120,7 @@ param_sweep <- function (seu,
     output2 <-
       mclapply(
         as.list(1:length(pN)),
-        FUN = DoubletFinder::parallel_paramSweep_v3,
+        FUN = DoubletFinder::parallel_paramSweep,
         n.real.cells,
         real.cells,
         pK,
@@ -137,7 +137,7 @@ param_sweep <- function (seu,
     output2 <-
       lapply(
         as.list(1:length(pN)),
-        FUN = DoubletFinder::parallel_paramSweep_v3,
+        FUN = DoubletFinder::parallel_paramSweep,
         n.real.cells,
         real.cells,
         pK,
