@@ -11,7 +11,9 @@ bb_plot_trace_data(
   facet_var = "group",
   color_var = "group",
   pal = NULL,
-  legend_pos = "none"
+  legend_pos = "none",
+  group_filter = NULL,
+  group_variable = "group"
 )
 }
 \arguments{
@@ -28,6 +30,8 @@ bb_plot_trace_data(
 \item{pal}{A color palette.  Can also be added after the fact.}
 
 \item{legend_pos}{Color legend position. Can also be added after the fact.  Defaults to "none".}
+
+\item{group_filter}{Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.}
 }
 \description{
 A function to generate a line plot from tracklike genomic data.  This pulls data from the Trace object trace_data slot.  Check what numeric and categorical variables are available for plotting using Trace.data.

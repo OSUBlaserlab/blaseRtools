@@ -267,10 +267,10 @@ bb_makeTrace <- function(obj,
   }
 
 
-  peaks_to_add <-
-    IRanges::subsetByOverlaps(peaks_to_add, plot_range)
   peaks_to_add <- buff_granges(peaks_to_add, gen = genome)
-
+  # peaks_to_add <-
+  #   IRanges::subsetByOverlaps(peaks_to_add, plot_range)
+  peaks_to_add <- trim_and_drop_levels(peaks_to_add, trim_to = plot_range)
   # trim the peaks
   # peaks_to_add <- trim_and_drop_levels(x = peaks_to_add, trim_to = plot_range)
 
@@ -475,6 +475,8 @@ theme_min_y <- function() {
 #' @param color_var The variable to color groups of traces by.  Optional but recommended.  Defaults to "group".
 #' @param pal A color palette.  Can also be added after the fact.
 #' @param legend_pos Color legend position. Can also be added after the fact.  Defaults to "none".
+#' @param group_filter Optional value to filter the trace data by.  Should be a value from the "group" metadata variable in the trace object.
+#' @param group_filter Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @export
@@ -484,13 +486,21 @@ bb_plot_trace_data <- function(trace,
                                facet_var = "group",
                                color_var = "group",
                                pal = NULL,
-                               legend_pos = "none") {
+                               legend_pos = "none",
+                               group_filter = NULL,
+                               group_variable = "group"
+                               ) {
   data_gr <- Trace.data(trace)
 
   data_tbl <-
     as.data.frame(data_gr) |>
     as_tibble() |>
     mutate(mid = width / 2 + start)
+
+  if(!is.null(group_filter)) {
+    data_tbl <- filter(data_tbl, !!sym(group_variable) == group_filter)
+  }
+
 
   p <- ggplot(data = data_tbl,
               mapping = aes(x = mid,
@@ -595,7 +605,7 @@ bb_plot_trace_links <- function(trace,
     mutate(mid = width / 2 + start) |>
     filter(score > cutoff) |>
     distinct() |>
-    mutate(group = rank(score))
+    mutate(group = rank(score, ties.method = "first"))
 
   bezier_data <-
     tibble(

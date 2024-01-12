@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9148</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9149</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,9 @@
 <span>  facet_var <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  color_var <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  legend_pos <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  legend_pos <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  group_filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_variable <span class="op">=</span> <span class="st">"group"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,6 +101,10 @@
 
 <dt>legend_pos</dt>
 <dd><p>Color legend position. Can also be added after the fact.  Defaults to "none".</p></dd>
+
+
+<dt>group_filter</dt>
+<dd><p>Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.</p></dd>
 
 </dl></div>
 

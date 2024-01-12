@@ -55,14 +55,9 @@ bb_gene_umap(
 }
 \value{
 A ggplot
-
-A ggplot
 }
 \description{
 Takes in a Seurat or cell_dat_set object, extracts UMAP dimensions and gene expression values.  For Seurat, default assay is "RNA"; can be changed to if necessary.  For cell_data_set, the assay parameter does nothing; the function extracts log and size-factor normalized counts which are similar but not identical to the Seurat "RNA" assay.  If a vector of genes is supplied to gene_or_genes, a faceted plot will be generated.  If a dataframe is supplied, an aggregated plot will be generated with a facet for each gene group.  The dataframe must be of 2 colums: the first containing feature ids and the second containing grouping information.  This is best generated using bb_rowmeta.
-}
-\details{
-Make a plot of gene expression in UMAP form
 }
 \seealso{
 \code{\link[monocle3]{normalized_counts}}
