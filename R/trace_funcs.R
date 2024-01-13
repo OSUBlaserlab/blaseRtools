@@ -664,13 +664,16 @@ select_the_transcripts <- function(gr) {
 #' @param trace A Trace object.
 #' @param font_face Font face option to use.  Default = "italic".
 #' @param select_transcript Optional selected transcript(s) to plot.
+#' @param icon_fill The color to make the exon boxes.
+#' @param debug Boolean.  Option to show the transcript ID on the final plot to confirm you have the right one. Default = FALSE.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @export
 bb_plot_trace_model <- function(trace,
                                 font_face = "italic",
                                 select_transcript = NULL,
-                                icon_fill = "cornsilk") {
+                                icon_fill = "cornsilk",
+                                debug = FALSE) {
   data_gr <- Trace.gene_model(trace)
   data_tbl <-
     mcols(data_gr) |>
@@ -729,7 +732,6 @@ bb_plot_trace_model <- function(trace,
     }
   )
 
-
   p <- ggplot() +
     geom_segment(
       data = filter(segments_to_plot, strand == "+"),
@@ -782,13 +784,18 @@ bb_plot_trace_model <- function(trace,
       size = 3,
       fontface = font_face
     )
+  if (debug) {
+    p <- p +
+      xlim(set_range(Trace.plot_range(trace)))
 
+  } else {
+    p <- p +
+      xlim(set_range(Trace.plot_range(trace))) +
+      theme_no_x() +
+      theme_min_y() +
+      labs(y = "Genes")
 
-  p <- p +
-    xlim(set_range(Trace.plot_range(trace))) +
-    theme_no_x() +
-    theme_min_y() +
-    labs(y = "Genes")
+  }
 
   return(p)
 }

@@ -343,9 +343,10 @@
 
 * updated bb_doubletfinder to work with seurat v5
 
-# blaseRtools 0.0.0.9149-50
+# blaseRtools 0.0.0.9149-51
 
 * fixed bugs in trace functions related to trimming levels for the peaks slot.
+* added option to debug the gene model track by showing the plotted transcript IDs
 
 
 
