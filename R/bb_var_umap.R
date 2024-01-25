@@ -217,8 +217,8 @@ bb_var_umap <- function(obj,
             }
           )
       } else if (length(facet_by) == 2) {
-        data_long$cross_product <-
-          paste0(data_long[, facet_by[1]], "_", data_long[, facet_by[2]])
+        data_long <- data_long |>
+          mutate(cross_product = paste0(!!sym(facet_by[1]), "_", !!sym(facet_by[2])))
         data_long <-
           purrr::map_dfr(
             .x = data_long$cross_product |> unique(),
@@ -234,8 +234,8 @@ bb_var_umap <- function(obj,
           )
       }
     } else {
-      data_long <-
-        data_long |> dplyr::mutate(density = get_density(x = data[, dim_x], y = data[, dim_y], n = nbin))
+      data_long$density <- get_density(x = as.data.frame(data_long)[, dim_x],
+                                       y = as.data.frame(data_long)[, dim_y], n = nbin)
     }
 
     plot <- ggplot2::ggplot(data_long) +
@@ -279,8 +279,8 @@ bb_var_umap <- function(obj,
             }
           )
       } else if (length(facet_by) == 2) {
-        data_long$cross_product <-
-          paste0(data_long[, facet_by[1]], "_", data_long[, facet_by[2]])
+        data_long <- data_long |>
+          mutate(cross_product = paste0(!!sym(facet_by[1]), "_", !!sym(facet_by[2])))
         data_long <-
           purrr::map_dfr(
             .x = data_long$cross_product |> unique(),
@@ -298,13 +298,11 @@ bb_var_umap <- function(obj,
           )
       }
     } else {
-      data_long <-
-        data_long |> dplyr::mutate(local_n = get_hexcount(
-          data = data_long,
-          x = dim_x,
-          y = dim_y,
-          n = nbin
-        ))
+      data_long$local_n <- get_hexcount(data = data,
+                                        x = dim_x,
+                                        y = dim_y,
+                                        n = nbin
+      )
     }
     data_long <-
       data_long |> dplyr::mutate(log_local_n = log10(local_n))
@@ -394,7 +392,7 @@ bb_var_umap <- function(obj,
         ggplot2::theme(strip.background = ggplot2::element_blank())
     } else if (length(facet_by) == 2) {
       plot <- plot +
-        ggplot2::facet_grid(...) +
+        ggplot2::facet_grid(rows = vars(!!sym(facet_by[1])), cols = vars(!!sym(facet_by[2])), ...) +
         ggplot2::theme(strip.background = ggplot2::element_blank())
     } else {
       return("Too many dimensions to facet by.")
