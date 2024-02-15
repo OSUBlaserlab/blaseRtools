@@ -110,6 +110,6 @@ VignetteBuilder: knitr
 Remotes: 
     github::blaserlab/blaseRdata,
     github::mojaveazure/seurat-disk,
-    github::chris-mcginnis-ucsf/DoubletFinder,
+    github::blaserlab/DoubletFinder,
     github::blaserlab/blaseRtemplates,
     github::sqjin/CellChat
