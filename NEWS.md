@@ -348,7 +348,7 @@
 * fixed bugs in trace functions related to trimming levels for the peaks slot.
 * added option to debug the gene model track by showing the plotted transcript IDs
 
-# blaseRtools 0.0.0.9152
+# blaseRtools 0.0.0.9152-3
 
 * fixed bug where density var umap plots with two dimensions weren't being calculated correctly.
 

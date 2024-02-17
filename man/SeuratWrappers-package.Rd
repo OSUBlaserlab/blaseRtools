@@ -4,6 +4,7 @@
 \name{SeuratWrappers-package}
 \alias{blaseRtools}
 \alias{blaseRtools-package}
+\alias{SeuratWrappers-package}
 \title{blaseRtools: R Tools for Blaser Lab Data Analysis}
 \description{
 This is a repository of R tools for Single Cell RNA seq and other lab data analysis functions.

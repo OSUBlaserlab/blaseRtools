@@ -10,7 +10,7 @@
 #' @export
 #' @import tidyverse monocle3
 #' @importFrom rstatix fisher_test
-#' @importFrom cli::cli_alert_info
+#' @importFrom cli cli_alert_info
 bb_cluster_representation <- function(cds,
                                       cluster_var,
                                       class_var,

@@ -166,6 +166,7 @@ as.cell_data_set.Seurat <- function(
   return(cds)
 }
 
+#' @title Convert single cell experiment to Seurat
 #' @param loadings Name of dimensional reduction to save loadings to, if present;
 #' defaults to first dimensional reduction present (eg.
 #' \code{SingleCellExperiment::reducedDimNames(x)[1]}); pass \code{NA} to

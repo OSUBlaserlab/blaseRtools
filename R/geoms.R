@@ -52,7 +52,7 @@ GeomSplitViolin <- ggplot2::ggproto(
 #' @param data Data to display, Default: NULL
 #' @param stat Statistic to plot, Default: 'ydensity'
 #' @param position Position, Default: 'identity'
-#' @param ...
+#' @param ... extra arguments
 #' @param draw_quantiles Quantiles to draw, Default: NULL
 #' @param trim Trim ends?, Default: TRUE
 #' @param scale Analogous to violin scale, Default: 'area'

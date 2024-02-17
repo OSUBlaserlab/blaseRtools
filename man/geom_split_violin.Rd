@@ -27,6 +27,8 @@ geom_split_violin(
 
 \item{position}{Position, Default: 'identity'}
 
+\item{...}{extra arguments}
+
 \item{draw_quantiles}{Quantiles to draw, Default: NULL}
 
 \item{trim}{Trim ends?, Default: TRUE}
