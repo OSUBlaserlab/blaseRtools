@@ -118,6 +118,9 @@
     <loc>/reference/aggregate.Matrix.html</loc>
   </url>
   <url>
+    <loc>/reference/as.Seurat.extras.html</loc>
+  </url>
+  <url>
     <loc>/reference/as.cell_data_set.html</loc>
   </url>
   <url>
@@ -164,6 +167,9 @@
   </url>
   <url>
     <loc>/reference/bb_fix_file_path.html</loc>
+  </url>
+  <url>
+    <loc>/reference/bb_fragment_replacement.html</loc>
   </url>
   <url>
     <loc>/reference/bb_gene_dotplot.html</loc>
