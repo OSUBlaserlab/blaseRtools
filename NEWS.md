@@ -353,6 +353,6 @@
 * fixed bug where density var umap plots with two dimensions weren't being calculated correctly.
 
 
-# blaseRtools 0.0.0.9154
+# blaseRtools 0.0.0.9154 -55
 
 * added bb_fragment_replacement

@@ -20,7 +20,7 @@
 #' @importFrom fs file_access
 #' @importFrom purrr map2
 bb_fragment_replacement <- function(obj,
-                         new_paths) {
+                                    new_paths) {
   n_new_paths <- length(new_paths)
   old <- Signac::Fragments(obj)
   n_old <- length(old)
@@ -32,23 +32,17 @@ bb_fragment_replacement <- function(obj,
     cli::cli_abort("You do not have access to this fragments file.")
   }
 
-  if (n_new_paths == 1) {
-    cellnames <- old@cells
-    new <- Signac::CreateFragmentObject(path = new_paths,
-                                        cells = cellnames,
-                                        validate.fragments = TRUE)
-  } else {
-    # replace more than one fragments file as a list
-    new <- purrr::map2(.x = old,
-                .y = new_paths,
-                .f = \(x, y) {
-                  cellnames <- x@cells
-                  new_frag <- Signac::CreateFragmentObject(path = y,
-                                                           cells = cellnames,
-                                                           validate.fragments = TRUE)
-                })
+  # replace more than one fragments file as a list
+  new <- purrr::map2(.x = old,
+                     .y = new_paths,
+                     .f = \(x, y) {
+                       cellnames <- x@cells
+                       new_frag <- Signac::CreateFragmentObject(path = y,
+                                                                cells = cellnames,
+                                                                validate.fragments = TRUE)
+                     })
 
-  }
+
 
   Signac::Fragments(obj) <- NULL
   Signac::Fragments(obj) <- new
