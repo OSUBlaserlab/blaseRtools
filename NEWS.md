@@ -356,3 +356,7 @@
 # blaseRtools 0.0.0.9154 -55
 
 * added bb_fragment_replacement
+
+# blaseRtools 0.0.0.9156
+
+* edited get_seurat_clr to fix bug introduced by Seurat v5

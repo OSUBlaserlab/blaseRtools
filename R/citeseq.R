@@ -153,6 +153,7 @@ bb_split_citeseq <- function(cds) {
 
 
 
+
 #' @importFrom SeuratObject CreateSeuratObject
 #' @importFrom SingleCellExperiment counts
 #' @importFrom Seurat NormalizeData as.sparse
@@ -166,7 +167,8 @@ get_seurat_clr <- function(cds) {
       margin = 2,
       assay = "ADT"
     )
-  data <- data@assays$ADT@data
+  # updated for Seurat v5
+  data <- data@assays$ADT@layers$data
   data <- Seurat::as.sparse(data)
   return(data)
 }
