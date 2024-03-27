@@ -21,3 +21,12 @@ a CDS with two new cell metadata columns
 \description{
 Use this function to transfer cell labels from one single cell dataset to another.  If a cds is provided for either reference or query, it is converted to a seurat object and the labels are transferred to the query by anchor finding.  The assignments will be in the form of a new cds column with name predicted."column name from reference".  This should be unique on the first application of the function to a query dataset.  However, if running queries against more than 1 reference data set it is possible that you will unintentionally generate the same column name which would overwrite the first assignment column.  The function checks for this and aborts with the recommendation to supply a unique id to the unique_id parameter.
 }
+\seealso{
+\code{\link[cli]{cli_abort}}
+\code{\link[Seurat]{components}}, \code{\link[Seurat]{SCTransform}}, \code{\link[Seurat]{RunPCA}}, \code{\link[Seurat]{RunUMAP}}, \code{\link[Seurat]{FindTransferAnchors}}, \code{\link[Seurat]{MapQuery}}
+\code{\link[monocle3]{exprs}}
+\code{\link[SingleCellExperiment]{character(0)}}
+\code{\link[purrr]{reexports}}
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate-joins}}
+\code{\link[tibble]{as_tibble}}
+}
