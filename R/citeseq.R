@@ -58,7 +58,6 @@ bb_cite_umap <-
         by = "antibody_id"
       ) |>
       select(cell_id, antibody = gene_short_name, binding)
-    return(data_tbl)
 
     dims <- SingleCellExperiment::reducedDims(cds)$UMAP
     colnames(dims) <- c("data_dim_1", "data_dim_2")
