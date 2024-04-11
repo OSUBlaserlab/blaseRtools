@@ -364,3 +364,7 @@
 # blaseRtools 0.0.0.9157
 
 * fixed bug in bb_cds_anno where joining the new cell annotations back onto the cds cell metadata failed due to failure to specify the joining columns.  This was only evident with cds queries containing conflicting cell metadata columns like RNA counts etc and resulted in NA assignments.
+
+# blaseRtools 0.0.0.9158
+
+* fixed bug in bb_cite_umap where we were matching additional antibodies inappropriately

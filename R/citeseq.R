@@ -48,9 +48,9 @@ bb_cite_umap <-
     if (length(antibody_id) == 0)
       cli::cli_abort("The requested antibody is not available in the data object.")
     data_tbl <- data_tbl |>
-      select(cell_id, matches(antibody_id)) |>
       pivot_longer(cols = -cell_id) |>
-      rename(antibody_id = name, binding = value) |>
+      filter(name == antibody_id) |>
+      dplyr::rename(antibody_id = name, binding = value) |>
       left_join(
         bb_rowmeta(cds_alt) |>
           filter(gene_short_name %in% antibody) |>
@@ -58,6 +58,7 @@ bb_cite_umap <-
         by = "antibody_id"
       ) |>
       select(cell_id, antibody = gene_short_name, binding)
+    return(data_tbl)
 
     dims <- SingleCellExperiment::reducedDims(cds)$UMAP
     colnames(dims) <- c("data_dim_1", "data_dim_2")
