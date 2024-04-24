@@ -292,7 +292,13 @@ bb_aggregate <-
 
 #' @importFrom dplyr mutate case_when filter
 get_gene_ids <- function(obj, gen, et = "Gene Expression") {
-  bb_rowmeta(obj, experiment_type = et) |>
+  rowmet <- bb_rowmeta(obj, experiment_type = et)
+  if (!"gene_short_name" %in% colnames(rowmet)) {
+    cli::cli_alert_warning("Copying feature_id to a new column, gene_short_name.")
+    cli::cli_alert_warning("You may want to change your object to have a proper gene_short_name metadata column.")
+    rowmet <- rowmet |> dplyr::mutate(gene_short_name = feature_id)
+  }
+  rowmet |>
     dplyr::mutate(
       ids =
         dplyr::case_when(

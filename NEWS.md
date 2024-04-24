@@ -368,3 +368,14 @@
 # blaseRtools 0.0.0.9158-9
 
 * fixed bug in bb_cite_umap where we were matching additional antibodies inappropriately
+
+# blaseRtools 0.0.0.9160:  
+
+* handled case when certain single cell objects do not have a gene_short_name column
+* applies to gene_umap and genebubbles
+* internal function get_gene_ids
+
+# blaseRtools 0.0.0.9161 todo
+
+* biaxial cite-seq plots
+* consensus reference columns
