@@ -375,7 +375,11 @@
 * applies to gene_umap and genebubbles
 * internal function get_gene_ids
 
-# blaseRtools 0.0.0.9161 todo
+# blaseRtools 0.0.0.9161 
+
+* fixed a bug where filter_cds returned all cells instead of 0 cells
+
+# todo
 
 * biaxial cite-seq plots
 * consensus reference columns
