@@ -379,6 +379,10 @@
 
 * fixed a bug where filter_cds returned all cells instead of 0 cells
 
+# blaseRtools 0.0.0.9162
+
+* parameterized bb_qc to change nmads
+
 # todo
 
 * biaxial cite-seq plots

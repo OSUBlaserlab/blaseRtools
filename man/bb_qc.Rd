@@ -8,6 +8,8 @@ bb_qc(
   cds,
   cds_name,
   genome = c("human", "mouse", "zfish"),
+  nmad_mito = 2,
+  nmad_detected = 2,
   max_mito = NULL,
   min_log_detected = NULL
 )

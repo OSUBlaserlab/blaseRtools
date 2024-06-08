@@ -1,10 +1,10 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   Ape: Ape.html
   blind_images: blind_images.html
   scRNAseq: scRNAseq.html
   trace: trace.html
-last_built: 2024-04-24T13:40Z
+last_built: 2024-06-08T14:22Z
 

@@ -12,7 +12,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  dev = "CairoPNG",
+  out.extra = ""
 )
 ```
 
@@ -149,7 +151,7 @@ vig_qc_res <- pmap(.l = list(cds = cds_list,
 ```
 
 For example:
-```{r, eval = FALSE, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, eval = FALSE, fig.align='center', fig.width=4.5, fig.height=3.5}
 vig_qc_res$chromium_controller[3]
 vig_qc_res$chromium_controller[4]
 ```
@@ -283,7 +285,7 @@ vignette_cds <- vignette_cds_aligned_temp
 rm(vignette_cds_aligned_temp)
 ```
 
-```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
+```{r, fig.align='center', fig.width=6.0, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "sample")
 ```
 
@@ -292,7 +294,7 @@ You can see that the pre-alignment dimensions are stored in the cell metadata so
 bb_cellmeta(vignette_cds)
 ```
 
-```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
+```{r, fig.align='center', fig.width=6.0, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "sample", 
             alt_dim_x = "prealignment_dim1", 
             alt_dim_y = "prealignment_dim2")
@@ -317,7 +319,7 @@ vignette_top_markers
 ```
 
 Now you can plot the cells and color by cluster type
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "partition")
 bb_var_umap(vignette_cds, var = "leiden")
 bb_var_umap(vignette_cds, var = "louvain")
@@ -366,7 +368,7 @@ bb_cellmeta(vignette_cds)
 
 You can plot the cells using the Seurat coordinates:
 
-```{r, dev='png', fig.align='center', fig.width=5.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=5.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "seurat_celltype_l1", 
             alt_dim_x = "seurat_dim1", 
@@ -377,7 +379,7 @@ bb_var_umap(vignette_cds,
 
 Or you can plot them using their own dimension reduction coordinates.  I think this method is better because it reflects the data more accurately.
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "seurat_celltype_l1")
 ```
 
@@ -389,7 +391,7 @@ Once this is done, I make new scripts for other analysis steps, such as Cell Ass
 
 Usually you want to pick a cluster resolution that is going to be useful and give all of the cells in that cluster the same name.  
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "leiden", plot_title = "Leiden Clusters")
 ```
 
@@ -409,7 +411,7 @@ That may be enough to tell you that Leiden cluster 1 is T/NK, Cluster 2 is Mono/
 If you have a complicated dataset you can use the more detailed seurat_celltype_l2 assignments and/or you can plot it like this:
 
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 ggplot(leiden_seurat, 
        mapping = aes(x = leiden, 
                      y = n, 
@@ -428,7 +430,7 @@ colData(vignette_cds)$leiden_assignment <- recode(colData(vignette_cds)$leiden,
                                                   "3" = "B")
 ```
 
-```{r, dev='png', fig.align='center', fig.width=6.0, fig.height=3.5}
+```{r, fig.align='center', fig.width=6.0, fig.height=3.5}
 bb_var_umap(vignette_cds, var = "leiden_assignment")
 ```
 
@@ -436,7 +438,7 @@ bb_var_umap(vignette_cds, var = "leiden_assignment")
 
 We've already used the main umap plotting function, bb_var_umap.  This allows you to color the cells by any cell metadata variable you choose.  You set the variable name as the "var" argument.  You can also highlight a specific value.
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "leiden_assignment", 
             value_to_highlight = "T/NK", 
@@ -446,7 +448,7 @@ bb_var_umap(vignette_cds,
 
 This function returns a ggplot so if you don't like the colors you just have to add on a different scale.  Color palettes can also be set internally in the function.  
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "leiden_assignment", 
             value_to_highlight = "T/NK", 
@@ -457,7 +459,7 @@ bb_var_umap(vignette_cds,
 
 An important concept for the overall analysis is understanding the distribution of cell states between experimental conditions.  We use a density function to calculate the local density of cells in UMAP space after faceting the plot by our experimental variable.  
 
-```{r, dev='png', fig.align='center', fig.width=7.0, fig.height=3.5}
+```{r, fig.align='center', fig.width=7.0, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "density", 
             facet_by = "equipment", 
@@ -469,7 +471,7 @@ As you can see, these are basically the same, which is what you would expect.
 
 Density is by definition normalized to the number of cells in the local area.  This can produce some over-normalization which may not be useful.  In this case you can map the color to the number of cells in local bins.  This may also work better with log normalization which you can do.  You would also want to use this with the option to downsample to the same number of overall cells so your plot isn't biased by the number of cells recovered.
 
-```{r, dev='png', fig.align='center', fig.width=7.0, fig.height=3.5}
+```{r, fig.align='center', fig.width=7.0, fig.height=3.5}
 bb_var_umap(vignette_cds, 
             var = "local_n", 
             nbin = 10, sample_equally = T, 
@@ -491,7 +493,7 @@ As in this case, usually Density looks better.
 
 Since the concept of distribution between cell states is so important, we have a dedicated function for plotting this.
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_cluster_representation(cds = vignette_cds, 
                           cluster_var = "leiden_assignment", 
                           class_var = "equipment", 
@@ -502,7 +504,7 @@ bb_cluster_representation(cds = vignette_cds,
 
 This function tells you which class of sample is enriched in each cluster.  The values are normalized according to the number of total cells captured for that class and presented as log fold change relative to one of the classes (control) which you designate.  Significance is determined using Fisher's exact test.  You can test any number of clusters but only two classes using this function.  As shown above, this function returns a ggplot which you can modify with any additional ggplot layers you like.  If this doesn't work for you, you can ask the function to return a data table which you can plot manually.
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_cluster_representation(cds = vignette_cds, 
                           cluster_var = "leiden_assignment", 
                           class_var = "equipment", 
@@ -518,7 +520,7 @@ In addition to plotting cell metadata variables, we can plot gene expression in 
 
 For example:
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_gene_umap(vignette_cds, 
              gene_or_genes = "CD3D")
 ```
@@ -528,14 +530,14 @@ Now a word of caution/advice.  I find that these plots are most useful for explo
 
 We can also plot multiple individual genes or aggregate gene scores (e.g. modules) using this function:
 
-```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3}
+```{r, fig.align='center', fig.width=7.5, fig.height=3}
 bb_gene_umap(vignette_cds, gene_or_genes = c("CD19", "CD3D", "CD14"))
 
 ```
 
 Note that for plotting aggregate genes, the parameter gene_or_genes should be provided with a data frame of two columns with the first column being ensembl cell id and the second being the gene grouping.
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 agg_genes <- 
   bb_rowmeta(vignette_cds) %>%
   select(id, module_labeled) %>%
@@ -553,7 +555,7 @@ bb_gene_umap(vignette_cds,
 A more information-dense way to plot these data is as a gene dotplot, or "gene bubbles".  This plot is less susceptible to misleading the reader because of overplotting.
 
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_genebubbles(vignette_cds,
                genes = c("CD3E", "CD14", "CD19"), 
                cell_grouping = "leiden_assignment")
@@ -561,7 +563,7 @@ bb_genebubbles(vignette_cds,
 
 If run with default settings, this will order the genes and cell groups using a biclustering algorithm.  This is not apparent on the plot above because of the small number of groups and genes.  But you can also specify the order:
 
-```{r, dev='png', fig.align='center', fig.width=4.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
 bb_genebubbles(vignette_cds, 
                 genes = c("CD3E", "CD14", "CD19"), 
                 cell_grouping = "leiden_assignment", 
@@ -572,7 +574,7 @@ bb_genebubbles(vignette_cds,
 
 You can generate composite variables like so:
 
-```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=7.5, fig.height=3.5}
 bb_genebubbles(vignette_cds, 
                 genes = c("CD3E", "CD14", "CD19"), 
                 cell_grouping = c("leiden_assignment", "louvain")) +
@@ -582,7 +584,7 @@ bb_genebubbles(vignette_cds,
 
 For more complicated figures, you can return a tibble and make the plot on your own:
 
-```{r, dev='png', fig.align='center', fig.width=7.5, fig.height=3.5}
+```{r, fig.align='center', fig.width=7.5, fig.height=3.5}
 bb_genebubbles(vignette_cds, 
                genes = c("CD3E", "CD14", "CD19"), 
                cell_grouping = c("leiden_assignment", "louvain"),
