@@ -53,7 +53,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	CVST	0.2.3	2024-05-05T21:06:27Z	72ac7fa441590c224dcb667ac1a261b1	/workspace/rst/cache_R-4.4.0/library/CVST/0.2-3/72ac7fa441590c224dcb667ac1a261b1/CVST	available
 4.4.0	CVXR	1.0.13	2024-06-04T05:10:18Z	25a1d4ff9df74d60aeb0e734271e72ff	/workspace/rst/cache_R-4.4.0/library/CVXR/1.0-13/25a1d4ff9df74d60aeb0e734271e72ff/CVXR	available
 4.4.0	Cairo	1.6.2	2024-05-05T21:06:41Z	9101e98a1be6782421c5394ea51ec5f5	/workspace/rst/cache_R-4.4.0/library/Cairo/1.6-2/9101e98a1be6782421c5394ea51ec5f5/Cairo	available
-4.4.0	CellChat	1.6.1	2024-05-05T21:07:50Z	ac6cce3aeea3dd1e29b34002b4dcbad6	/workspace/rst/cache_R-4.4.0/library/CellChat/1.6.1/ac6cce3aeea3dd1e29b34002b4dcbad6/CellChat	active
+4.4.0	CellChat	1.6.1	2024-06-08T14:30:17Z	305af501160fb6f779cf6b3bd61ab953	/workspace/rst/cache_R-4.4.0/library/CellChat/1.6.1/305af501160fb6f779cf6b3bd61ab953/CellChat	active
 4.4.0	ChIPpeakAnno	3.38.0	2024-05-05T20:36:35Z	ad9ef6507c75ae53a9ac1742bdfc5de8	/workspace/rst/cache_R-4.4.0/library/ChIPpeakAnno/3.38.0/ad9ef6507c75ae53a9ac1742bdfc5de8/ChIPpeakAnno	available
 4.4.0	ChIPseeker	1.40.0	2024-05-05T21:10:03Z	f7debed2aedaa3bf25cca515f3bde493	/workspace/rst/cache_R-4.4.0/library/ChIPseeker/1.40.0/f7debed2aedaa3bf25cca515f3bde493/ChIPseeker	available
 4.4.0	ChemmineR	3.56.0	2024-05-05T21:10:43Z	bacc3fe81c9cd1fc71d99229e2156d1c	/workspace/rst/cache_R-4.4.0/library/ChemmineR/3.56.0/bacc3fe81c9cd1fc71d99229e2156d1c/ChemmineR	available
@@ -93,7 +93,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	DiceKriging	1.6.0	2024-05-05T21:30:00Z	6f577893f7b2cade753d62cb3d032db1	/workspace/rst/cache_R-4.4.0/library/DiceKriging/1.6.0/6f577893f7b2cade753d62cb3d032db1/DiceKriging	available
 4.4.0	DiffBind	3.14.0	2024-05-06T12:52:07Z	b454d22899f2885f7b76919e16d3d3b2	/workspace/rst/cache_R-4.4.0/library/DiffBind/3.14.0/b454d22899f2885f7b76919e16d3d3b2/DiffBind	available
 4.4.0	DirichletMultinomial	1.46.0	2024-05-05T20:36:35Z	f0f2e878c6a7b9f0f50cf1ff0c31283d	/workspace/rst/cache_R-4.4.0/library/DirichletMultinomial/1.46.0/f0f2e878c6a7b9f0f50cf1ff0c31283d/DirichletMultinomial	available
-4.4.0	DoubletFinder	2.0.4	2024-05-05T21:30:21Z	6535087f5e918127a28d39a106529448	/workspace/rst/cache_R-4.4.0/library/DoubletFinder/2.0.4/6535087f5e918127a28d39a106529448/DoubletFinder	active
+4.4.0	DoubletFinder	2.0.4	2024-06-08T14:30:18Z	2599f5a7a54e2a6bef91dd833f967171	/workspace/rst/cache_R-4.4.0/library/DoubletFinder/2.0.4/2599f5a7a54e2a6bef91dd833f967171/DoubletFinder	active
 4.4.0	DropletUtils	1.24.0	2024-05-05T21:33:08Z	7ceda58423d3a7d5339fee931dbd52a7	/workspace/rst/cache_R-4.4.0/library/DropletUtils/1.24.0/7ceda58423d3a7d5339fee931dbd52a7/DropletUtils	available
 4.4.0	ECOSolveR	0.5.5	2024-05-05T21:06:35Z	a3d88331ce653e48608ddc77636e1562	/workspace/rst/cache_R-4.4.0/library/ECOSolveR/0.5.5/a3d88331ce653e48608ddc77636e1562/ECOSolveR	available
 4.4.0	EGAnet	2.0.6	2024-05-05T21:33:29Z	1af96d3b1efac949b370a94ea0fc1c6d	/workspace/rst/cache_R-4.4.0/library/EGAnet/2.0.6/1af96d3b1efac949b370a94ea0fc1c6d/EGAnet	available
@@ -433,9 +433,9 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	bit	4.0.5	2024-05-06T05:03:37Z	ff573e83b0f96f1a6d70360cc7c4af58	/workspace/rst/cache_R-4.4.0/library/bit/4.0.5/ff573e83b0f96f1a6d70360cc7c4af58/bit	available
 4.4.0	bit64	4.0.5	2024-05-06T05:03:37Z	32816b1d6c23bf4d0df85ba208014041	/workspace/rst/cache_R-4.4.0/library/bit64/4.0.5/32816b1d6c23bf4d0df85ba208014041/bit64	available
 4.4.0	bitops	1.0.7	2024-05-05T20:16:52Z	6c047a71e642d02a021c46d691096b60	/workspace/rst/cache_R-4.4.0/library/bitops/1.0-7/6c047a71e642d02a021c46d691096b60/bitops	available
-4.4.0	blaseRdata	0.0.0.9013	2024-05-05T22:49:32Z	c65b4975460ce8649dd3f29cd35e60fb	/workspace/rst/cache_R-4.4.0/library/blaseRdata/0.0.0.9013/c65b4975460ce8649dd3f29cd35e60fb/blaseRdata	active
+4.4.0	blaseRdata	0.0.0.9013	2024-06-08T14:30:18Z	9cc539e0cde0dedcf3b5a1ccbd807d48	/workspace/rst/cache_R-4.4.0/library/blaseRdata/0.0.0.9013/9cc539e0cde0dedcf3b5a1ccbd807d48/blaseRdata	active
 4.4.0	blaseRextras	0.0.0.9007	2024-05-06T12:45:09Z	7e4d1b9cce7d9e8a24e0f03154f60826	/workspace/rst/cache_R-4.4.0/library/blaseRextras/0.0.0.9007/7e4d1b9cce7d9e8a24e0f03154f60826/blaseRextras	available
-4.4.0	blaseRtools	0.0.0.9161	2024-05-06T10:40:57Z	38ab1db24760723246322d6f0a656efd	/workspace/rst/cache_R-4.4.0/library/blaseRtools/0.0.0.9161/38ab1db24760723246322d6f0a656efd/blaseRtools	active
+4.4.0	blaseRtools	0.0.0.9162	2024-06-08T14:30:19Z	55acc3384a0936aafb96a1b91e050169	/workspace/rst/cache_R-4.4.0/library/blaseRtools/0.0.0.9162/55acc3384a0936aafb96a1b91e050169/blaseRtools	active
 4.4.0	blavaan	0.5.4	2024-05-05T22:50:29Z	1a62824164bf1ce852e8f7be0a0bdecd	/workspace/rst/cache_R-4.4.0/library/blavaan/0.5-4/1a62824164bf1ce852e8f7be0a0bdecd/blavaan	available
 4.4.0	blme	1.0.5	2024-05-05T22:50:45Z	a7472fbc9bc4faa71080a55d4811599d	/workspace/rst/cache_R-4.4.0/library/blme/1.0-5/a7472fbc9bc4faa71080a55d4811599d/blme	available
 4.4.0	blob	1.2.4	2024-05-05T20:16:53Z	81cbc3af9ecd8ffc491ddb2a9a4ef87e	/workspace/rst/cache_R-4.4.0/library/blob/1.2.4/81cbc3af9ecd8ffc491ddb2a9a4ef87e/blob	available
@@ -1532,7 +1532,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	sos	2.1.7	2024-05-06T01:42:49Z	1ab4a5ba87d0ce6b6f144306f15af8d3	/workspace/rst/cache_R-4.4.0/library/sos/2.1-7/1ab4a5ba87d0ce6b6f144306f15af8d3/sos	available
 4.4.0	sourcetools	0.1.7.1	2024-05-06T05:04:23Z	6aa83a7f1c4689448cb62578ead42238	/workspace/rst/cache_R-4.4.0/library/sourcetools/0.1.7-1/6aa83a7f1c4689448cb62578ead42238/sourcetools	available
 4.4.0	sp	2.1.4	2024-05-05T20:36:47Z	2184024a1c1ddbb5b111c7e5666737e2	/workspace/rst/cache_R-4.4.0/library/sp/2.1-4/2184024a1c1ddbb5b111c7e5666737e2/sp	available
-4.4.0	spData	2.3.0	2024-05-05T22:22:28Z	66893cd3c6b1de4a13a603ec3b5b61a7	/workspace/rst/cache_R-4.4.0/library/spData/2.3.0/66893cd3c6b1de4a13a603ec3b5b61a7/spData	available
+4.4.0	spData	2.3.1	2024-06-08T14:30:19Z	d7a47a4c79c39a62ab8e69e82c50785e	/workspace/rst/cache_R-4.4.0/library/spData/2.3.1/d7a47a4c79c39a62ab8e69e82c50785e/spData	available
 4.4.0	spacefillr	0.3.3	2024-05-24T05:06:01Z	314d6d36d46c0234c49c06a7bfb17da6	/workspace/rst/cache_R-4.4.0/library/spacefillr/0.3.3/314d6d36d46c0234c49c06a7bfb17da6/spacefillr	available
 4.4.0	spacetime	1.3.1	2024-05-05T23:41:58Z	22715a115464959ad5e7674a893c512c	/workspace/rst/cache_R-4.4.0/library/spacetime/1.3-1/22715a115464959ad5e7674a893c512c/spacetime	available
 4.4.0	spam	2.10.0	2024-05-05T21:30:24Z	e5f74770c61a7ac22a24f6aa0098ff80	/workspace/rst/cache_R-4.4.0/library/spam/2.10-0/e5f74770c61a7ac22a24f6aa0098ff80/spam	available

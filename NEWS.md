@@ -383,6 +383,10 @@
 
 * parameterized bb_qc to change nmads
 
+# blaseRtools 0.0.0.9163
+
+* added minimum segment length parameter to bb_var_umap
+
 # todo
 
 * biaxial cite-seq plots

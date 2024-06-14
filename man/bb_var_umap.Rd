@@ -42,7 +42,8 @@ bb_var_umap(
   outline_alpha = 1,
   ...,
   man_text_df = NULL,
-  text_geom = "text"
+  text_geom = "text",
+  minimum_segment_length = 1
 )
 }
 \arguments{
@@ -114,6 +115,8 @@ order_cells and choose_graph_segments in non-interactive mode.}
 \item{...}{Additional params for facetting.}
 
 \item{man_text_df}{A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.}
+
+\item{minimum_segment_length}{Minimum length of a line to draw from label to centroid.}
 }
 \value{
 a ggplot

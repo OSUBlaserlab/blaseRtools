@@ -24,6 +24,7 @@
 #' @param raster_dpi If rasterize then this is the DPI used.  Default = 300.
 #' @param ... Additional params for facetting.
 #' @param man_text_df A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.
+#' @param minimum_segment_length Minimum length of a line to draw from label to centroid.
 #' @param show_trajectory_graph Whether to render the principal graph for the
 #'   trajectory. Requires that learn_graph() has been called on cds.
 #' @param trajectory_graph_color The color to be used for plotting the
@@ -83,7 +84,8 @@ bb_var_umap <- function(obj,
                         outline_alpha = 1,
                         ...,
                         man_text_df = NULL,
-                        text_geom = "text") {
+                        text_geom = "text",
+                        minimum_segment_length = 1) {
   cds_warn(cds)
   obj_stop(obj)
 
@@ -92,7 +94,7 @@ bb_var_umap <- function(obj,
     text_geom_repel <- geom_label_repel
   } else {
     text_geom <- geom_text
-    text_geom_repel <- geom_text_repel
+    text_geom_repel <- ggrepel::geom_text_repel
   }
 
   if ("cell_data_set" %in% class(obj)) {
@@ -482,7 +484,7 @@ bb_var_umap <- function(obj,
         data = text_df,
         mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
         size = group_label_size,
-        min.segment.length = 1
+        min.segment.length = minimum_segment_length
       )
   } else if (!is.null(man_text_df)) {
     plot <- plot +
@@ -490,7 +492,9 @@ bb_var_umap <- function(obj,
       text_geom(
         data = text_df,
         mapping = ggplot2::aes_string(x = "text_x", y = "text_y", label = "label"),
-        size = group_label_size
+        size = group_label_size,
+        min.segment.length = minimum_segment_length
+
       )
   }
   if (rasterize)

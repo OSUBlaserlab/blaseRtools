@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9162</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9163</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,8 @@
 <span>  outline_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  man_text_df <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  text_geom <span class="op">=</span> <span class="st">"text"</span></span>
+<span>  text_geom <span class="op">=</span> <span class="st">"text"</span>,</span>
+<span>  minimum_segment_length <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -235,6 +236,10 @@ order_cells and choose_graph_segments in non-interactive mode.</p></dd>
 
 <dt>man_text_df</dt>
 <dd><p>A data frame in the form of text_x = numeric_vector, text_y = numeric_vector, label = character_vector for manually placing text labels.</p></dd>
+
+
+<dt>minimum_segment_length</dt>
+<dd><p>Minimum length of a line to draw from label to centroid.</p></dd>
 
 </dl></div>
     <div class="section level2">
