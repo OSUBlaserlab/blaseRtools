@@ -387,6 +387,10 @@
 
 * added minimum segment length parameter to bb_var_umap
 
+# blaseRtools 0.0.0.9164
+
+* added bb_loupeR function
+
 # todo
 
 * biaxial cite-seq plots

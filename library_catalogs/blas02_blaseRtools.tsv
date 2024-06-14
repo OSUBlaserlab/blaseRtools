@@ -435,7 +435,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	bitops	1.0.7	2024-05-05T20:16:52Z	6c047a71e642d02a021c46d691096b60	/workspace/rst/cache_R-4.4.0/library/bitops/1.0-7/6c047a71e642d02a021c46d691096b60/bitops	available
 4.4.0	blaseRdata	0.0.0.9013	2024-06-08T14:30:18Z	9cc539e0cde0dedcf3b5a1ccbd807d48	/workspace/rst/cache_R-4.4.0/library/blaseRdata/0.0.0.9013/9cc539e0cde0dedcf3b5a1ccbd807d48/blaseRdata	active
 4.4.0	blaseRextras	0.0.0.9007	2024-05-06T12:45:09Z	7e4d1b9cce7d9e8a24e0f03154f60826	/workspace/rst/cache_R-4.4.0/library/blaseRextras/0.0.0.9007/7e4d1b9cce7d9e8a24e0f03154f60826/blaseRextras	available
-4.4.0	blaseRtools	0.0.0.9162	2024-06-08T14:30:19Z	55acc3384a0936aafb96a1b91e050169	/workspace/rst/cache_R-4.4.0/library/blaseRtools/0.0.0.9162/55acc3384a0936aafb96a1b91e050169/blaseRtools	active
+4.4.0	blaseRtools	0.0.0.9163	2024-06-14T02:43:27Z	f8038d2dc875e82bd9c3aec150366116	/workspace/rst/cache_R-4.4.0/library/blaseRtools/0.0.0.9163/f8038d2dc875e82bd9c3aec150366116/blaseRtools	active
 4.4.0	blavaan	0.5.4	2024-05-05T22:50:29Z	1a62824164bf1ce852e8f7be0a0bdecd	/workspace/rst/cache_R-4.4.0/library/blavaan/0.5-4/1a62824164bf1ce852e8f7be0a0bdecd/blavaan	available
 4.4.0	blme	1.0.5	2024-05-05T22:50:45Z	a7472fbc9bc4faa71080a55d4811599d	/workspace/rst/cache_R-4.4.0/library/blme/1.0-5/a7472fbc9bc4faa71080a55d4811599d/blme	available
 4.4.0	blob	1.2.4	2024-05-05T20:16:53Z	81cbc3af9ecd8ffc491ddb2a9a4ef87e	/workspace/rst/cache_R-4.4.0/library/blob/1.2.4/81cbc3af9ecd8ffc491ddb2a9a4ef87e/blob	available
@@ -594,7 +594,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	domir	1.2.0	2024-05-05T23:09:52Z	e8bdf32f8a3367e70db3d75dc0ad426f	/workspace/rst/cache_R-4.4.0/library/domir/1.2.0/e8bdf32f8a3367e70db3d75dc0ad426f/domir	available
 4.4.0	dotCall64	1.1.1	2024-05-05T20:20:44Z	f40e84c0e3dbd1ad8b557735b53ce15b	/workspace/rst/cache_R-4.4.0/library/dotCall64/1.1-1/f40e84c0e3dbd1ad8b557735b53ce15b/dotCall64	available
 4.4.0	dotwhisker	0.8.9999	2024-05-07T05:11:33Z	8b7a51c84280cefda276535b8c3b3ad9	/workspace/rst/cache_R-4.4.0/library/dotwhisker/0.8.9999/8b7a51c84280cefda276535b8c3b3ad9/dotwhisker	available
-4.4.0	downlit	0.4.3	2024-05-06T05:03:50Z	b885c8538bdc80735e7b7ac1fec74a3b	/workspace/rst/cache_R-4.4.0/library/downlit/0.4.3/b885c8538bdc80735e7b7ac1fec74a3b/downlit	available
+4.4.0	downlit	0.4.4	2024-06-12T05:09:08Z	9bc6c1efc7fe45c99b71bc85f6a773cd	/workspace/rst/cache_R-4.4.0/library/downlit/0.4.4/9bc6c1efc7fe45c99b71bc85f6a773cd/downlit	available
 4.4.0	downloader	0.4	2024-05-05T23:00:19Z	676ce4394bec55fdb05e9472568648a9	/workspace/rst/cache_R-4.4.0/library/downloader/0.4/676ce4394bec55fdb05e9472568648a9/downloader	available
 4.4.0	dplyr	1.1.4	2024-05-06T05:03:50Z	60bf58b00132e6770720e546b6d3c9b4	/workspace/rst/cache_R-4.4.0/library/dplyr/1.1.4/60bf58b00132e6770720e546b6d3c9b4/dplyr	active
 4.4.0	dqrng	0.4.1	2024-05-30T05:13:16Z	e66699458a50314fd63fd6bc0f1bd604	/workspace/rst/cache_R-4.4.0/library/dqrng/0.4.1/e66699458a50314fd63fd6bc0f1bd604/dqrng	available
@@ -637,7 +637,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	etm	1.1.1	2024-05-05T21:41:42Z	ef513aaecafa809ecde74e83e2443765	/workspace/rst/cache_R-4.4.0/library/etm/1.1.1/ef513aaecafa809ecde74e83e2443765/etm	available
 4.4.0	etrunct	0.1	2024-05-05T21:30:23Z	9a6260b88bdaa2988dc4bdb99f3e9c9f	/workspace/rst/cache_R-4.4.0/library/etrunct/0.1/9a6260b88bdaa2988dc4bdb99f3e9c9f/etrunct	available
 4.4.0	eulerr	7.0.2	2024-05-05T23:14:28Z	f92bd0b28a2d3252b08211b338ec427a	/workspace/rst/cache_R-4.4.0/library/eulerr/7.0.2/f92bd0b28a2d3252b08211b338ec427a/eulerr	available
-4.4.0	evaluate	0.23	2024-05-06T05:03:51Z	c4e500d4bcea1de7e7e7bd2eef2f17ed	/workspace/rst/cache_R-4.4.0/library/evaluate/0.23/c4e500d4bcea1de7e7e7bd2eef2f17ed/evaluate	available
+4.4.0	evaluate	0.24.0	2024-06-12T05:09:08Z	2e62500ad9f94b19586280c99bc5fa54	/workspace/rst/cache_R-4.4.0/library/evaluate/0.24.0/2e62500ad9f94b19586280c99bc5fa54/evaluate	available
 4.4.0	evgam	1.0.0	2024-05-05T23:05:54Z	7ef2a89a71004d8c9aa2c1c4652a2cb3	/workspace/rst/cache_R-4.4.0/library/evgam/1.0.0/7ef2a89a71004d8c9aa2c1c4652a2cb3/evgam	available
 4.4.0	exactRankTests	0.8.35	2024-05-05T22:28:26Z	5faef8c9719d7244f79dbb52159a6bd9	/workspace/rst/cache_R-4.4.0/library/exactRankTests/0.8-35/5faef8c9719d7244f79dbb52159a6bd9/exactRankTests	available
 4.4.0	expm	0.999.9	2024-05-05T21:07:54Z	68d498305d03a38478f5a6193b2e2706	/workspace/rst/cache_R-4.4.0/library/expm/0.999-9/68d498305d03a38478f5a6193b2e2706/expm	available
@@ -1005,7 +1005,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	logspline	2.1.22	2024-05-12T05:07:53Z	20e3d00bc473dbf23a8c942c3096654e	/workspace/rst/cache_R-4.4.0/library/logspline/2.1.22/20e3d00bc473dbf23a8c942c3096654e/logspline	available
 4.4.0	lokern	1.1.11	2024-05-05T23:56:24Z	2654c4011c7113c8ebd71d446e1b4e68	/workspace/rst/cache_R-4.4.0/library/lokern/1.1-11/2654c4011c7113c8ebd71d446e1b4e68/lokern	available
 4.4.0	loo	2.7.0	2024-05-05T22:50:31Z	281c2d046487e4ad799ca86bee51a0fd	/workspace/rst/cache_R-4.4.0/library/loo/2.7.0/281c2d046487e4ad799ca86bee51a0fd/loo	available
-4.4.0	loupeR	1.1.0	2024-05-10T21:08:35Z	49c5e553592469f1b7dfff991628a66f	/workspace/rst/cache_R-4.4.0/library/loupeR/1.1.0/49c5e553592469f1b7dfff991628a66f/loupeR	available
+4.4.0	loupeR	1.1.0	2024-05-10T21:08:35Z	49c5e553592469f1b7dfff991628a66f	/workspace/rst/cache_R-4.4.0/library/loupeR/1.1.0/49c5e553592469f1b7dfff991628a66f/loupeR	active
 4.4.0	lpSolve	5.6.20	2024-05-05T22:11:36Z	aa54d95223f109d92793a7c34309f696	/workspace/rst/cache_R-4.4.0/library/lpSolve/5.6.20/aa54d95223f109d92793a7c34309f696/lpSolve	available
 4.4.0	lpSolveAPI	5.5.2.0.17.11	2024-05-19T05:07:39Z	d88359209dc4c585b7cd307fac668ee9	/workspace/rst/cache_R-4.4.0/library/lpSolveAPI/5.5.2.0-17.11/d88359209dc4c585b7cd307fac668ee9/lpSolveAPI	available
 4.4.0	lqmm	1.5.8	2024-05-05T23:56:39Z	c07c33a022dadd1c863a4ecf66b2db86	/workspace/rst/cache_R-4.4.0/library/lqmm/1.5.8/c07c33a022dadd1c863a4ecf66b2db86/lqmm	available
@@ -1552,7 +1552,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	spatstat.random	3.2.3	2024-05-05T22:23:19Z	8ec6ad1cb4ff3088ed6c490951305251	/workspace/rst/cache_R-4.4.0/library/spatstat.random/3.2-3/8ec6ad1cb4ff3088ed6c490951305251/spatstat.random	available
 4.4.0	spatstat.sparse	3.0.3	2024-05-05T22:23:19Z	7bf155e6efa6a78afff2d0a1f7a5ff17	/workspace/rst/cache_R-4.4.0/library/spatstat.sparse/3.0-3/7bf155e6efa6a78afff2d0a1f7a5ff17/spatstat.sparse	available
 4.4.0	spatstat.utils	3.0.4	2024-05-05T22:23:19Z	e2c7edcf0234b46727aa5d310296ad33	/workspace/rst/cache_R-4.4.0/library/spatstat.utils/3.0-4/e2c7edcf0234b46727aa5d310296ad33/spatstat.utils	available
-4.4.0	spdep	1.3.4	2024-06-02T05:11:27Z	2ded7b305585dcfeb2d791d147bce01d	/workspace/rst/cache_R-4.4.0/library/spdep/1.3-4/2ded7b305585dcfeb2d791d147bce01d/spdep	available
+4.4.0	spdep	1.3.5	2024-06-12T05:09:10Z	f09a6f99746877a163d820dc40f7743c	/workspace/rst/cache_R-4.4.0/library/spdep/1.3-5/f09a6f99746877a163d820dc40f7743c/spdep	available
 4.4.0	speedglm	0.3.5	2024-05-05T22:49:36Z	4383565c191e6c79d20e2d9e31a4449b	/workspace/rst/cache_R-4.4.0/library/speedglm/0.3-5/4383565c191e6c79d20e2d9e31a4449b/speedglm	active
 4.4.0	spelling	2.3.0	2024-05-06T01:47:42Z	d8573bfbb948a4c289c909b2f5ca9454	/workspace/rst/cache_R-4.4.0/library/spelling/2.3.0/d8573bfbb948a4c289c909b2f5ca9454/spelling	available
 4.4.0	splancs	2.1.45	2024-05-29T05:13:33Z	01af3aa2f49567730fe677293c77e9ef	/workspace/rst/cache_R-4.4.0/library/splancs/2.01-45/01af3aa2f49567730fe677293c77e9ef/splancs	available
@@ -1716,7 +1716,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.4.0	vsn	3.72.0	2024-05-05T22:07:27Z	c8e6e61378b11db11a8f918746198c23	/workspace/rst/cache_R-4.4.0/library/vsn/3.72.0/c8e6e61378b11db11a8f918746198c23/vsn	available
 4.4.0	vtreat	1.6.4	2024-05-06T02:11:20Z	69d910737768eeadbceb6cd42473af2c	/workspace/rst/cache_R-4.4.0/library/vtreat/1.6.4/69d910737768eeadbceb6cd42473af2c/vtreat	available
 4.4.0	waiter	0.2.5	2024-05-05T22:52:44Z	c823b960cf4651f27b64dad39060110b	/workspace/rst/cache_R-4.4.0/library/waiter/0.2.5/c823b960cf4651f27b64dad39060110b/waiter	available
-4.4.0	waldo	0.5.2	2024-05-06T05:04:32Z	17feaa4184f3bff52e42ffec11cec8ea	/workspace/rst/cache_R-4.4.0/library/waldo/0.5.2/17feaa4184f3bff52e42ffec11cec8ea/waldo	available
+4.4.0	waldo	0.5.2	2024-05-06T05:04:32Z	17feaa4184f3bff52e42ffec11cec8ea	/workspace/rst/cache_R-4.4.0/library/waldo/0.5.2/17feaa4184f3bff52e42ffec11cec8ea/waldo	active
 4.4.0	warp	0.2.1	2024-05-05T22:49:37Z	f535e40672d819bbacdd0d879ce6d75d	/workspace/rst/cache_R-4.4.0/library/warp/0.2.1/f535e40672d819bbacdd0d879ce6d75d/warp	available
 4.4.0	webfakes	1.3.1	2024-05-06T02:11:38Z	5e56d232292021f45c0ebad9f5ead072	/workspace/rst/cache_R-4.4.0/library/webfakes/1.3.1/5e56d232292021f45c0ebad9f5ead072/webfakes	available
 4.4.0	webmockr	0.9.0	2024-05-06T13:48:41Z	94b8be0fd563a2df96f99595f3830a40	/workspace/rst/cache_R-4.4.0/library/webmockr/0.9.0/94b8be0fd563a2df96f99595f3830a40/webmockr	available
