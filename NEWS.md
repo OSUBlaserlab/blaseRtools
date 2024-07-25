@@ -391,6 +391,10 @@
 
 * added bb_loupeR function
 
+# blaseRtools 0.0.0.9165
+
+* added bb_daseq
+
 # todo
 
 * biaxial cite-seq plots

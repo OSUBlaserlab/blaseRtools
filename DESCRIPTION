@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9164
+Version: 0.0.0.9165
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -103,7 +103,8 @@ Imports:
     igraph,
     reshape2,
     fields,
-    KernSmooth
+    KernSmooth,
+    DAseq
 Depends: 
     tidyverse,
     blaseRdata,
