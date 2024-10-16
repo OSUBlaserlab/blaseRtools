@@ -395,6 +395,11 @@
 
 * added bb_daseq
 
+# blaseRtools 0.0.0.9166
+
+* added hexify to bb_var_umap
+* changed the interaction label used by bb_cellchat_heatmap because of duplications in the cellchat database.  This may cause cosmetic changes in old code.
+
 # todo
 
 * biaxial cite-seq plots

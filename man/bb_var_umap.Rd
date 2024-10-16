@@ -43,7 +43,9 @@ bb_var_umap(
   ...,
   man_text_df = NULL,
   text_geom = "text",
-  minimum_segment_length = 1
+  minimum_segment_length = 1,
+  hexify = FALSE,
+  n_hexbins = 100
 )
 }
 \arguments{

@@ -85,7 +85,9 @@ bb_var_umap <- function(obj,
                         ...,
                         man_text_df = NULL,
                         text_geom = "text",
-                        minimum_segment_length = 1) {
+                        minimum_segment_length = 1,
+                        hexify = FALSE,
+                        n_hexbins = 100) {
   cds_warn(cds)
   obj_stop(obj)
 
@@ -330,6 +332,21 @@ bb_var_umap <- function(obj,
         end = 0.9,
         guide = "none"
       )
+  } else if (hexify) {
+    if(!is.numeric(data_long$value)) {
+      cli::cli_abort("Var must be numeric to use hexify.")
+    }
+    plot <- ggplot(data_long,
+                   aes_string(
+                     x = dim_x,
+                    y = dim_y)) +
+      stat_summary_hex(aes(z = value),
+                       fun = mean,
+                       bins = n_hexbins) +
+      scale_fill_gradient2(high = "red3",
+                           mid = "transparent",
+                           low = "blue4")
+
   } else {
     plot <- plot +
       ggplot2::geom_point(
@@ -345,17 +362,19 @@ bb_var_umap <- function(obj,
         alpha = foreground_alpha,
         size = cell_size
       )
+
+    # apply palettes
     if (class(data_long$value) == "numeric") {
       plot <- plot +
         ggplot2::scale_fill_viridis_c(guide = "colorbar", na.value = "transparent") +
         ggplot2::scale_color_viridis_c(guide = "none", na.value = "grey80")
-    } else if (length(palette) == 1 && palette == "viridis") {
+    } else if (palette == "viridis") {
       plot <- plot +
         ggplot2::scale_fill_viridis_d(begin = 0.1, end = 0.9) +
         ggplot2::scale_color_viridis_d(begin = 0.1,
                                        end = 0.9,
                                        guide = "none")
-    } else if (length(palette) == 1 && palette == "rcolorbrewer") {
+    } else if (palette == "rcolorbrewer") {
       plot <-
         plot + ggplot2::scale_color_brewer(palette = "Paired", guide = "none") +
         ggplot2::scale_fill_brewer(palette = "Paired")

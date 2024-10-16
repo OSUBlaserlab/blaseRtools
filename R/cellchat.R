@@ -218,13 +218,15 @@ bb_cellchat_heatmap <- function(object,
     mtx <- mtx |> dplyr::filter(source %in% source_filter)
   if (!is.null(target_filter))
     mtx <- mtx |> dplyr::filter(target %in% target_filter)
+
   mtx <- mtx |>
     dplyr::mutate(source_target = paste0(source, " -> ", target)) |>
-    dplyr::select(source_target, interaction_name_2, prob) |>
+    dplyr::select(source_target, interaction_name, prob) |>
     tidyr::pivot_wider(
-      names_from = interaction_name_2,
+      names_from = interaction_name,
       values_from = prob,
-      values_fill = 0
+      values_fill = 0,
+      names_repair = "universal"
     ) |>
     bb_tbl_to_matrix() |>
     t()
