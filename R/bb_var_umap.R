@@ -368,13 +368,13 @@ bb_var_umap <- function(obj,
       plot <- plot +
         ggplot2::scale_fill_viridis_c(guide = "colorbar", na.value = "transparent") +
         ggplot2::scale_color_viridis_c(guide = "none", na.value = "grey80")
-    } else if (palette == "viridis") {
+    } else if (length(palette) == 1 && palette == "viridis") {
       plot <- plot +
         ggplot2::scale_fill_viridis_d(begin = 0.1, end = 0.9) +
         ggplot2::scale_color_viridis_d(begin = 0.1,
                                        end = 0.9,
                                        guide = "none")
-    } else if (palette == "rcolorbrewer") {
+    } else if (length(palette) == 1 && palette == "rcolorbrewer") {
       plot <-
         plot + ggplot2::scale_color_brewer(palette = "Paired", guide = "none") +
         ggplot2::scale_fill_brewer(palette = "Paired")
