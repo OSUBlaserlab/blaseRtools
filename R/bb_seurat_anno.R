@@ -13,7 +13,7 @@
 #' @importFrom SummarizedExperiment colData
 bb_seurat_anno <- function(cds, reference) {
   seurat_reference <- SeuratDisk::LoadH5Seurat(reference)
-  exprs <- monocle3::exprs(cds_main)
+  exprs <- monocle3::exprs(cds)
   rownames(exprs) <-
     dplyr::left_join(tibble::tibble(feature_id = rownames(exprs)),
                      bb_rowmeta(cds)) |>

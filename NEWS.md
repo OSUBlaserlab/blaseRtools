@@ -404,6 +404,10 @@
 
 * fixed bug
 
+# blaseRtools 0.0.0.9168
+
+* fixed bug in bb_seurat_anno where cds was misidentified
+
 # todo
 
 * biaxial cite-seq plots
