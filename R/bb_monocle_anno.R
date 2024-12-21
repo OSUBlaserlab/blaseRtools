@@ -16,7 +16,7 @@
 #' @importFrom fs path
 #' @importFrom dplyr select matches
 #' @import cli
-#' @importFrom function purrr reduce map
+#' @importFrom purrr reduce map
 #' @importFrom dplyr select join_by left_join
 bb_monocle_anno <-
   function(cds_qry, cds_ref, labels, suffix = "_ref") {
