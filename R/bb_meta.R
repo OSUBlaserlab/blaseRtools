@@ -84,3 +84,10 @@ obj_stop <- function(obj) {
       class(obj) %in% c("cell_data_set", "Seurat", "monocle3", "SeuratObject")
   )
 }
+
+cds_stop <- function(obj) {
+  if (!class(obj) %in% c("cell_data_set", "monocle3") ) {
+    cli::cli_abort("You must use this function on a cell_data_set object.")
+  }
+
+}

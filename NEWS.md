@@ -408,6 +408,10 @@
 
 * fixed bug in bb_seurat_anno where cds was misidentified
 
+# blaseRtools 0.0.0.9169
+
+* added monocle anno
+
 # todo
 
 * biaxial cite-seq plots
