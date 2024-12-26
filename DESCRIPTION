@@ -30,7 +30,7 @@ Imports:
     ashr,
     readxl,
     cowplot,
-    monocle3,
+    monocle3 (>= 1.4.22),
     MASS,
     Matrix,
     Seurat,

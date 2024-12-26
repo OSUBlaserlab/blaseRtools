@@ -412,6 +412,10 @@
 
 * added monocle anno
 
+# blaseRtools 0.0.0.9170
+
+* imports newest monocle3
+
 # todo
 
 * biaxial cite-seq plots
