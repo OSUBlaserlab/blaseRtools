@@ -49,6 +49,10 @@ bb_cellchat <-
 
       # get the expression data
       cellchat_data <- monocle3::normalized_counts(cds)
+      if (class(cellchat_data) != "dgCMatrix") {
+        cellchat_data <- as(cellchat_data, "dgCMatrix")
+      }
+
       row.names(cellchat_data) <-
         dplyr::left_join(tibble::tibble(feature_id = row.names(cellchat_data)),
                          bb_rowmeta(cds)) |>

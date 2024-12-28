@@ -416,6 +416,10 @@
 
 * imports newest monocle3
 
+# blaseRtools 0.0.0.9171
+
+* fixes bug in cellchat to work with on disk matrices
+
 # todo
 
 * biaxial cite-seq plots
