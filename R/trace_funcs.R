@@ -245,7 +245,7 @@ bb_makeTrace <- function(obj,
  if (!is.null(peaks)) {
     # read in the peak file in granges format
     peaks_to_add <- peaks
-    values(peaks_to_add) <- NULL
+    # values(peaks_to_add) <- NULL
     peaks_to_add <- buff_granges(peaks_to_add, gen = genome)
 
     # trim the data and clean up levels
@@ -476,7 +476,7 @@ theme_min_y <- function() {
 #' @param pal A color palette.  Can also be added after the fact.
 #' @param legend_pos Color legend position. Can also be added after the fact.  Defaults to "none".
 #' @param group_filter Optional value to filter the trace data by.  Should be a value from the "group" metadata variable in the trace object.
-#' @param group_filter Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.
+#' @param group_variable Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @export
@@ -540,12 +540,16 @@ bb_plot_trace_data <- function(trace,
 #'
 #' @param trace A Trace object.
 #' @param fill_color The color to fill the peak graphics with.  Defaults to grey60.
+#' @param group_filter Optional value to filter the peak data by.  Should be a value from the "group" metadata variable in the trace object.
+#' @param group_variable Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.
 #' @import tidyverse
 #' @importFrom BiocGenerics as.data.frame
 #' @importFrom cli cli_abort
 #' @export
 bb_plot_trace_peaks <- function(trace,
-                                fill_color = "grey60") {
+                                group_filter = NULL,
+                                group_variable = "group",
+                                pal = NULL) {
   gr <- Trace.peaks(trace)
 
   if (start(gr[1]) > end(gr[1])) {
@@ -559,11 +563,23 @@ bb_plot_trace_peaks <- function(trace,
     mutate(mid = width / 2 + start) |>
     mutate(type = "Peaks")
 
+  if(!is.null(group_filter)) {
+    gr_tbl <- filter(gr_tbl, !!sym(group_variable) == group_filter)
+  }
+
   p <- ggplot(data = gr_tbl,
               mapping = aes(x = mid,
                             y = type,
-                            width = width)) +
-    geom_tile(color = "black", fill = fill_color)
+                            width = width))
+  if (is.null(pal)) {
+    p <- p +
+      geom_tile(color = "black", fill = "grey60")
+  } else {
+    p <- p +
+      geom_tile(color = "black", aes(fill = !!sym(group_variable))) +
+      scale_fill_manual(values = pal) +
+      theme(legend.position = "none")
+  }
 
   p <- p +
     xlim(set_range(Trace.plot_range(trace))) +
@@ -838,3 +854,28 @@ formatter1000 <- function(x){
   x/1000
 }
 
+#' @title Import Peaks from SEACR
+#' @description The function reads peaks in .bed file format produced by SEACR.  Optionally add a group variable and value for later filtering or faceting when combined with other peak files.
+#' @param file file path to the SEACR .bed file
+#' @param group_variable An optional variable name for additional group metadata.  PARAM_DESCRIPTION, Default: NULL
+#' @param group_value A value supplied to the group metadata variable.  Required if group_variable is not NULL.  PARAM_DESCRIPTION
+#' @return A GRanges object
+#' @seealso
+#'  \code{\link[readr]{read_delim}}
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[GenomicRanges]{makeGRangesFromDataFrame}}
+#' @rdname bb_import_seacr_peaks
+#' @export
+#' @importFrom readr read_tsv
+#' @importFrom dplyr select mutate
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+bb_import_seacr_peaks <- function(file, group_variable = NULL, group_value) {
+  tbl <- readr::read_tsv(file, col_names = c("chr", "start", "end", "total_signal", "max_signal", "region")) |>
+    dplyr::select(c(chr, start, end))
+
+  if(!is.null(group_variable)) {
+    tbl <- tbl |>
+      dplyr::mutate(!!group_variable := group_value)
+  }
+  GenomicRanges::makeGRangesFromDataFrame(tbl, keep.extra.columns = TRUE)
+}

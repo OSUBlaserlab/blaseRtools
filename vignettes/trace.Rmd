@@ -199,11 +199,7 @@ This is relatively straightforward:
 bb_plot_trace_peaks(zf_prkcda_trace)
 ```
 
-If you want you can change the fill color too:
 
-```{r}
-bb_plot_trace_peaks(zf_prkcda_trace, fill_color = "blue")
-```
 
 ### Plotting Links
 

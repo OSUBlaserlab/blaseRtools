@@ -31,7 +31,9 @@ bb_plot_trace_data(
 
 \item{legend_pos}{Color legend position. Can also be added after the fact.  Defaults to "none".}
 
-\item{group_filter}{Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.}
+\item{group_filter}{Optional value to filter the trace data by.  Should be a value from the "group" metadata variable in the trace object.}
+
+\item{group_variable}{Optional metadatavariable to filter trace data by.  When imported from signac/seurat objects, this value defaults to "group", so that is the default here.  However if constructed manually, you may wish to apply filtering to another variable.  If so, apply it to this parameter.}
 }
 \description{
 A function to generate a line plot from tracklike genomic data.  This pulls data from the Trace object trace_data slot.  Check what numeric and categorical variables are available for plotting using Trace.data.
