@@ -420,12 +420,9 @@
 
 * fixes bug in cellchat to work with on disk matrices
 
-# blaseRtools 0.0.0.9171
+# blaseRtools 0.0.0.9173
 
-* updated trace functions
-* added function to import peaks .bed file from SEACR
-* updated bb_plot_trace_peaks to allow filtering.  This may break some rarely used code.
-
+* added ImageClass
 
 # todo
 

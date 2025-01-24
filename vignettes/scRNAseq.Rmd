@@ -538,14 +538,14 @@ bb_gene_umap(vignette_cds, gene_or_genes = c("CD19", "CD3D", "CD14"))
 Note that for plotting aggregate genes, the parameter gene_or_genes should be provided with a data frame of two columns with the first column being ensembl cell id and the second being the gene grouping.
 
 ```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
-agg_genes <- 
-  bb_rowmeta(vignette_cds) %>%
-  select(id, module_labeled) %>%
-  filter(module_labeled == "Module 1")
-  
-
-bb_gene_umap(vignette_cds, 
-             gene_or_genes = agg_genes)
+# agg_genes <- 
+#   bb_rowmeta(vignette_cds) %>%
+#   select(id, module_labeled) %>%
+#   filter(module_labeled == "Module 1")
+#   
+# 
+# bb_gene_umap(vignette_cds, 
+#              gene_or_genes = agg_genes)
 ```
 
 
