@@ -424,7 +424,7 @@
 
 * added ImageClass
 
-# blaseRtools 0.0.0.9174
+# blaseRtools 0.0.0.9174-5
 
 * renamed as_tibble to ImageCatalog.as_tibble
 * fixed scRNA-seq vignette

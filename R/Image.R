@@ -399,20 +399,20 @@ setMethod("note<-", "Image_", function(x, value) {
 #' Methods are provided for
 #'
 #' * viewing as a tibble:  ImageCatalog.as_tibble
-#' * writing to .json format:  ImageCatalog.write
+#' * writing to tsv format:  ImageCatalog.write
 #' * adding an image:  ImageCatalog.add
 #' * deleting an image:  ImageCatalog.delete
 #' * subsetting and extracting:  brackets and double brackets
 #'
 #' An ImageCatalog object can be made from a list of Image objects using ImageCatalog(list = <list of images>).
 #'
-#' More commonly, you will generate the ImageCatalog from a .json file. To make an image catalog this way, run ImageCatalog(json_path = <path>).
+#' More commonly, you will generate the ImageCatalog from a tsv catalog file. To make an image catalog this way, run ImageCatalog(catalog_path = <path>).
 #'
 #'
 #' @export
 ImageCatalog <- setClass(Class = "ImageCatalog",
                          slots = list(images = "list",
-                                      json_path = "character"))
+                                      catalog_path = "character"))
 
 #' @importFrom purrr map list_rbind
 #' @importFrom tibble tibble
@@ -457,7 +457,7 @@ setMethod("initialize",
           "ImageCatalog",
           function(.Object,
                    images = list(),
-                   json_path = character(0),
+                   catalog_path = character(0),
                    ...) {
             # .Object <- callNextMethod()
 
@@ -483,8 +483,10 @@ setMethod("initialize",
 
               })
             } else {
-              catalog_tibble <- rjson::fromJSON(file = json_path) |>
-                tibble::as_tibble()
+              catalog_tibble <- readr::read_tsv(file = catalog_path,
+                                                col_types = "ccccccccccc") |>
+                tidyr::nest(.by = c(-use, -note),
+                            .key = "uses_and_notes")
               images <- purrr::pmap(catalog_tibble,
                                     .f = \(
                                       file_path,
@@ -495,8 +497,7 @@ setMethod("initialize",
                                       microscope,
                                       mag,
                                       filter,
-                                      use,
-                                      note,
+                                      uses_and_notes,
                                       md5sum
                                     ) {
                                       image_ <- new("Image_")
@@ -508,8 +509,8 @@ setMethod("initialize",
                                       image_@microscope <- microscope
                                       image_@mag <- mag
                                       image_@filter <- filter
-                                      image_@use <- use
-                                      image_@note <- note
+                                      image_@use <- uses_and_notes$use
+                                      image_@note <- uses_and_notes$note
                                       image_@md5sum <- md5sum
                                       image_
                                     })
@@ -518,7 +519,7 @@ setMethod("initialize",
               })
             }
               .Object@images <- images
-              .Object@json_path <- json_path
+              .Object@catalog_path <- catalog_path
               callNextMethod()
               .Object
 
@@ -588,14 +589,13 @@ setMethod("ImageCatalog.as_tibble", signature("ImageCatalog"), function(image_ca
 
 
 #' @rdname ImageCatalog-class
-#' @importFrom rjson toJSON
+#' @importFrom readr write_tsv
 #' @export
 setGeneric("ImageCatalog.write", function(image_catalog, out)
   standardGeneric("ImageCatalog.write"))
 setMethod("ImageCatalog.write", "ImageCatalog", function(image_catalog, out) {
   ImageCatalog.as_tibble(image_catalog) |>
-    rjson::toJSON() |>
-    cat(file = out)
+    readr::write_tsv(file = out)
 })
 
 #' @rdname ImageCatalog-class

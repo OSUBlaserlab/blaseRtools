@@ -1,20 +1,46 @@
 devtools::load_all()
 test1 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/1.png")
 test2 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/2.png")
+test1.1 <- test1
+use(test1.1) <- "foo"
 test3 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/3.png")
 test4 <- Image(file = "~/network/X/Labs/Blaser/Brad/test_img/4.png")
 test4.1 <- test4
 test5 <- Image()
 test1_ <- Image_()
 ImageCatalog()
-test_cat1 <- ImageCatalog(images = list(test4, test5))
+test_cat1 <- ImageCatalog(images = list(test1, test2))
+test_cat1 <- ImageCatalog.add(test_cat1, test1.1)
+ImageCatalog.write(test_cat1, out = "test.tsv")
+test_cat2 <- ImageCatalog(catalog_path = "test.tsv")
+waldo::compare(test_cat1, test_cat2)
+
+test <- ImageCatalog.as_tibble(test_cat1) |> nest(.by = c(-use, -note), .key = "uses_and_notes")
+read_tsv("test.tsv", col_types = "ccccccccccc")
+purrr::pmap(test, .f = \(
+  file_path,
+  species,
+  stage,
+  genetics,
+  treatment,
+  microscope,
+  mag,
+  filter,
+  uses_and_notes,
+  md5sum
+) {
+  # uses_and_notes
+ uses_and_notes$note
+ # uses_and_notes$use
+})
+
+test_cat2 <- ImageCatalog(json_path = "test.json")
 test_cat1@json_path
 test_cat1[[1]]
 test_cat1["f912f7"]
 test_cat1[["f912f7"]]
 test_cat1$f912f7
 as_tibble(test_cat1)
-ImageCatalog.write(test_cat1, out = "test.json")
 
 test_cat2 <- ImageCatalog(json_path = "test.json")
 test_cat2@json_path

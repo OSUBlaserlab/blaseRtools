@@ -36,7 +36,7 @@ This object holds all of the individual Image objects.
 Methods are provided for
 \itemize{
 \item viewing as a tibble:  ImageCatalog.as_tibble
-\item writing to .json format:  ImageCatalog.write
+\item writing to tsv format:  ImageCatalog.write
 \item adding an image:  ImageCatalog.add
 \item deleting an image:  ImageCatalog.delete
 \item subsetting and extracting:  brackets and double brackets
@@ -44,5 +44,5 @@ Methods are provided for
 
 An ImageCatalog object can be made from a list of Image objects using ImageCatalog(list = \if{html}{\out{<list of images>}}).
 
-More commonly, you will generate the ImageCatalog from a .json file. To make an image catalog this way, run ImageCatalog(json_path = \if{html}{\out{<path>}}).
+More commonly, you will generate the ImageCatalog from a tsv catalog file. To make an image catalog this way, run ImageCatalog(catalog_path = \if{html}{\out{<path>}}).
 }
