@@ -157,26 +157,26 @@ setMethod("initialize",
               microscope <- choices[microscope]
             }
 
+            choices <- c("1x", "2X", "4X", "10X", "20X", "40X", "Other")
             mag <-
-              menu(c("1x", "2X", "4X", "10X", "20X", "40X", "Other"), title = "Enter the magnification used.")
+              menu(choices, title = "Enter the magnification used.")
             if (mag == 7) {
               mag <- readline("Enter the magnification.")
             } else {
               mag <- choices[mag]
             }
 
-            filter <-
-              menu(
-                c(
-                  "Green",
-                  "Red",
-                  "Blue",
-                  "Brightfield - Greyscale",
-                  "Brightfield - Full Color",
-                  "Other"
-                ),
-                title  = "Enter the filter/camera options."
+            choices <-
+              c(
+                "Green",
+                "Red",
+                "Blue",
+                "Brightfield - Greyscale",
+                "Brightfield - Full Color",
+                "Other"
               )
+            filter <- menu(choices,
+                           title  = "Enter the filter/camera options.")
             if (filter == 6) {
               filter <-
                 readline("Enter a free-text description of the filter/camera used. ")
