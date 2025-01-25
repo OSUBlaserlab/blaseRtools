@@ -1,4 +1,4 @@
-#'@rdname Image
+#'@rdname Image-class
 Image_ <- setClass(
   Class = "Image_",
   slots = list(
@@ -208,7 +208,7 @@ setMethod("initialize",
           })
 
 
-#' @rdname Image
+#' @rdname Image-class
 #' @importFrom cli cli_text
 #' @export
 setMethod("show",
@@ -229,12 +229,12 @@ setMethod("show",
 
 
 # setter and getter methods -----------------------
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("file_path", function(x)
   standardGeneric("file_path"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("file_path<-", function(x, value)
   standardGeneric("file_path<-"))
@@ -245,12 +245,12 @@ setMethod("file_path<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("species", function(x)
   standardGeneric("species"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("species<-", function(x, value)
   standardGeneric("species<-"))
@@ -261,11 +261,11 @@ setMethod("species<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("stage", function(x)
   standardGeneric("stage"))
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("stage<-", function(x, value)
   standardGeneric("stage<-"))
@@ -276,12 +276,12 @@ setMethod("stage<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("genetics", function(x)
   standardGeneric("genetics"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("genetics<-", function(x, value)
   standardGeneric("genetics<-"))
@@ -292,11 +292,11 @@ setMethod("genetics<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("treatment", function(x)
   standardGeneric("treatment"))
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("treatment<-", function(x, value)
   standardGeneric("treatment<-"))
@@ -307,12 +307,12 @@ setMethod("treatment<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("microscope", function(x)
   standardGeneric("microscope"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("microscope<-", function(x, value)
   standardGeneric("microscope<-"))
@@ -323,12 +323,12 @@ setMethod("microscope<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("mag", function(x)
   standardGeneric("mag"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("mag<-", function(x, value)
   standardGeneric("mag<-"))
@@ -339,12 +339,12 @@ setMethod("mag<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("filter", function(x)
   standardGeneric("filter"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("filter<-", function(x, value)
   standardGeneric("filter<-"))
@@ -356,12 +356,12 @@ setMethod("filter<-", "Image_", function(x, value) {
   x
 })
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("use", function(x)
   standardGeneric("use"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("use<-", function(x, value)
   standardGeneric("use<-"))
@@ -374,12 +374,12 @@ setMethod("use<-", "Image_", function(x, value) {
 })
 
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("note", function(x)
   standardGeneric("note"))
 
-#' @rdname Image
+#' @rdname Image-class
 #' @export
 setGeneric("note<-", function(x, value)
   standardGeneric("note<-"))
@@ -398,7 +398,7 @@ setMethod("note<-", "Image_", function(x, value) {
 #'
 #' Methods are provided for
 #'
-#' * viewing as a tibble:  as_tibble
+#' * viewing as a tibble:  ImageCatalog.as_tibble
 #' * writing to .json format:  ImageCatalog.write
 #' * adding an image:  ImageCatalog.add
 #' * deleting an image:  ImageCatalog.delete
@@ -524,7 +524,7 @@ setMethod("initialize",
 
           })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @importFrom cli cli_text
 #' @export
 setMethod("show",
@@ -534,7 +534,7 @@ setMethod("show",
 
           })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @export
 setMethod("[", c("ImageCatalog"),
           function(x, i, j, ..., drop = TRUE)
@@ -542,7 +542,7 @@ setMethod("[", c("ImageCatalog"),
             initialize(x, images = x@images[i])
           })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @export
 setMethod("[[", c("ImageCatalog"),
           function(x, i, j, ..., drop = TRUE)
@@ -550,7 +550,7 @@ setMethod("[[", c("ImageCatalog"),
             x@images[i]
           })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @export
 setMethod("$", "ImageCatalog",
           function(x, name)
@@ -560,18 +560,13 @@ setMethod("$", "ImageCatalog",
           })
 
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @importFrom purrr map list_rbind
 #' @importFrom tibble tibble
 #' @export
-setMethod("as_tibble", signature("ImageCatalog"), function(x,
-                                                           ...,
-                                                           .rows = NULL,
-                                                           .name_repair = c("check_unique",
-                                                                            "unique", "universal", "minimal"),
-                                                           rownames = pkgconfig::get_config("tibble::rownames",
-                                                                                            NULL)) {
-  image_catalog <- x
+setGeneric("ImageCatalog.as_tibble", function(image_catalog)
+  standardGeneric("ImageCatalog.as_tibble"))
+setMethod("ImageCatalog.as_tibble", signature("ImageCatalog"), function(image_catalog) {
   purrr::map(.x = image_catalog@images, .f = \(x) {
     tibble::tibble(
       file_path = x@file_path,
@@ -592,18 +587,18 @@ setMethod("as_tibble", signature("ImageCatalog"), function(x,
 })
 
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @importFrom rjson toJSON
 #' @export
 setGeneric("ImageCatalog.write", function(image_catalog, out)
   standardGeneric("ImageCatalog.write"))
 setMethod("ImageCatalog.write", "ImageCatalog", function(image_catalog, out) {
-  as_tibble(image_catalog) |>
+  ImageCatalog.as_tibble(image_catalog) |>
     rjson::toJSON() |>
     cat(file = out)
 })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @importFrom fs path
 #' @importFrom dplyr filter
 #' @importFrom purrr pmap
@@ -617,7 +612,7 @@ setMethod("ImageCatalog.add", "ImageCatalog", function(image_catalog, image) {
 
   image_hash <- image@md5sum
 
-  cat <- as_tibble(image_catalog) |>
+  cat <- ImageCatalog.as_tibble(image_catalog) |>
     dplyr::filter(md5sum == image_hash)
 
   if (nrow(cat) == 0) {
@@ -645,7 +640,7 @@ setMethod("ImageCatalog.add", "ImageCatalog", function(image_catalog, image) {
         md5sum = cat$md5sum
       )
 
-    image_list <- purrr::pmap(as_tibble(image_catalog) |>
+      image_list <- purrr::pmap(ImageCatalog.as_tibble(image_catalog) |>
                                 dplyr::filter(md5sum != image_hash),
                               .f = \(
                                 file_path,
@@ -686,7 +681,7 @@ setMethod("ImageCatalog.add", "ImageCatalog", function(image_catalog, image) {
   image_catalog
 })
 
-#' @rdname ImageCatalog
+#' @rdname ImageCatalog-class
 #' @importFrom fs path
 #' @importFrom dplyr mutate filter select
 #' @importFrom stringr str_sub
@@ -696,7 +691,7 @@ setGeneric("ImageCatalog.delete", function(image_catalog, hash)
   standardGeneric("ImageCatalog.delete"))
 setMethod("ImageCatalog.delete", "ImageCatalog", function(image_catalog, hash) {
   hash <- stringr::str_sub(hash, start = 1L, end = 6L)
-  cat <- as_tibble(image_catalog) |>
+  cat <- ImageCatalog.as_tibble(image_catalog) |>
     dplyr::mutate(hash_short = stringr::str_sub(md5sum, start = 1L, end = 6L)) |>
     dplyr::filter(hash_short != hash) |>
     dplyr::select(-hash_short)

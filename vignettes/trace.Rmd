@@ -316,7 +316,7 @@ Or I can put some meaningful information in the facet variable to serve as a hel
 
 ```{r}
 dat <- Trace.data(e4_PRKCD_trace) |> 
-  mutate(group = "E4-HUVEC")
+  plyranges::mutate(group = "E4-HUVEC")
 e4_PRKCD_trace_alt <- Trace.setData(e4_PRKCD_trace, dat)
 bb_plot_trace_data(e4_PRKCD_trace_alt) / 
 bb_plot_trace_model(e4_PRKCD_trace_alt) / 

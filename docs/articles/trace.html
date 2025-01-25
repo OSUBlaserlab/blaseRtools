@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9172</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9174</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,8 +117,6 @@ object.</p></li>
 <p>An example of each of these slots:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/blaserlab/blaseRtools" class="external-link">blaseRtools</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="co"># trace_data</span></span>
 <span><span class="fu"><a href="../reference/Trace.data.html">Trace.data</a></span><span class="op">(</span><span class="va">zf_prkcda_trace</span><span class="op">)</span></span>
 <span><span class="co">#&gt; GRanges object with 15000 ranges and 7 metadata columns:</span></span>
@@ -505,7 +503,7 @@ go away.</p>
 serve as a helpful title:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Trace.data.html">Trace.data</a></span><span class="op">(</span><span class="va">e4_PRKCD_trace</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="st">"E4-HUVEC"</span><span class="op">)</span></span>
+<span>  <span class="fu">plyranges</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>group <span class="op">=</span> <span class="st">"E4-HUVEC"</span><span class="op">)</span></span>
 <span><span class="va">e4_PRKCD_trace_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Trace.setData.html">Trace.setData</a></span><span class="op">(</span><span class="va">e4_PRKCD_trace</span>, <span class="va">dat</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/bb_plot_trace_data.html">bb_plot_trace_data</a></span><span class="op">(</span><span class="va">e4_PRKCD_trace_alt</span><span class="op">)</span> <span class="op">/</span> </span>
 <span><span class="fu"><a href="../reference/bb_plot_trace_model.html">bb_plot_trace_model</a></span><span class="op">(</span><span class="va">e4_PRKCD_trace_alt</span><span class="op">)</span> <span class="op">/</span> </span>

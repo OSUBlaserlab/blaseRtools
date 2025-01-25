@@ -85,8 +85,8 @@ bb_monocle_regression_better <- function(cds,
     )
     fit_coefs <- coefficient_table(gene_fits)
     if (!is.null(stratification_variable)) {
-      fit_coefs_return <- fit_coefs %>% filter(term != "(Intercept)") %>%
-        mutate(stratification = stratification_value, formula = form) %>%
+      fit_coefs_return <- fit_coefs %>% dplyr::filter(term != "(Intercept)") %>%
+        dplyr::mutate(stratification = stratification_value, formula = form) %>%
         select(id,
                gene_short_name,
                stratification,
@@ -97,8 +97,8 @@ bb_monocle_regression_better <- function(cds,
                q_value)
     }
     else {
-      fit_coefs_return <- fit_coefs %>% filter(term != "(Intercept)") %>%
-        mutate(stratification = "no stratification", formula = form) %>%
+      fit_coefs_return <- fit_coefs %>% dplyr::filter(term != "(Intercept)") %>%
+        dplyr::mutate(stratification = "no stratification", formula = form) %>%
         select(id,
                gene_short_name,
                stratification,

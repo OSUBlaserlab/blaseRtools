@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   dev = "CairoPNG",
   out.extra = ""
 )
+
 ```
 
 ## Introduction
@@ -86,6 +87,8 @@ library(monocle3)
 library(Seurat)
 library(tidyverse)
 library(cowplot)
+library(conflicted)
+conflict_prefer("filter", "dplyr")
 theme_set(theme_cowplot(font_size = 12))
 ```
 
@@ -121,7 +124,7 @@ cds_list <- map(
   .x = vignette_config$sample,
   .f = function(x, conf = vignette_config) {
     conf_filtered <- conf %>%
-      filter(sample == x)
+      dplyr::filter(sample == x)
     cds <- bb_load_tenx_targz(targz_file = conf_filtered$targz_path,
                               sample_metadata_tbl = conf_filtered %>% 
                                 select(-c(sample, targz_path))
@@ -538,14 +541,14 @@ bb_gene_umap(vignette_cds, gene_or_genes = c("CD19", "CD3D", "CD14"))
 Note that for plotting aggregate genes, the parameter gene_or_genes should be provided with a data frame of two columns with the first column being ensembl cell id and the second being the gene grouping.
 
 ```{r, fig.align='center', fig.width=4.5, fig.height=3.5}
-# agg_genes <- 
-#   bb_rowmeta(vignette_cds) %>%
-#   select(id, module_labeled) %>%
-#   filter(module_labeled == "Module 1")
-#   
-# 
-# bb_gene_umap(vignette_cds, 
-#              gene_or_genes = agg_genes)
+agg_genes <-
+  bb_rowmeta(vignette_cds) %>%
+  dplyr::select(id, module_labeled) %>%
+  dplyr::filter(module_labeled == "Module 1")
+
+
+bb_gene_umap(vignette_cds,
+             gene_or_genes = agg_genes)
 ```
 
 
@@ -641,11 +644,11 @@ vignette_pseudobulk_res$Header
 # Differential expression results.  Positive L2FC indicates up in T/NK vs DC/Mono
 
 vignette_pseudobulk_res$Result %>%
-  filter(log2FoldChange > 0) %>%
+  dplyr::filter(log2FoldChange > 0) %>%
   arrange(padj)
   
 vignette_pseudobulk_res$Result %>%
-  filter(log2FoldChange < 0) %>%
+  dplyr::filter(log2FoldChange < 0) %>%
   arrange(padj)
 ```
 
@@ -668,7 +671,7 @@ The regression function is based on the generalized linear regression in R and b
 The blaseRtools package has a function that wraps the multivariate regression function from *monocle3* and add some minor functionality.
 
 ```{r}
-vignette_regression_res <- bb_monocle_regression(cds = vignette_cds, 
+vignette_regression_res <- bb_monocle_regression_better(cds = vignette_cds, 
                       gene_or_genes = c("CD19", "CD3D", "CD14"), 
                       form = "~leiden_assignment")
 vignette_regression_res

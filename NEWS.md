@@ -424,6 +424,11 @@
 
 * added ImageClass
 
+# blaseRtools 0.0.0.9174
+
+* renamed as_tibble to ImageCatalog.as_tibble
+* fixed scRNA-seq vignette
+
 # todo
 
 * biaxial cite-seq plots

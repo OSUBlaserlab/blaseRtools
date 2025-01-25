@@ -13,7 +13,7 @@ buff_granges <- function(x, gen = NULL) {
   x_df <- as.data.frame(x) |>
     as_tibble() |>
     mutate(seqnames = as.character(seqnames)) |>
-    filter(seqnames %in% std_chroms) |>
+    dplyr::filter(seqnames %in% std_chroms) |>
     mutate(seqnames = ifelse(
       str_detect(seqnames, "chr"),
       seqnames,
@@ -46,7 +46,7 @@ bb_buff_granges <- function(x, gen) {
   x_df <- as.data.frame(x) |>
     as_tibble() |>
     mutate(seqnames = as.character(seqnames)) |>
-    filter(seqnames %in% std_chroms) |>
+    dplyr::filter(seqnames %in% std_chroms) |>
     mutate(seqnames = ifelse(
       str_detect(seqnames, "chr"),
       seqnames,
@@ -498,7 +498,7 @@ bb_plot_trace_data <- function(trace,
     mutate(mid = width / 2 + start)
 
   if(!is.null(group_filter)) {
-    data_tbl <- filter(data_tbl, !!sym(group_variable) == group_filter)
+    data_tbl <- dplyr::filter(data_tbl, !!sym(group_variable) == group_filter)
   }
 
 
@@ -564,7 +564,7 @@ bb_plot_trace_peaks <- function(trace,
     mutate(type = "Peaks")
 
   if(!is.null(group_filter)) {
-    gr_tbl <- filter(gr_tbl, !!sym(group_variable) == group_filter)
+    gr_tbl <- dplyr::filter(gr_tbl, !!sym(group_variable) == group_filter)
   }
 
   p <- ggplot(data = gr_tbl,
@@ -619,7 +619,7 @@ bb_plot_trace_links <- function(trace,
     as.data.frame(gr) |>
     as_tibble() |>
     mutate(mid = width / 2 + start) |>
-    filter(score > cutoff) |>
+    dplyr::filter(score > cutoff) |>
     distinct() |>
     mutate(group = rank(score, ties.method = "first"))
 
@@ -711,7 +711,7 @@ bb_plot_trace_model <- function(trace,
     transcript_lookup <-
       bind_rows(as_tibble(mcols(hg38_granges_reduced)), as_tibble(mcols(zfin_granges_reduced)))
     selected <- transcript_lookup |>
-      filter(parent_transcript %in% select_transcript) |>
+      dplyr::filter(parent_transcript %in% select_transcript) |>
       select(gene_name, parent_transcript) |>
       deframe()
     # replace the original with selected transcripts
@@ -720,7 +720,7 @@ bb_plot_trace_model <- function(trace,
   }
 
   data_to_plot <- data_tbl |>
-    filter(parent_transcript %in% transcripts)
+    dplyr::filter(parent_transcript %in% transcripts)
 
   names_to_plot <- data_to_plot |>
     group_by(gene_name, parent_transcript, strand) |>
@@ -731,7 +731,7 @@ bb_plot_trace_model <- function(trace,
     .x = names_to_plot$gene_name,
     .f = function(x, data = names_to_plot) {
       filtered <- data |>
-        filter(gene_name == x)
+        dplyr::filter(gene_name == x)
       xpos <-
         seq.int(from = filtered$gene_start,
                 to = filtered$gene_end,
@@ -750,7 +750,7 @@ bb_plot_trace_model <- function(trace,
 
   p <- ggplot() +
     geom_segment(
-      data = filter(segments_to_plot, strand == "+"),
+      data = dplyr::filter(segments_to_plot, strand == "+"),
       mapping = aes(
         x = xpos,
         xend = xend,
@@ -765,7 +765,7 @@ bb_plot_trace_model <- function(trace,
       )
     ) +
     geom_segment(
-      data = filter(segments_to_plot, strand == "-"),
+      data = dplyr::filter(segments_to_plot, strand == "-"),
       mapping = aes(
         x = xpos,
         xend = xend,

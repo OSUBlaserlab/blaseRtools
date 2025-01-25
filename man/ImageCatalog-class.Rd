@@ -4,13 +4,38 @@
 \name{ImageCatalog-class}
 \alias{ImageCatalog-class}
 \alias{ImageCatalog}
+\alias{show,ImageCatalog-method}
+\alias{[,ImageCatalog,ANY,ANY,ANY-method}
+\alias{[[,ImageCatalog,ANY,ANY-method}
+\alias{$,ImageCatalog-method}
+\alias{ImageCatalog.as_tibble}
+\alias{ImageCatalog.write}
+\alias{ImageCatalog.add}
+\alias{ImageCatalog.delete}
 \title{An S4 Image Catalog}
+\usage{
+\S4method{show}{ImageCatalog}(object)
+
+\S4method{[}{ImageCatalog,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[[}{ImageCatalog,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{$}{ImageCatalog}(x, name)
+
+ImageCatalog.as_tibble(image_catalog)
+
+ImageCatalog.write(image_catalog, out)
+
+ImageCatalog.add(image_catalog, image)
+
+ImageCatalog.delete(image_catalog, hash)
+}
 \description{
 This object holds all of the individual Image objects.
 
 Methods are provided for
 \itemize{
-\item viewing as a tibble:  as_tibble
+\item viewing as a tibble:  ImageCatalog.as_tibble
 \item writing to .json format:  ImageCatalog.write
 \item adding an image:  ImageCatalog.add
 \item deleting an image:  ImageCatalog.delete

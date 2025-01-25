@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9172</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9174</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -237,6 +237,8 @@ plots and do differential gene expression if you like.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/" class="external-link">cowplot</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://conflicted.r-lib.org/" class="external-link">conflicted</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://conflicted.r-lib.org/reference/conflict_prefer.html" class="external-link">conflict_prefer</a></span><span class="op">(</span><span class="st">"filter"</span>, <span class="st">"dplyr"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/theme_cowplot.html" class="external-link">theme_cowplot</a></span><span class="op">(</span>font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Read in the analysis configuration file. Here I am reading it from
 the blaseRdata package but you would substitute your own file path.</p>
@@ -288,7 +290,7 @@ file. This will produce a list of cds objects for us.</p>
 <span>  .x <span class="op">=</span> <span class="va">vignette_config</span><span class="op">$</span><span class="va">sample</span>,</span>
 <span>  .f <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">conf</span> <span class="op">=</span> <span class="va">vignette_config</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">conf_filtered</span> <span class="op">&lt;-</span> <span class="va">conf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sample</span> <span class="op">==</span> <span class="va">x</span><span class="op">)</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sample</span> <span class="op">==</span> <span class="va">x</span><span class="op">)</span></span>
 <span>    <span class="va">cds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_load_tenx_targz.html">bb_load_tenx_targz</a></span><span class="op">(</span>targz_file <span class="op">=</span> <span class="va">conf_filtered</span><span class="op">$</span><span class="va">targz_path</span>,</span>
 <span>                              sample_metadata_tbl <span class="op">=</span> <span class="va">conf_filtered</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>                                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">targz_path</span><span class="op">)</span><span class="op">)</span></span>
@@ -900,13 +902,13 @@ it should be used with caution.</p>
 should be provided with a data frame of two columns with the first
 column being ensembl cell id and the second being the gene grouping.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">agg_genes</span> <span class="op">&lt;-</span> </span>
+<code class="sourceCode R"><span><span class="va">agg_genes</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/bb_rowmeta.html">bb_rowmeta</a></span><span class="op">(</span><span class="va">vignette_cds</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">module_labeled</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">module_labeled</span> <span class="op">==</span> <span class="st">"Module 1"</span><span class="op">)</span></span>
-<span>  </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">module_labeled</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">module_labeled</span> <span class="op">==</span> <span class="st">"Module 1"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/bb_gene_umap.html">bb_gene_umap</a></span><span class="op">(</span><span class="va">vignette_cds</span>, </span>
+<span></span>
+<span><span class="fu"><a href="../reference/bb_gene_umap.html">bb_gene_umap</a></span><span class="op">(</span><span class="va">vignette_cds</span>,</span>
 <span>             gene_or_genes <span class="op">=</span> <span class="va">agg_genes</span><span class="op">)</span></span></code></pre></div>
 <p><img src="scRNAseq_files/figure-html/unnamed-chunk-41-1.png" width="432" style="display: block; margin: auto;"></p>
 </div>
@@ -1071,7 +1073,7 @@ run the pseudobulk function.</p>
 <code class="sourceCode R"><span><span class="co"># Differential expression results.  Positive L2FC indicates up in T/NK vs DC/Mono</span></span>
 <span></span>
 <span><span class="va">vignette_pseudobulk_res</span><span class="op">$</span><span class="va">Result</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">log2FoldChange</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">log2FoldChange</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">padj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6,867 × 8</span></span></span>
 <span><span class="co">#&gt;    id             gene_short_name baseMean log2FoldChange  lfcSE  stat    pvalue</span></span>
@@ -1090,7 +1092,7 @@ run the pseudobulk function.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: padj &lt;dbl&gt;</span></span></span>
 <span>  </span>
 <span><span class="va">vignette_pseudobulk_res</span><span class="op">$</span><span class="va">Result</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">log2FoldChange</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">log2FoldChange</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">padj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6,967 × 8</span></span></span>
 <span><span class="co">#&gt;    id          gene_short_name baseMean log2FoldChange  lfcSE  stat pvalue  padj</span></span>
@@ -1152,22 +1154,22 @@ similar to DESeq2 which we ahve already used.</p>
 regression function from <em>monocle3</em> and add some minor
 functionality.</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">vignette_regression_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_monocle_regression.html">bb_monocle_regression</a></span><span class="op">(</span>cds <span class="op">=</span> <span class="va">vignette_cds</span>, </span>
+<code class="sourceCode R"><span><span class="va">vignette_regression_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bb_monocle_regression_better.html">bb_monocle_regression_better</a></span><span class="op">(</span>cds <span class="op">=</span> <span class="va">vignette_cds</span>, </span>
 <span>                      gene_or_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD19"</span>, <span class="st">"CD3D"</span>, <span class="st">"CD14"</span><span class="op">)</span>, </span>
 <span>                      form <span class="op">=</span> <span class="st">"~leiden_assignment"</span><span class="op">)</span></span>
 <span><span class="va">vignette_regression_res</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 8</span></span></span>
-<span><span class="co">#&gt;   id             gene_short_name stratification formula term  estimate   p_value</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSG000001704… CD14            no stratifica… ~leide… leid…    4.69  1.28<span style="color: #949494;">e</span><span style="color: #BB0000;">-148</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSG000001704… CD14            no stratifica… ~leide… leid…    0.142 7.07<span style="color: #949494;">e</span><span style="color: #BB0000;">-  1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSG000001704… CD14            no stratifica… ~leide… stat…    0.265 1.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-  2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSG000001672… CD3D            no stratifica… ~leide… leid…   -<span style="color: #BB0000;">4.15</span>  8.89<span style="color: #949494;">e</span><span style="color: #BB0000;">-237</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSG000001672… CD3D            no stratifica… ~leide… leid…   -<span style="color: #BB0000;">3.69</span>  4.44<span style="color: #949494;">e</span><span style="color: #BB0000;">- 49</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSG000001672… CD3D            no stratifica… ~leide… stat…    1.28  3.37<span style="color: #949494;">e</span><span style="color: #BB0000;">- 46</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> ENSG000001774… CD19            no stratifica… ~leide… leid…    0.590 6.18<span style="color: #949494;">e</span><span style="color: #BB0000;">-  1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> ENSG000001774… CD19            no stratifica… ~leide… leid…    5.93  3.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-  9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> ENSG000001774… CD19            no stratifica… ~leide… stat…    1.02  4.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-  3</span></span></span>
+<span><span class="co">#&gt;   id       gene_short_name stratification formula term  log2FoldChange   p_value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSG000… CD14            no stratifica… ~leide… leid…          6.59  1.28<span style="color: #949494;">e</span><span style="color: #BB0000;">-148</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSG000… CD14            no stratifica… ~leide… leid…          0.182 7.07<span style="color: #949494;">e</span><span style="color: #BB0000;">-  1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSG000… CD14            no stratifica… ~leide… stat…          0.342 1.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-  2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSG000… CD3D            no stratifica… ~leide… leid…         -<span style="color: #BB0000;">5.87</span>  8.89<span style="color: #949494;">e</span><span style="color: #BB0000;">-237</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSG000… CD3D            no stratifica… ~leide… leid…         -<span style="color: #BB0000;">5.24</span>  4.44<span style="color: #949494;">e</span><span style="color: #BB0000;">- 49</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSG000… CD3D            no stratifica… ~leide… stat…          1.84  3.37<span style="color: #949494;">e</span><span style="color: #BB0000;">- 46</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> ENSG000… CD19            no stratifica… ~leide… leid…          0.174 6.18<span style="color: #949494;">e</span><span style="color: #BB0000;">-  1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> ENSG000… CD19            no stratifica… ~leide… leid…          5.93  3.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-  9</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> ENSG000… CD19            no stratifica… ~leide… stat…          0.360 4.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-  3</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: q_value &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>If you look at the term column you can see the comparisons being
 made:</p>
