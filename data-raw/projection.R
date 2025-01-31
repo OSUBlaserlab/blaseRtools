@@ -255,3 +255,11 @@ while (x %in% test_cond) {
   n <- n + 1
 }
 x
+
+
+purrr::map2(.x = c("A", "B", "C"),
+            .y = c("1"),
+            .f = \(x,y) {
+              paste0(x, y)
+            }
+            )

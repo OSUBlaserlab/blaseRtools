@@ -36,7 +36,6 @@
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate-joins}}, \code{\link[dplyr]{join_by}}
 #' @rdname bb_monocle_
 #' @importFrom cli cli_abort cli_alert_info cli_alert_success
-#' @importFrom base intersect
 #' @importFrom monocle3 estimate_size_factors preprocess_cds reduce_dimension save_transform_models load_transform_models preprocess_transform reduce_dimension_transform transfer_cell_labels fix_missing_cell_labels
 #' @importFrom SingleCellExperiment reducedDimNames reducedDim reducedDims
 #' @importFrom fs path
@@ -65,7 +64,7 @@ bb_monocle_ <-
     genes_qry <- row.names(cds_qry)
 
     # Shared genes.
-    genes_shared <- base::intersect(genes_ref, genes_qry)
+    genes_shared <- intersect(genes_ref, genes_qry)
 
     if (!all(genes_qry == genes_shared)) {
       cli::cli_alert_info("Reprocessing cds_qry...")
