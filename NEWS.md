@@ -429,6 +429,10 @@
 * renamed as_tibble to ImageCatalog.as_tibble
 * fixed scRNA-seq vignette
 
+# blaseRtools 0.0.0.9177
+* added bb_monocle_project
+* reorganized code on bb_monocle_anno and renamed file
+
 # todo
 
 * biaxial cite-seq plots
