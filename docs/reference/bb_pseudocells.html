@@ -13,7 +13,7 @@ Note:  The matrix rownames and row metadata for the returned cds will contain on
 
     <a class="navbar-brand me-2" href="../index.html">blaseRtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9178</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9179</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,15 +72,15 @@ Note:  The matrix rownames and row metadata for the returned cds will contain on
 
 
 <dt id="arg-n-pseudocells">n_pseudocells<a class="anchor" aria-label="anchor" href="#arg-n-pseudocells"></a></dt>
-<dd><p>The number of pseudocells to create.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.</p></dd>
+<dd><p>The number of pseudocells to create.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.  This value will be recycled if necessary to match the number of columns in tpm_mtx.</p></dd>
 
 
 <dt id="arg-transcripts-per-pseudocell">transcripts_per_pseudocell<a class="anchor" aria-label="anchor" href="#arg-transcripts-per-pseudocell"></a></dt>
-<dd><p>The number of transcripts to sample for each pseudocell.  Should be similar to the median number of UMI in the single cell data the pseudocells will be projected onto.</p></dd>
+<dd><p>The number of transcripts to sample for each pseudocell.  Should be similar to the median number of UMI in the single cell data the pseudocells will be projected onto.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.  This value will be recycled if necessary to match the number of columns in tpm_mtx.</p></dd>
 
 
 <dt id="arg-remove-genes">remove_genes<a class="anchor" aria-label="anchor" href="#arg-remove-genes"></a></dt>
-<dd><p>A vector of genes to remove before sampling.  Should be the same or similar tot he genes removed from the single cell data the pseudocells will be projected onto, Default: NULL</p></dd>
+<dd><p>A vector of genes to remove before sampling.  Should be the same or similar to the genes removed from the single cell data the pseudocells will be projected onto, Default: NULL</p></dd>
 
 </dl></div>
     <div class="section level2">

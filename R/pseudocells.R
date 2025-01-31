@@ -8,9 +8,9 @@
 #' Note:  The matrix rownames and row metadata for the returned cds will contain only the rownames from the input tpm_matrix.  So these should share the same namespace as the single cell cds that the pseudocell data will be projected onto.
 #'
 #' @param tpm_matrix A matrix of TPM counts from a bulk RNA experiment.  A cds will be generated for each column in this matrix and the result combined.
-#' @param n_pseudocells The number of pseudocells to create.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.
-#' @param transcripts_per_pseudocell The number of transcripts to sample for each pseudocell.  Should be similar to the median number of UMI in the single cell data the pseudocells will be projected onto.
-#' @param remove_genes A vector of genes to remove before sampling.  Should be the same or similar tot he genes removed from the single cell data the pseudocells will be projected onto, Default: NULL
+#' @param n_pseudocells The number of pseudocells to create.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.  This value will be recycled if necessary to match the number of columns in tpm_mtx.
+#' @param transcripts_per_pseudocell The number of transcripts to sample for each pseudocell.  Should be similar to the median number of UMI in the single cell data the pseudocells will be projected onto.  Should be length 1 or to specify a uniqe n_pseudocells for each dataset, a vector of the same length as the number of columns in tpm_matrix.  This value will be recycled if necessary to match the number of columns in tpm_mtx.
+#' @param remove_genes A vector of genes to remove before sampling.  Should be the same or similar to the genes removed from the single cell data the pseudocells will be projected onto, Default: NULL
 #' @return A cell data set
 #' @examples
 #' \dontrun{
@@ -44,18 +44,18 @@ bb_pseudocells <-
       cli::cli_abort("{.emph transcripts_per_pseudocell} must be a numeric.")
     }
 
-    if (ncol(tpm_matrix) != length(n_pseudocells)) {
-      cli::cli_warn(
-        "Recycling {.emph n_pseudocells} to match the number of columns in {.emph tpm_matrix}"
-      )
-    }
-
-    if (ncol(tpm_matrix) != length(transcripts_per_pseudocell)) {
-      cli::cli_warn(
-        "Recycling {.emph transcripts_per_pseudocell} to match the number of columns in {.emph tpm_matrix}"
-      )
-    }
-
+    # if (ncol(tpm_matrix) != length(n_pseudocells)) {
+    #   cli::cli_warn(
+    #     "Recycling {.emph n_pseudocells} to match the number of columns in {.emph tpm_matrix}"
+    #   )
+    # }
+    #
+    # if (ncol(tpm_matrix) != length(transcripts_per_pseudocell)) {
+    #   cli::cli_warn(
+    #     "Recycling {.emph transcripts_per_pseudocell} to match the number of columns in {.emph tpm_matrix}"
+    #   )
+    # }
+    #
 
     exprs_list <-
       purrr::pmap(
@@ -100,7 +100,7 @@ bb_pseudocells <-
           Seurat::as.sparse(full_mtx)
 
         }
-      ) |> set_names(colnames(rounded_tpm_filtered))
+      ) |> set_names(colnames(tpm_matrix))
 
 
     coldata_list <- purrr::map2(.x = exprs_list,

@@ -429,7 +429,7 @@
 * renamed as_tibble to ImageCatalog.as_tibble
 * fixed scRNA-seq vignette
 
-# blaseRtools 0.0.0.9177-8
+# blaseRtools 0.0.0.9177-9
 * pseudocells
 * monocle projection
 
