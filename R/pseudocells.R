@@ -65,6 +65,8 @@ bb_pseudocells <-
           tpp = transcripts_per_pseudocell
         ),
         .f = \(sample_name,
+               np,
+               tpp,
                dat = tpm_matrix,
                remove = remove_genes) {
           bulk <- sample_name
@@ -108,7 +110,7 @@ bb_pseudocells <-
                                 .f = \(x, y) {
                                   coldata <- tibble::tibble(cell_id = colnames(x),
                                                             dataset = y) |>
-                                    as.data.frame()
+                                    base::as.data.frame()
                                   rownames(coldata) <- coldata$cell_id
                                   coldata$cell_id <- NULL
                                   coldata
