@@ -5,7 +5,6 @@ setOldClass("dendrogram", prototype = "dendrogram")
 #' @export
 #' @import methods
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
-#' @importClassesFrom stats dendrogram
 .SummarizedHeatmap <- setClass(
   "SummarizedHeatmap",
   slots = representation(
