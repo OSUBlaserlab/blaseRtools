@@ -1,66 +1,91 @@
 devtools::load_all()
-test1 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/1.png")
-test2 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/2.png")
-test1.1 <- test1
-use(test1.1) <- "foo"
-test3 <- Image(file = "/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/test_img/3.png")
-test4 <- Image(file = "~/network/X/Labs/Blaser/Brad/test_img/4.png")
-test4.1 <- test4
-test5 <- Image()
-test1_ <- Image_()
-ImageCatalog()
-test_cat1 <- ImageCatalog(images = list(test1, test2))
-test_cat1 <- ImageCatalog.add(test_cat1, test1.1)
-ImageCatalog.write(test_cat1, out = "test.tsv")
-test_cat2 <- ImageCatalog(catalog_path = "test.tsv")
-waldo::compare(test_cat1, test_cat2)
+testthat::test_file("tests/testthat/test-SummarizedHeatmap.R")
+library(patchwork)
+mat <- matrix(rnorm(100), ncol=5)
+colnames(mat) <- letters[1:5]
+rownames(mat) <- letters[6:25]
+test_sh <- SummarizedHeatmap(mat)
+colData(test_sh)$sample_type <- c("vowel", "consonant", "consonant", "consonant", "vowel")
+colData(test_sh)$sample_type2 <- c("vowel2", "consonant2", "consonant2", "consonant2", "vowel2")
+isVowel <- function(char) char %in% c('a', 'e', 'i', 'o', 'u')
+rowData(test_sh)$feature_type <- ifelse(isVowel(letters[6:25]), "vowel", "consonant")
+rowData(test_sh)$feature_type2 <- paste0(rowData(test_sh)$feature_type, "2")
 
-test <- ImageCatalog.as_tibble(test_cat1) |> nest(.by = c(-use, -note), .key = "uses_and_notes")
-read_tsv("test.tsv", col_types = "ccccccccccc")
-purrr::pmap(test, .f = \(
-  file_path,
-  species,
-  stage,
-  genetics,
-  treatment,
-  microscope,
-  mag,
-  filter,
-  uses_and_notes,
-  md5sum
-) {
-  # uses_and_notes
- uses_and_notes$note
- # uses_and_notes$use
-})
 
-test_cat2 <- ImageCatalog(json_path = "test.json")
-test_cat1@json_path
-test_cat1[[1]]
-test_cat1["f912f7"]
-test_cat1[["f912f7"]]
-test_cat1$f912f7
-as_tibble(test_cat1)
+p1 <- bb_plot_heatmap_colDendro(test_sh)
+p2 <- bb_plot_heatmap_rowDendro(test_sh, side = "left")
+p3 <- bb_plot_heatmap_colData(
+    test_sh,
+    vars = c("Sample Type" = "sample_type", "Sample Type 2" = "sample_type2"),
+    manual_pal = c(
+      "consonant" = "ivory",
+      "vowel" = "pink",
+      "consonant2" = "cornsilk",
+      "vowel2" = "pink3"
+    )
+  ) * theme(plot.background = element_rect(color = "red"))
+p4 <- bb_plot_heatmap_rowData(test_sh,
+                          vars = c("Feature Type" = "feature_type",
+                                   "Feature Type2" = "feature_type2"),
+                          manual_pal = c("consonant" = "ivory3",
+                                         "vowel" = "pink4",
+                                         "consonant2" = "bisque1",
+                                         "vowel2" = "lightpink3"))
 
-test_cat2 <- ImageCatalog(json_path = "test.json")
-test_cat2@json_path
+# bb_plot_heatmap_main(test_sh, tile_color = "white") * scale_y_discrete(breaks = c("u", "m", "h", "v", "t"), position = "right", guide = guide_axis(n.dodge = 3))  +
+# p5 <- bb_plot_heatmap_main(test_sh, tile_color = "white") * theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+p5 <- bb_plot_heatmap_main(test_sh, tile_color = "white") + theme(plot.background = element_rect(color = "red"))
 
-test_cat2[[1]]
+p6 <- guide_area()
+design <- "
+##1#
+##36
+2456
 
-waldo::compare(test_cat1, test_cat2)
-validObject(test_cat2)
-test_cat3 <- ImageCatalog.add(test_cat1, test3)
-as_tibble(test_cat3)
+"
+p1 + p2 + free(p3, side = "r",  type = "space") + free(p4, side = "t", type = "space") + p5 + p6 + plot_layout(
+              design = design,
+              guides = "collect")
 
-test_cat3 <- ImageCatalog.delete(test_cat3, hash = "c0296b")
-as_tibble(test_cat3)
 
-test_cat <- ImageCatalog(images = list(test1, test2))
-test1.1 <- test1
-use(test1) <- "foo"
-note(test1) <- "bar"
-test_cat <- ImageCatalog.add(test_cat, test1)
-as_tibble(test_cat)
-as_tibble(test_cat) |> nest(.by = c(-use, -note), .key = "uses_and_notes")
-as_tibble(test_cat) |> nest(.by = c(-use, -note), .key = "uses_and_notes") |> unnest(cols = c(`uses and notes`))
-as_tibble(test_cat) |> nest(.by = c(-use, -note), .key = "uses_and_notes") |> dplyr::filter(str_detect(md5sum, "1dc7b"))
+library(patchwork)
+devtools::load_all()
+{
+p1 <- bb_plot_heatmap_main(test_sh, flip = TRUE)
+p2 <- bb_plot_heatmap_colDendro(test_sh, side = "left")
+p3 <- bb_plot_heatmap_colData(test_sh, side = "left")
+p4 <- bb_plot_heatmap_rowDendro(test_sh, side = "top")
+p5 <- bb_plot_heatmap_rowData(test_sh, side = "top")
+p6 <- guide_area()
+p7 <- bb_plot_heatmap_colHighlight(test_sh, highlights = c("a", "b", "c"), side = "right")
+p8 <- bb_plot_heatmap_rowHighlight(test_sh, highlights = c("w", "s", "v"), side = "bottom")
+
+design <- "
+##4#6
+##5#6
+23176
+##8##
+"
+p1 + p2 + free(p3, side = "t", type = "space") + p4 + free(p5, side = "r", type = "space") + p6 + p7 + p8 + plot_layout(design = design, guides = "collect")
+}
+
+
+devtools::load_all()
+{
+p1 <- bb_plot_heatmap_main(test_sh, flip = FALSE) * theme(plot.background = element_rect(color = "red"))
+p2 <- bb_plot_heatmap_colDendro(test_sh, side = "top")
+p3 <- bb_plot_heatmap_colData(test_sh, side = "top") * theme(plot.background = element_rect(color = "red"))
+p4 <- bb_plot_heatmap_rowDendro(test_sh, side = "left")
+p5 <- bb_plot_heatmap_rowData(test_sh, side = "left") * theme(plot.background = element_rect(color = "red"))
+p6 <- guide_area()
+p7 <- bb_plot_heatmap_colHighlight(test_sh, highlights = c("a", "b", "c"), side = "bottom")
+p8 <- bb_plot_heatmap_rowHighlight(test_sh, highlights = c("w", "s", "v"), side = "right")
+
+design <- "
+##2#6
+##3#6
+45186
+##7##
+"
+p1 + p2 + free(p3, side = "r", type = "space") + p4 + free(p5, side = "t", type = "space") + p6 + p7 + p8 + plot_layout(design = design, guides = "collect")
+}

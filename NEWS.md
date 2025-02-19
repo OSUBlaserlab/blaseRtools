@@ -433,6 +433,9 @@
 * pseudocells
 * monocle projection
 
+# blaseRtools 0.0.0.9182
+* SummarizedHeatmap
+
 # todo
 
 * biaxial cite-seq plots

@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9181
+Version: 0.0.0.9182
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -116,3 +116,6 @@ Remotes:
     github::blaserlab/DoubletFinder,
     github::blaserlab/blaseRtemplates,
     github::sqjin/CellChat
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
