@@ -1,3 +1,47 @@
+#' @title Import a Big Wig File
+#' @description This is a thin wrapper around rtracklayer::import.bw.  The purpose is to serve as a helper function for making Trace objects from bigwig files.  This function converts the name of the numeric value metadata column to "coverage" for consistency with Trace objects made from Seurat/Signac objects.  The numeric column it will look for is "score" by default.  This appears to be the default name applied by import.bw and so this is the default value for this function.  The option is provided to change it if necessary.  The group variable must be supplied.  Typically this will be something informative, like "ATAC" or some Histone mark that the data come from.
+#' @param path file path to the bigwig file
+#' @param group a label to apply that describes the source data for the track
+#' @param coverage_column PARAM_DESCRIPTION, Default: 'score'
+#' @return a granges object
+#' @rdname bb_import_bw
+#' @export
+#' @importFrom rtracklayer import.bw
+#' @importFrom plyranges mutate select
+bb_import_bw <- function(path, group, coverage_column = "score") {
+  rtracklayer::import.bw(path) |>
+    plyranges::mutate(group = group) |>
+    plyranges::mutate(coverage = !!sym(coverage_column)) |>
+    plyranges::select(-!!sym(coverage_column))
+
+}
+
+# Function to fill internal gaps with fixed-width tiles
+#' @importFrom GenomicRanges gaps tile sort
+#' @importFrom plyranges mutate
+#' @importFrom tidyr replace_na
+fill_gaps_with_tiles <- function(gr, fixed_width, plot_range) {
+  # Get the gaps
+  gaps <- GenomicRanges::gaps(gr)
+  # Tile the gaps
+  tiled_gaps <- GenomicRanges::tile(gaps, width = fixed_width)
+  # Unlist the tiled gaps
+  tiled_gaps <- unlist(tiled_gaps)
+  # Combine the original GRanges with the tiled gaps
+  combined_gr <- c(gr, tiled_gaps)
+
+  # Sort the combined GRanges
+  combined_gr <- GenomicRanges::sort(combined_gr)
+  combined_gr <- trim_and_drop_levels(combined_gr, trim_to = plot_range) |>
+    plyranges::mutate(coverage = tidyr::replace_na(coverage, 0)) |>
+    plyranges::mutate(group = tidyr::replace_na(group, unique(gr$group)))
+
+
+  return(combined_gr)
+}
+
+
+
 # Helper functions
 #' @importFrom GenomicRanges makeGRangesFromDataFrame
 #' @importFrom BiocGenerics as.data.frame
@@ -146,19 +190,22 @@ setValidity("Trace", function(object) {
 
 #' Construct a Trace object from a Signac Object or Granges object
 #'
-#' @description Problem 1:  Signac objects and GRanges made from bigwigs are large and it is computationally expensive to get data from them when tweaking plots.  Problem 2:  For the most part we like how Signac plots genomic coverage of track-like data and we would like to show bulk data in a similar way with a similar compuatational interface.  The trace object is a small intermediate object that holds the minimal amount of data you need to make a coverage plot showing accessibility or binding to a specific genomic region.  Then you can use the trace object to quickly and easily generate tracks as needed for your plot.  These tracks are all ggplots and are easy to configure for legible graphics.  There are options for displaying groups by color or facet which are built in with good graphical defaults.  If these are not suitable, they can be changed post hoc like any other ggplot.
+#' @description Problem 1:  Signac objects and GRanges made from bigwigs are large and it is computationally expensive to get data from them when tweaking plots.  Problem 2:  For the most part we like how Signac plots genomic coverage of track-like data and we would like to show bulk data in a similar way with a similar compuatational interface.  The trace object is a small intermediate object that holds the minimal amount of data you need to make a coverage plot showing accessibility or binding to a specific genomic region.  Then you can use the trace object to quickly and easily generate tracks as needed for your plot.  These tracks are all ggplots and are easy to configure for legible graphics using add-on layers.  There are options for displaying groups by color or facet which are built in with good graphical defaults.  If these are not suitable, they can be changed post hoc like any other ggplot.
 #'
-#' @param obj A Signac/Seurat object or a GRanges object.  Import a bigwig file to a GRanges object using import.bw from rtracklayer.  Use plyranges functions to easily pre-filter the GRanges objec e.g. by chr to reduce processing time.  The precise range will be defined by gene_to_plot and the extend arguments.  You may wish to add grouping metadata columns and to merge several bulk tracks before importing.
+#' @param obj A Signac/Seurat object or a GRanges object.  Import a bigwig file to a GRanges object using bb_import_bw to ensure proper formatting.  Use plyranges functions to easily pre-filter the GRanges object e.g. by chr to reduce processing time.  The precise range will be defined by gene_to_plot and the extend arguments.  You may wish to add grouping metadata columns and to merge several bulk tracks.  This can be done while importing using c(bw1, bw2).
 #' @param gene_to_plot The gene you want to display.  Must be a valid gene in the genome assembly being used.
 #' @param genome The genome assembly.  Required.  Must be either "hg38" or "danRer11".
 #' @param extend_left Bases to extend plot_range left, or upstream relative to the top strand.
 #' @param extend_right Bases to extend plot_range right, or downstream relative to the top strand.
 #' @param peaks An optional GRanges object holding peak data.  Ignored for Signac/Seurat objects which carry this internally.
-#' @param bulk_group_col This parameter allows identification of a grouping variable in your bigwig/Granges object if you have added one.  One example is if you are adding multiple bulk tracks:  You can use this to plot the data in different colors or facets.  A new metadata column called "group" will be added to hold this.  If you haven't added grouping data in upstream processing, leave it NULL (default).  In this case the new group column will be filled with a single string (see bulk_group_id).  Will be ignored for Signac/Seurat objects.
-#' @param bulk_group_id The value you want to display with the track data on faceted plots when you haven't added any grouping information before making the object.  Defaults to "bulk" which is not a great choice.  Will be ignored for Signac/Seurat objects.
-#' @param bulk_coverage_col If you are making the object from a bigwig/GRanges, you need to identify which column in your bigwig/GRanges object holds the coverage data to plot on the y axis.  Defaults to "score".  Will be ignored for Signac/Seurat objects.
+#' @param bulk_group_col Used only when making a Trace from a GRanges object.  This identifies the metadata column holding the grouping information for the Trace data.   It will be converted literally to "group" when the object is made.  Recommendation is to import the bigwigs using import_bw which will set the group column and name it appropriately and then this can be left as the default.  This is ignored for Signac/Seurat objects which report this by default in a column named group.
+#' @param bulk_coverage_col If you are making the object from a bigwig/GRanges, you need to identify which column in your bigwig/GRanges object holds the coverage data to plot on the y axis.  Defaults to "coverage".  Similar to bulk_group_col, if you import the bigwig using bb_import_bw, it should already be named appropriately.  Will be ignored for Signac/Seurat objects which use "coverage" by default.
+#' @param fill_in Some track data may be very sparse.  This probably depends on how it was generated.  It seems that nextflow bigwigs have missing data where there is no signal but data from Signac is more complete with zeros.  The problem with missing data is that it makes the line plot look jagged.  This option allows you to fill in gaps in the trace data with 0's.  This is done by tiling the regions without real signal, leaving the ranges with real signal untouched.  Default is FALSE for compatibility with older code.  TRUE will fill in the gaps.
+#' @param fixed_width Bin width for filling in gaps in sparse genome track data.  Defaults to 100 bp.
 #' @import GenomicRanges tidyverse blaseRdata cli
 #' @importFrom Signac CoveragePlot granges Links
+#' @importFrom purrr map
+#' @importFrom plyranges filter
 #' @export
 bb_makeTrace <- function(obj,
                          gene_to_plot,
@@ -166,9 +213,10 @@ bb_makeTrace <- function(obj,
                          extend_left = 0,
                          extend_right = 0,
                          peaks = NULL,
-                         bulk_group_col = NULL,
-                         bulk_group_id = "bulk",
-                         bulk_coverage_col = "score") {
+                         bulk_group_col = "group",
+                         bulk_coverage_col = "coverage",
+                         fill_in = FALSE,
+                         fixed_width = 100) {
   genome <- match.arg(genome, choices = c("hg38", "danRer11"))
 
   # find the chromosome needed needed
@@ -227,13 +275,24 @@ bb_makeTrace <- function(obj,
 
   # clean up the metadata if you are working from a GRanges;
   if ("GRanges" %in% class(obj)) {
-    if (!is.null(bulk_group_col)) {
       values(gr)$group <- values(gr)[[bulk_group_col]]
       values(gr)$coverage <- values(gr)[[bulk_coverage_col]]
-    } else {
-      values(gr) <-
-        data.frame(group = bulk_group_id, coverage = values(gr)[[bulk_coverage_col]])
-    }
+  }
+
+  if (fill_in) {
+
+    filled_in_list <-
+      purrr::map(.x = unique(gr$group),
+                 .f = \(x,
+                        dat = gr,
+                        pr = plot_range,
+                        fw = fixed_width) {
+                   # fill in zeros
+                   dat <- plyranges::filter(dat, group == x)
+                   fill_gaps_with_tiles(gr = dat, plot_range = pr, fixed_width = fw)
+
+                 })
+    gr <- GenomicRanges::sort(do.call(c, filled_in_list))
 
   }
 

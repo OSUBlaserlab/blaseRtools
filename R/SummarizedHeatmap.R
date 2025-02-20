@@ -136,14 +136,5 @@ setReplaceMethod("rowData", "SummarizedHeatmap", function(x, value) {
 })
 
 
-#' @export
-setGeneric("colData<-", function(x, ..., value)
-  standardGeneric("colData<-"))
-
-setReplaceMethod("colData", "SummarizedHeatmap", function(x, value) {
-  x@colData <- value
-  validObject(x)
-  x
-})
 
 

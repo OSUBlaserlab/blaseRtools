@@ -436,6 +436,9 @@
 # blaseRtools 0.0.0.9182
 * SummarizedHeatmap
 
+# blaseRtools 0.0.0.9183
+* Updated trace functions to fill in gaps in sparse traces
+
 # todo
 
 * biaxial cite-seq plots
