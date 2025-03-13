@@ -1,4 +1,5 @@
 setOldClass("dendrogram", prototype = "dendrogram")
+setClassUnion("dendrogramOrNULL", c("dendrogram", "NULL"))
 
 # class definition --------------------
 #' @rdname SummarizedHeatmap
@@ -7,9 +8,17 @@ setOldClass("dendrogram", prototype = "dendrogram")
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 .SummarizedHeatmap <- setClass(
   "SummarizedHeatmap",
-  slots = representation(
-    colDendro = "dendrogram",
-    rowDendro = "dendrogram"
+  slots = list(
+    colDendro = "dendrogramOrNULL",
+    rowDendro = "dendrogramOrNULL",
+    colOrder = "character",
+    rowOrder = "character"
+  ),
+  prototype = list(
+    colDendro = NULL,
+    rowDendro = NULL,
+    colOrder = NULL,
+    rowOrder = NULL
   ),
   contains = "SummarizedExperiment"
 )
@@ -24,7 +33,13 @@ setOldClass("dendrogram", prototype = "dendrogram")
 #' Use the SummarizedHeatmap constructor to make an instance of the class from a matrix.  Use colData and rowData to get or set these values.  Internal validity checks will ensure the columns and rows match.
 #'
 #' New to this object are colDendro and rowDendro slots.  These hold hierarchical clustering information used for ordering the heatmap plot and plotting the dendrogrms.  These are generated automatically when the object is created.
+#'
+#' In order to manually set the order of the columns or rows, supply values to the rowOrder or colOrder parameters.  This will prevent creation of dendrograms for the respective colums or rows.
+#'
 #' @param mat A matrix to build the object from.
+#' @param colOrder A character string corresponding to matrix column names.
+#' @param rowOrder A character string corresponding to matrix row names.
+#' @param cluster_method Clusterihng algorithm.  See stats::hclust.
 #' @param ... other arguments to pass into SummarizedExperiment
 #' @return A SummarizedHeatmap object
 #' @examples
@@ -51,7 +66,12 @@ setOldClass("dendrogram", prototype = "dendrogram")
 #' @export
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
-SummarizedHeatmap <- function(mat, ...) {
+SummarizedHeatmap <- function(
+    mat,
+    colOrder = NULL,
+    rowOrder = NULL,
+    cluster_method = "ave",
+    ...) {
   se <-
     SummarizedExperiment::SummarizedExperiment(
       assays = list(matrix = mat),
@@ -59,12 +79,33 @@ SummarizedHeatmap <- function(mat, ...) {
       colData = S4Vectors::DataFrame(row.names = colnames(mat)),
       ...
     )
-  cd <- as.dendrogram(hclust(dist(t(mat)), "ave"))
-  rd <- as.dendrogram(hclust(dist(mat), "ave"))
+
+  cd <- as.dendrogram(hclust(dist(t(mat)), method = cluster_method))
+  rd <- as.dendrogram(hclust(dist(mat), method = cluster_method))
+
+  if (!is.null(colOrder)) {
+    co <- colOrder
+    cd <- NULL
+  } else {
+    ddata <- ggdendro::dendro_data(cd, type = "rectangle")
+    co <- ddata$labels$label
+  }
+
+  if (!is.null(rowOrder)) {
+    ro <- rowOrder
+    rd <- NULL
+  } else {
+    ddata <- ggdendro::dendro_data(rd, type = "rectangle")
+    ro <- ddata$labels$label
+  }
+
   obj <-
     .SummarizedHeatmap(se,
-                       colDendro = cd,
-                       rowDendro = rd)
+      colDendro = cd,
+      rowDendro = rd,
+      colOrder = co,
+      rowOrder = ro
+    )
 }
 
 
@@ -75,6 +116,27 @@ S4Vectors::setValidity2("SummarizedHeatmap", function(object) {
   if (SummarizedExperiment::assayNames(object)[1] != "matrix") {
     msg <- c(msg, "'matrix' must be first assay")
   }
+
+
+  if (!is.null(rowDendro(object))) {
+    dg <- rowDendro(object)
+    ddata <- ggdendro::dendro_data(dg, type = "rectangle")
+    if (any(rowOrder(object) != ddata$labels$label)) {
+      msg <- c(msg, "The rowOrder slot does not match the row dendrogram")
+    }
+
+  }
+
+  if (!is.null(colDendro(object))) {
+    dh <- colDendro(object)
+    hdata <- ggdendro::dendro_data(dh, type = "rectangle")
+    if (any(colOrder(object) != hdata$labels$label)) {
+      msg <- c(msg, "The colOrder slot does not match the row dendrogram")
+    }
+
+  }
+
+
 
   if (is.null(msg)) {
     TRUE
@@ -123,6 +185,28 @@ setMethod("rowData", "SummarizedHeatmap", function(x, ...) {
   # as_tibble(out)
 })
 
+#' @export
+setGeneric("colOrder", function(x, ...)
+  standardGeneric("colOrder"))
+
+#' @export
+#' @importFrom SummarizedExperiment assay
+setMethod("colOrder", "SummarizedHeatmap", function(x) {
+  x@colOrder
+
+})
+
+
+#' @export
+setGeneric("rowOrder", function(x, ...)
+  standardGeneric("rowOrder"))
+
+#' @export
+#' @importFrom SummarizedExperiment assay
+setMethod("rowOrder", "SummarizedHeatmap", function(x) {
+  x@rowOrder
+
+})
 # setters ----------------------------
 
 #' @export

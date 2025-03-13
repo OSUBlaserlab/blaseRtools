@@ -430,14 +430,21 @@
 * fixed scRNA-seq vignette
 
 # blaseRtools 0.0.0.9177-81
+
 * pseudocells
 * monocle projection
 
 # blaseRtools 0.0.0.9182
+
 * SummarizedHeatmap
 
 # blaseRtools 0.0.0.9183
+
 * Updated trace functions to fill in gaps in sparse traces
+
+# blaseRtools 0.0.0.9184
+
+* summarized heatmap
 
 # todo
 

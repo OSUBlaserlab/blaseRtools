@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap_plotting.R
 \name{bb_plot_heatmap_colHighlight}
 \alias{bb_plot_heatmap_colHighlight}
-\title{Plot a Column Highligh}
+\title{Plot a Column Highlight}
 \usage{
 bb_plot_heatmap_colHighlight(
   obj,

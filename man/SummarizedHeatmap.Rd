@@ -7,10 +7,22 @@
 \alias{SummarizedHeatmap}
 \title{An S4 Class for Holding Heatmap Data}
 \usage{
-SummarizedHeatmap(mat, ...)
+SummarizedHeatmap(
+  mat,
+  colOrder = NULL,
+  rowOrder = NULL,
+  cluster_method = "ave",
+  ...
+)
 }
 \arguments{
 \item{mat}{A matrix to build the object from.}
+
+\item{colOrder}{A character string corresponding to matrix column names.}
+
+\item{rowOrder}{A character string corresponding to matrix row names.}
+
+\item{cluster_method}{Clusterihng algorithm.  See stats::hclust.}
 
 \item{...}{other arguments to pass into SummarizedExperiment}
 }
@@ -25,6 +37,8 @@ Like the SummarizedExperiment Class it is built around a matrix.  Like the Singl
 Use the SummarizedHeatmap constructor to make an instance of the class from a matrix.  Use colData and rowData to get or set these values.  Internal validity checks will ensure the columns and rows match.
 
 New to this object are colDendro and rowDendro slots.  These hold hierarchical clustering information used for ordering the heatmap plot and plotting the dendrogrms.  These are generated automatically when the object is created.
+
+In order to manually set the order of the columns or rows, supply values to the rowOrder or colOrder parameters.  This will prevent creation of dendrograms for the respective colums or rows.
 }
 \examples{
 

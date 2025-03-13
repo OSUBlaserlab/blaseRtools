@@ -30,5 +30,5 @@ bb_plot_heatmap_main(
 a ggplot
 }
 \description{
-Takes in a Summarized Heatmap object and returns a ggplot of the matrix data.  Currently only supports clustering.
+Takes in a Summarized Heatmap object and returns a ggplot of the matrix data.
 }

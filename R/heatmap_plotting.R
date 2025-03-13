@@ -1,6 +1,8 @@
-
 #' @title Plot a Heatmap Row Dendrogram
 #' @description Takes in a SummarizedHeatmap object and returns a ggplot of the rowDendro slot.  This can be positioned with the side parameter.  Default is to position it on the left.  If flipping the heatmap so that the rows run vertically, you will need to change the side argument to top or bottom.
+#'
+#' If row order is set explicitly when creating this object, the dendrogram slot will be NULL and this function will abort.
+#'
 #' @param obj a Summarized Heatmap
 #' @param side Orientation/side of the heatmap to plot, Default: c("left", "right", "top", "bottom")
 #' @param linewidth Weight of the lines for the dendrogram, Default: 0.5
@@ -20,6 +22,9 @@ bb_plot_heatmap_rowDendro <-
     }
     side <- match.arg(side)
     dg <- rowDendro(obj)
+    if (is.null(dg)) {
+      cli::cli_abort("This SummarizedHeatmap has no row dendrogram.  Was rowOrder specified manually?")
+    }
     ddata <- ggdendro::dendro_data(dg, type = "rectangle")
 
     if (side %in% c("left", "right")) {
@@ -72,6 +77,8 @@ bb_plot_heatmap_rowDendro <-
 
 #' @title Plot a Heatmap Column Dendrogram
 #' @description Takes in a SummarizedHeatmap object and returns a ggplot of the rowDendro slot.  This can be positioned with the side parameter.  Default is to position it on the left.  If flipping the heatmap so that the rows run vertically, you will need to change the side argument to top or bottom.
+#'
+#' If row order is set explicitly when creating this object, the dendrogram slot will be NULL, and this function will abort.
 #' @param obj a Summarized Heatmap
 #' @param side Orientation/side of the heatmap to put the dendrogram, Default: c("top", "bottom", "left", "right")
 #' @param linewidth Weight of the dendrogram plot, Default: 0.5
@@ -91,6 +98,9 @@ bb_plot_heatmap_colDendro <-
     }
     side <- match.arg(side)
     dg <- colDendro(obj)
+    if (is.null(dg)) {
+      cli::cli_abort("This SummarizedHeatmap has no column dendrogram.  Was colOrder specified manually?")
+    }
     ddata <- ggdendro::dendro_data(dg, type = "rectangle")
 
     if (side %in% c("top", "bottom")) {
@@ -141,7 +151,7 @@ bb_plot_heatmap_colDendro <-
   }
 
 #' @title Plot the Body of  Heatmap
-#' @description Takes in a Summarized Heatmap object and returns a ggplot of the matrix data.  Currently only supports clustering.
+#' @description Takes in a Summarized Heatmap object and returns a ggplot of the matrix data.
 #' @param obj A SummarizedHeatmap
 #' @param tile_color Outline of the color tiles, Default: 'white'
 #' @param high Color for high values, applied to scale_fill_gradient_2, Default: 'red3'
@@ -166,15 +176,11 @@ bb_plot_heatmap_main <-
     if (!"SummarizedHeatmap" %in% class(obj)) {
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")
     }
-    dg <- rowDendro(obj)
-    ddata <- ggdendro::dendro_data(dg, type = "rectangle")
-    dh <- colDendro(obj)
-    hdata <- ggdendro::dendro_data(dh, type = "rectangle")
     hm_dat <- SummarizedExperiment::assay(obj) |>
       as_tibble(rownames = "rownames") |>
       pivot_longer(-rownames) |>
-      mutate(rownames = factor(rownames, levels = ddata$labels$label)) |>
-      mutate(name = factor(name, levels = hdata$labels$label))
+      mutate(rownames = factor(rownames, levels = rowOrder(obj))) |>
+      mutate(name = factor(name, levels = colOrder(obj)))
 
     if (!flip) {
       hm <- ggplot(hm_dat, aes(x = name, y = rownames, fill = value)) +
@@ -206,7 +212,7 @@ bb_plot_heatmap_main <-
 
   }
 
-#' @title Plot a Column Highligh
+#' @title Plot a Column Highlight
 #' @description Use geom_text_repel to selectively highlight some column names.  Useful when there are too many to highlight to be able to use the axis directly.
 #' @param obj A summarized heatmap
 #' @param highlights A vector of columns to highlight, Default: character(0)
@@ -229,16 +235,12 @@ bb_plot_heatmap_colHighlight <-
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")
     }
     side <- match.arg(side)
-    dg <- rowDendro(obj)
-    ddata <- ggdendro::dendro_data(dg, type = "rectangle")
-    dh <- colDendro(obj)
-    hdata <- ggdendro::dendro_data(dh, type = "rectangle")
 
     hm_dat <- assay(obj) |>
       as_tibble(rownames = "rownames") |>
       pivot_longer(-rownames) |>
-      mutate(rownames = factor(rownames, levels = ddata$labels$label)) |>
-      mutate(name = factor(name, levels = hdata$labels$label))
+      mutate(rownames = factor(rownames, levels = rowOrder(obj))) |>
+      mutate(name = factor(name, levels = colOrder(obj)))
 
 
     if (side %in% c("top", "bottom")) {
@@ -381,16 +383,11 @@ bb_plot_heatmap_rowHighlight <-
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")
     }
     side <- match.arg(side)
-    dg <- rowDendro(obj)
-    ddata <- ggdendro::dendro_data(dg, type = "rectangle")
-    dh <- colDendro(obj)
-    hdata <- ggdendro::dendro_data(dh, type = "rectangle")
-
     hm_dat <- assay(obj) |>
       as_tibble(rownames = "rownames") |>
       pivot_longer(-rownames) |>
-      mutate(rownames = factor(rownames, levels = ddata$labels$label)) |>
-      mutate(name = factor(name, levels = hdata$labels$label))
+      mutate(rownames = factor(rownames, levels = rowOrder(obj))) |>
+      mutate(name = factor(name, levels = colOrder(obj)))
 
 
     if (side %in% c("top", "bottom")) {
@@ -539,14 +536,12 @@ bb_plot_heatmap_colData <-
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")
     }
     side <- match.arg(side)
-    dh <- colDendro(obj)
-    hdata <- ggdendro::dendro_data(dh, type = "rectangle")
 
     dat <- colData(obj) |>
       as_tibble(rownames = "colData_rownames") |>
       pivot_longer(-colData_rownames) |>
       dplyr::filter(name %in% vars) |>
-      mutate(colData_rownames = factor(colData_rownames, levels = hdata$labels$label))
+      mutate(colData_rownames = factor(colData_rownames, levels = colOrder(obj)))
 
     if (is.null(names(vars))) {
       cli_div(theme = list(span.emph = list(color = "orange")))
@@ -607,7 +602,6 @@ bb_plot_heatmap_colData <-
       p <-
         patchwork::wrap_plots(plotlist, nrow = 1, axes = "collect") &
         theme(plot.margin = margin(0, 0, 0, 0))
-      # free(p, type = "space")
       p
     }
   }
@@ -645,14 +639,12 @@ bb_plot_heatmap_rowData <-
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")
     }
     side <- match.arg(side)
-    dg <- rowDendro(obj)
-    ddata <- ggdendro::dendro_data(dg, type = "rectangle")
 
     dat <- rowData(obj) |>
       as_tibble(rownames = "rowData_rownames") |>
       pivot_longer(-rowData_rownames) |>
       dplyr::filter(name %in% vars) |>
-      mutate(rowData_rownames = factor(rowData_rownames, levels = ddata$labels$label))
+      mutate(rowData_rownames = factor(rowData_rownames, levels = rowOrder(obj)))
 
     if (is.null(names(vars))) {
       cli_div(theme = list(span.emph = list(color = "orange")))
@@ -673,8 +665,10 @@ bb_plot_heatmap_rowData <-
                          p <- ggplot(data = d,
                                      aes(y = rowData_rownames, fill = value, x = label)) +
                            geom_tile(color = tile_color) +
-                           scale_x_discrete(position = "top", expand =
+                           scale_x_discrete(position = "top",
+                                            expand =
                                               expansion(add = 0)) +
+                           scale_y_discrete(expand = expansion(add = 0)) +
                            theme_hm_rowData_left() +
                            labs(fill = y, x = NULL, y = NULL)
                          if (!is.null(pal))
@@ -686,7 +680,6 @@ bb_plot_heatmap_rowData <-
       p <-
         patchwork::wrap_plots(plotlist, nrow = 1, axes = "collect") &
         theme(plot.margin = margin(0, 0, 0, 0))
-      # free(p, type = "space")
       p
     } else {
       plotlist <- map2(.x = vars,
@@ -703,6 +696,7 @@ bb_plot_heatmap_rowData <-
                            scale_y_discrete(position = "right",
                                             expand =
                                               expansion(add = 0)) +
+                           scale_x_discrete(expand = expansion(add = 0)) +
                            theme_hm_rowData_top() +
 
                            labs(fill = y, x = NULL, y = NULL)

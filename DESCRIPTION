@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9183
+Version: 0.0.0.9184
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",

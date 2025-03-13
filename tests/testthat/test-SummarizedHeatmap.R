@@ -13,6 +13,9 @@ rowData(test_sh)$feature_type <- ifelse(isVowel(letters[6:25]), "vowel", "conson
 rowData_test <- S4Vectors::DataFrame(
                           feature_type = ifelse(isVowel(letters[6:25]), "vowel", "consonant"),
                           row.names = letters[6:25])
+test_sh1 <- SummarizedHeatmap(mat, colOrder = letters[1:5])
+test_sh2 <- SummarizedHeatmap(mat, rowOrder = letters[6:25])
+
 test_that("Summarized Heatmap works", {
   expect_true(validObject(test_sh))
   expect_identical(rownames(colData(test_sh)), letters[1:5])
@@ -22,4 +25,10 @@ test_that("Summarized Heatmap works", {
   expect_identical(attributes(bb_plot_heatmap_colDendro(test_sh))$class, c("gg", "ggplot"))
   expect_identical(colData(test_sh), colData_test)
   expect_identical(rowData(test_sh), rowData_test)
+  expect_true(validObject(test_sh1))
+  expect_null(colDendro(test_sh1))
+  expect_true(validObject(test_sh2))
+  expect_null(rowDendro(test_sh2))
+  expect_error(bb_plot_heatmap_rowDendro(test_sh2))
+  expect_error(bb_plot_heatmap_colDendro(test_sh1))
 })
