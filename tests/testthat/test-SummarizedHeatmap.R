@@ -1,5 +1,6 @@
 library(SummarizedExperiment)
 library(ggdendro)
+set.seed(123)
 mat <- matrix(rnorm(100), ncol=5)
 colnames(mat) <- letters[1:5]
 rownames(mat) <- letters[6:25]
@@ -15,6 +16,31 @@ rowData_test <- S4Vectors::DataFrame(
                           row.names = letters[6:25])
 test_sh1 <- SummarizedHeatmap(mat, colOrder = letters[1:5])
 test_sh2 <- SummarizedHeatmap(mat, rowOrder = letters[6:25])
+
+test_heatmap <- function() {
+  p1 <- bb_plot_heatmap_main(test_sh, flip = FALSE)
+  p2 <- bb_plot_heatmap_colDendro(test_sh, side = "top")
+  p3 <- bb_plot_heatmap_colData(test_sh, side = "top")
+  p4 <- bb_plot_heatmap_rowDendro(test_sh, side = "left")
+  p5 <- bb_plot_heatmap_rowData(test_sh, side = "left")
+  p6 <- guide_area()
+  p7 <-
+    bb_plot_heatmap_colHighlight(test_sh,
+                                 highlights = c("a", "b", "c"),
+                                 side = "bottom")
+  p8 <-
+    bb_plot_heatmap_rowHighlight(test_sh,
+                                 highlights = c("w", "s", "v"),
+                                 side = "right")
+
+  design <- "
+##2#6
+##3#6
+45186
+##7##
+"
+p1 + p2 + free(p3, side = "r", type = "space") + p4 + free(p5, side = "t", type = "space") + p6 + p7 + p8 + plot_layout(design = design, guides = "collect")
+}
 
 test_that("Summarized Heatmap works", {
   expect_true(validObject(test_sh))

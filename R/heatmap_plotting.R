@@ -377,7 +377,7 @@ bb_plot_heatmap_colHighlight <-
 bb_plot_heatmap_rowHighlight <-
   function(obj,
            highlights = character(0),
-           side = c("top", "bottom", "right", "left"),
+           side = c("right", "left", "top", "bottom"),
            ...) {
     if (!"SummarizedHeatmap" %in% class(obj)) {
       cli::cli_abort("This function must be run on a SummarizedHeatmap object")

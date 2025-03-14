@@ -7,7 +7,7 @@
 bb_plot_heatmap_rowHighlight(
   obj,
   highlights = character(0),
-  side = c("top", "bottom", "right", "left"),
+  side = c("right", "left", "top", "bottom"),
   ...
 )
 }
