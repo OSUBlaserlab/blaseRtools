@@ -256,8 +256,6 @@ bb_plot_heatmap_colHighlight <-
           geom_text_repel(
             ...,
             angle = 90,
-            force        = 1,
-            box.padding = 0.25,
             nudge_y      = -0.01,
             direction    = "x",
             hjust        = 1,
@@ -279,8 +277,6 @@ bb_plot_heatmap_colHighlight <-
           geom_text_repel(
             ...,
             angle = 90,
-            force        = 1,
-            box.padding = 0.25,
             nudge_y      = 0.01,
             direction    = "x",
             hjust        = 1,
@@ -312,8 +308,6 @@ bb_plot_heatmap_colHighlight <-
           geom_text_repel(
             ...,
             angle = 0,
-            force        = 1,
-            box.padding = 0.25,
             nudge_x      = -0.01,
             direction    = "y",
             hjust        = 1,
@@ -335,8 +329,6 @@ bb_plot_heatmap_colHighlight <-
           geom_text_repel(
             ...,
             angle = 0,
-            force        = 1,
-            box.padding = 0.25,
             nudge_x      = 0.01,
             direction    = "y",
             hjust        = 1,
@@ -405,8 +397,6 @@ bb_plot_heatmap_rowHighlight <-
           geom_text_repel(
             ...,
             angle = 90,
-            force        = 1,
-            box.padding = 0.25,
             nudge_y      = -0.01,
             direction    = "x",
             hjust        = 1,
@@ -428,8 +418,6 @@ bb_plot_heatmap_rowHighlight <-
           geom_text_repel(
             ...,
             angle = 90,
-            force        = 1,
-            box.padding = 0.25,
             nudge_y      = 0.01,
             direction    = "x",
             hjust        = 1,
@@ -462,8 +450,6 @@ bb_plot_heatmap_rowHighlight <-
           geom_text_repel(
             ...,
             angle = 0,
-            force        = 1,
-            box.padding = 0.25,
             nudge_x      = -0.01,
             direction    = "y",
             hjust        = 1,
@@ -485,8 +471,6 @@ bb_plot_heatmap_rowHighlight <-
           geom_text_repel(
             ...,
             angle = 0,
-            force        = 1,
-            box.padding = 0.25,
             nudge_x      = 0.01,
             direction    = "y",
             hjust        = 1,
