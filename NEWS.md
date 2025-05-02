@@ -442,7 +442,7 @@
 
 * Updated trace functions to fill in gaps in sparse traces
 
-# blaseRtools 0.0.0.9184 - 5
+# blaseRtools 0.0.0.9184 - 6
 
 * summarized heatmap
 

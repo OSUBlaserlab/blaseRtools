@@ -113,7 +113,7 @@ bb_plot_heatmap_colDendro <-
         ), linewidth = linewidth)
       if (side == "bottom") {
         dend <- dend +
-          scale_y_reverse(add = c(0.1, 0.1)) +
+          scale_y_reverse(expand = expansion(add = c(0.1, 0.1))) +
           scale_x_continuous(expand = expansion(add = c(0.5, 0.5))) +
           theme_dendro()
       } else {

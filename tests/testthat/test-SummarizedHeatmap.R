@@ -1,5 +1,6 @@
 library(SummarizedExperiment)
 library(ggdendro)
+library(patchwork)
 set.seed(123)
 mat <- matrix(rnorm(100), ncol=5)
 colnames(mat) <- letters[1:5]
@@ -19,7 +20,7 @@ test_sh2 <- SummarizedHeatmap(mat, rowOrder = letters[6:25])
 
 test_heatmap <- function() {
   p1 <- bb_plot_heatmap_main(test_sh, flip = FALSE)
-  p2 <- bb_plot_heatmap_colDendro(test_sh, side = "top")
+  p2 <- bb_plot_heatmap_colDendro(test_sh, side = "bottom")
   p3 <- bb_plot_heatmap_colData(test_sh, side = "top")
   p4 <- bb_plot_heatmap_rowDendro(test_sh, side = "left")
   p5 <- bb_plot_heatmap_rowData(test_sh, side = "left")
@@ -41,6 +42,8 @@ test_heatmap <- function() {
 "
 p1 + p2 + free(p3, side = "r", type = "space") + p4 + free(p5, side = "t", type = "space") + p6 + p7 + p8 + plot_layout(design = design, guides = "collect")
 }
+
+test_heatmap()
 
 test_that("Summarized Heatmap works", {
   expect_true(validObject(test_sh))
