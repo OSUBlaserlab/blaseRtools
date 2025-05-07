@@ -938,3 +938,44 @@ bb_import_seacr_peaks <- function(file, group_variable = NULL, group_value) {
   }
   GenomicRanges::makeGRangesFromDataFrame(tbl, keep.extra.columns = TRUE)
 }
+
+#' @title Import Peaks from MACS2
+#' @description The function reads peak files produced by MACS.  Optionally add a group variable and value for later filtering or faceting when combined with other peak files.
+#' @param file file path to the MACS narrowpeak file
+#' @param group_variable An optional variable name for additional group metadata.  PARAM_DESCRIPTION, Default: NULL
+#' @param group_value A value supplied to the group metadata variable.  Required if group_variable is not NULL.  PARAM_DESCRIPTION
+#' @return A GRanges object
+#' @seealso
+#'  \code{\link[readr]{read_delim}}
+#'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+#'  \code{\link[GenomicRanges]{makeGRangesFromDataFrame}}
+#' @rdname bb_import_seacr_peaks
+#' @export
+#' @importFrom readr read_tsv
+#' @importFrom dplyr select mutate
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+bb_import_macs_narrowpeaks <- function(file,
+                                        group_variable = NULL,
+                                        group_value){
+  tbl <- readr::read_tsv(
+    file,
+    col_names = c(
+      "chrom",
+      "chromStart",
+      "chromEnd",
+      "name",
+      "score",
+      "strand",
+      "singalValue",
+      "pValue",
+      "qValue",
+      "peak"
+    )
+  ) |> dplyr::select(c(chr = chrom, start = chromStart, end = chromEnd))
+
+  if (!is.null(group_variable)) {
+    tbl <- dplyr::mutate(tbl, `:=`(!!group_variable, group_value))
+  }
+  GenomicRanges::makeGRangesFromDataFrame(tbl, keep.extra.columns = TRUE)
+}
+

@@ -2,12 +2,15 @@
 % Please edit documentation in R/trace_funcs.R
 \name{bb_import_seacr_peaks}
 \alias{bb_import_seacr_peaks}
+\alias{bb_import_macs_narrowpeaks}
 \title{Import Peaks from SEACR}
 \usage{
 bb_import_seacr_peaks(file, group_variable = NULL, group_value)
+
+bb_import_macs_narrowpeaks(file, group_variable = NULL, group_value)
 }
 \arguments{
-\item{file}{file path to the SEACR .bed file}
+\item{file}{file path to the MACS narrowpeak file}
 
 \item{group_variable}{An optional variable name for additional group metadata.  PARAM_DESCRIPTION, Default: NULL}
 
@@ -15,11 +18,19 @@ bb_import_seacr_peaks(file, group_variable = NULL, group_value)
 }
 \value{
 A GRanges object
+
+A GRanges object
 }
 \description{
 The function reads peaks in .bed file format produced by SEACR.  Optionally add a group variable and value for later filtering or faceting when combined with other peak files.
+
+The function reads peak files produced by MACS.  Optionally add a group variable and value for later filtering or faceting when combined with other peak files.
 }
 \seealso{
+\code{\link[readr]{read_delim}}
+\code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
+\code{\link[GenomicRanges]{makeGRangesFromDataFrame}}
+
 \code{\link[readr]{read_delim}}
 \code{\link[dplyr]{select}}, \code{\link[dplyr]{mutate}}
 \code{\link[GenomicRanges]{makeGRangesFromDataFrame}}

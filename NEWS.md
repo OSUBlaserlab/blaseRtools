@@ -446,6 +446,10 @@
 
 * summarized heatmap
 
+# blaseRtools 0.0.0.9188
+
+* added bb_import_macs_narrowpeak
+
 # todo
 
 * biaxial cite-seq plots
