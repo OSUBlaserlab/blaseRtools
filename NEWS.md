@@ -450,6 +450,10 @@
 
 * added bb_import_macs_narrowpeak
 
+# blaseRtools 0.0.0.9189
+
+* fixed bb_blind_images
+
 # todo
 
 * biaxial cite-seq plots

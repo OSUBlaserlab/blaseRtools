@@ -6,43 +6,51 @@
 #' @param output_dir The linux-style file path for the directory that will hold the blinded images.  The directory will be created by the function.
 #' @return nothing
 #' @export
-#' @import tidyverse digest fs blaseRdata
+#' @importFrom stringr str_replace_all str_extract str_replace str_sub
+#' @importFrom fs path dir_create path_file file_copy
+#' @importFrom dplyr mutate across select pull filter arrange
+#' @importFrom tidyr contains
+#' @importFrom digest digest
+#' @importFrom tibble tibble
+#' @importFrom readr write_csv
 bb_blind_images <- function(analysis_file, file_column, output_dir) {
-  ts <- str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
+  ts <- stringr::str_replace_all(Sys.time(), "[:punct:]|[:alpha:]|[:space:]", "")
   output_dir <- fs::path(paste0(output_dir, "_", ts))
   fs::dir_create(path = output_dir)
   analysis_file <-
-    analysis_file %>%
-    mutate(across(contains(file_column), bb_fix_file_path))
+    analysis_file |>
+    dplyr::mutate(dplyr::across(tidyr::contains(file_column), bb_fix_file_path))
   filepaths <-
-    analysis_file %>%
-    select(filepaths = contains(file_column)) %>%
-    mutate(filepaths = bb_fix_file_path(filepaths)) %>%
-    pull(filepaths)
+    analysis_file |>
+    dplyr::select(filepaths = tidyr::contains(file_column)) |>
+    dplyr::mutate(filepaths = bb_fix_file_path(filepaths)) |>
+    dplyr::pull(filepaths)
 
   blinding_key <- map_dfr(
     .x = filepaths,
     .f = function(x, out = output_dir) {
       filename <- fs::path_file(x)
-      extension <- str_extract(x, ".tif|.tiff|.jpeg|.jpg|.png")
-      filestem <- str_replace(filename, ".tif|.tiff|.jpeg|.jpg|.png", "")
+      extension <- stringr::str_extract(x, ".tif|.tiff|.jpeg|.jpg|.png")
+      filestem <- stringr::str_replace(filename, ".tif|.tiff|.jpeg|.jpg|.png", "")
       hash <- digest::digest(x, algo = "md5", file = TRUE)
-      hash_short <- str_sub(hash, end = 6)
+      hash_short <- stringr::str_sub(hash, end = 6)
       hash_int <- strtoi(paste0("0x", hash_short))
       hash_mod <- hash_int %% nrow(wordhash)
-      hash_final <- wordhash %>%
-        filter(index == hash_mod) %>%
-        pull(word) #%>%
+      hash_final <- wordhash |>
+        dplyr::filter(index == hash_mod) |>
+        dplyr::pull(word) #%>%
         # paste(., "_", hash_short)
       key <-
-        tibble(source_file = x,
+        tibble::tibble(source_file = x,
                blinded_file = paste0(out, "/", hash_final, extension))
       return(key)
     }
   )
   fs::file_copy(path = blinding_key$source_file, new_path = blinding_key$blinded_file, overwrite = FALSE)
   scoresheet <-
-    blinding_key %>% select(-source_file) %>% arrange(blinded_file)
-  write_csv(blinding_key, file = fs::path(output_dir, "blinding_key.csv"))
-  write_csv(scoresheet, file = fs::path(output_dir, "scoresheet.csv"))
+    blinding_key |>
+    dplyr::select(-source_file) |>
+    dplyr::arrange(blinded_file)
+  readr::write_csv(blinding_key, file = fs::path(output_dir, "blinding_key.csv"))
+  readr::write_csv(scoresheet, file = fs::path(output_dir, "scoresheet.csv"))
 }

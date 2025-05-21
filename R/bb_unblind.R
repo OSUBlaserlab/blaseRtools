@@ -15,20 +15,20 @@ bb_unblind_images <-
            scorefile = "scoresheet.csv",
            analysis_file,
            file_column)  {
-    key <- read_csv(fs::path(directory, keyfile))
-    scores <- read_csv(fs::path(directory, scorefile))
-    res <- left_join(key,
-                     scores) %>%
-      arrange(source_file)
-    write_csv(res, file = fs::path(directory, "unblinded_result.csv"))
+    key <- readr::read_csv(fs::path(directory, keyfile))
+    scores <- readr::read_csv(fs::path(directory, scorefile))
+    res <- dplyr::left_join(key,
+                     scores) |>
+      dplyr::arrange(source_file)
+    readr::write_csv(res, file = fs::path(directory, "unblinded_result.csv"))
     analysis_file <-
-      read_csv(analysis_file)  %>%
-      mutate(across(contains(file_column), bb_fix_file_path)) %>%
-      rename(source_file = contains(file_column))
+      readr::read_csv(analysis_file) |>
+      dplyr::mutate(dplyr::across(tidyr::contains(file_column), bb_fix_file_path)) |>
+      dplyr::rename(source_file = tidyr::contains(file_column))
     analysis_joined <-
-      left_join(analysis_file, res) %>%
-      rename(!!file_column := source_file) %>%
-      select(-blinded_file)
+      dplyr::left_join(analysis_file, res) |>
+      dplyr::rename(!!file_column := source_file) |>
+      dplyr::select(-blinded_file)
     return(analysis_joined)
 
   }
