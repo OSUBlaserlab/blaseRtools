@@ -9,21 +9,21 @@
 #' @rdname filter_cds
 #' @export
 filter_cds <- function(cds, cells = "all", genes = "all") {
-  if (all(cells == "all")) {
+  if (any(cells == "all")) {
     cells <- bb_cellmeta(cds) %>%
       pull(cell_id)
   } else {
+    if (nrow(cells) == 0) cli::cli_abort("Your filtering removed all cells.  Aborting.")
     cells <- cells %>%
       pull(cell_id)
-    if (length(cells) == 0) cli::cli_abort("Your filtering removed all cells.  Aborting.")
   }
-  if (all(genes == "all")) {
+  if (any(genes == "all")) {
     genes <- bb_rowmeta(cds) %>%
       pull(feature_id)
   }  else {
+    if (nrow(genes) == 0) cli::cli_abort("Your filtering removed all genes.  Aborting.")
     genes <- genes %>%
       pull(feature_id)
-    if (length(genes) == 0) cli::cli_abort("Your filtering removed all genes.  Aborting.")
   }
   result <- cds[genes, cells]
   return(result)

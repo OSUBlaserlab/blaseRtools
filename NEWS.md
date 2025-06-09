@@ -454,6 +454,11 @@
 
 * fixed bb_blind_images
 
+# blaseRtools 0.0.0.9190
+
+* fixed bug in filter_cds that returned all of the cells if filtering returns 0 lines
+* fixed namespace issues in bb_doubletfinder
+
 # todo
 
 * biaxial cite-seq plots

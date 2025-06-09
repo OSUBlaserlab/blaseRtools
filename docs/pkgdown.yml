@@ -1,5 +1,5 @@
-pandoc: 3.1.11
-pkgdown: 2.1.2
+pandoc: '3.4'
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   Ape: Ape.html
@@ -7,4 +7,4 @@ articles:
   scRNAseq: scRNAseq.html
   SummarizedHeatmap: SummarizedHeatmap.html
   trace: trace.html
-last_built: 2025-05-21T14:35Z
+last_built: 2025-06-09T18:10Z
