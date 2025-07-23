@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9194
+Version: 0.0.0.9195
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -108,7 +108,11 @@ Imports:
     KernSmooth,
     DAseq,
     ggdendro,
-    loupeR
+    loupeR,
+    patchwork,
+    rtracklayer,
+    S4Vectors,
+    waldo
 Depends: 
     tidyverse,
     blaseRdata,
