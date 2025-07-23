@@ -1,6 +1,6 @@
 Package: blaseRtools
 Title: R Tools for Blaser Lab Data Analysis 
-Version: 0.0.0.9192
+Version: 0.0.0.9193
 Authors@R: 
     person(given = "Brad",
            family = "Blaser",
@@ -106,7 +106,8 @@ Imports:
     fields,
     KernSmooth,
     DAseq,
-    ggdendro
+    ggdendro,
+    loupeR
 Depends: 
     tidyverse,
     blaseRdata,
@@ -117,7 +118,8 @@ Remotes:
     github::mojaveazure/seurat-disk,
     github::blaserlab/DoubletFinder,
     github::blaserlab/blaseRtemplates,
-    github::sqjin/CellChat
+    github::sqjin/CellChat,
+    github::10XGenomics/loupeR
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
